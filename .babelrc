@@ -1,0 +1,21 @@
+/*
+ * @Description: babel配置
+ * @Author: longzhang6
+ * @Date: 2020-04-11 15:16:54
+ * @LastEditors: longzhang6
+ * @LastEditTime: 2020-04-11 15:35:23
+ */
+{
+  "presets": ["react-app"],
+  "plugins": [
+    ["@babel/plugin-proposal-decorators", { "legacy": true }], // * 启用装饰器语法
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "libraryDirectory": "es",
+        "style": "css" // `style: true` 会加载 less 文件
+      }
+    ]
+  ]
+}
