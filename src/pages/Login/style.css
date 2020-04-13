@@ -1,0 +1,22 @@
+#login-page {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #283443;
+  z-index: 99;
+}
+
+.login-container {
+  width: 380px;
+}
+
+.title {
+  text-align: center;
+  color: #fff;
+  font-size: 30px;
+}
