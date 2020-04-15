@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-16 01:04:03
+ * @LastEditTime: 2020-04-16 01:07:06
  */
 import React, { useState, useEffect, useRef } from "react";
 import { Form, Input, Select, Button } from "antd";
@@ -35,6 +35,7 @@ const RegisterForm = () => {
   useEffect(() => {
     if (countDown === 0) {
       clearInterval(timer.current);
+      setCountDown(5);
       setIsSendVerify(false);
     }
     forceUpdate({});
