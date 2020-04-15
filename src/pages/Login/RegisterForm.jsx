@@ -3,9 +3,9 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-16 00:55:18
+ * @LastEditTime: 2020-04-16 01:04:03
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Form, Input, Select, Button } from "antd";
 import { useStore } from "@/hooks/useStore";
 import { observer } from "mobx-react";
@@ -16,6 +16,7 @@ const RegisterForm = () => {
   const { userInfoStore } = useStore();
   const [isSendVerify, setIsSendVerify] = useState(false);
   const [countDown, setCountDown] = useState(5);
+  let timer = useRef();
 
   const [form] = Form.useForm();
   const [, forceUpdate] = useState();
@@ -25,15 +26,17 @@ const RegisterForm = () => {
   const onFinishFailed = () => {};
 
   const verifyPhone = () => {
-    let timer = null;
     setIsSendVerify(true);
-    timer = setInterval(() => {
+    timer.current = setInterval(() => {
       setCountDown((countDown) => countDown - 1);
     }, 1000);
   };
 
   useEffect(() => {
-    console.log(countDown, "countDown");
+    if (countDown === 0) {
+      clearInterval(timer.current);
+      setIsSendVerify(false);
+    }
     forceUpdate({});
   }, [countDown]);
 
