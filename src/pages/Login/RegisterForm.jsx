@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-15 23:55:31
+ * @LastEditTime: 2020-04-16 00:55:18
  */
 import React, { useState, useEffect } from "react";
 import { Form, Input, Select, Button } from "antd";
@@ -16,7 +16,6 @@ const RegisterForm = () => {
   const { userInfoStore } = useStore();
   const [isSendVerify, setIsSendVerify] = useState(false);
   const [countDown, setCountDown] = useState(5);
-  let timer = null;
 
   const [form] = Form.useForm();
   const [, forceUpdate] = useState();
@@ -26,18 +25,17 @@ const RegisterForm = () => {
   const onFinishFailed = () => {};
 
   const verifyPhone = () => {
+    let timer = null;
     setIsSendVerify(true);
-    console.log(isSendVerify);
     timer = setInterval(() => {
       setCountDown((countDown) => countDown - 1);
-      console.log(countDown);
     }, 1000);
   };
 
   useEffect(() => {
     console.log(countDown, "countDown");
     forceUpdate({});
-  }, []);
+  }, [countDown]);
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
