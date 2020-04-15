@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-15 19:56:03
+ * @LastEditTime: 2020-04-15 20:28:54
  */
 import React, { useState, useEffect } from "react";
 import { Form, Input, Select, Button } from "antd";
@@ -15,7 +15,7 @@ const { Option } = Select;
 const RegisterForm = () => {
   const { userInfoStore } = useStore();
   const [form] = Form.useForm();
-  const [, forceUpdate] = useState(); // To disable submit button at the beginning.
+  const [, forceUpdate] = useState();
   useEffect(() => {
     forceUpdate({});
   }, []);
@@ -44,9 +44,7 @@ const RegisterForm = () => {
             block
             disabled={
               !form.isFieldTouched("phone") ||
-              !form.isFieldTouched("password") ||
-              !form.isFieldTouched("confirm") ||
-              form.getFieldsError().filter(({ errors }) => errors.length).length
+              form.getFieldError("phone").length
             }
           >
             获取验证码
