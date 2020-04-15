@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-13 23:54:14
+ * @LastEditTime: 2020-04-15 19:18:37
  */
 import React from "react";
 import { withRouter } from "react-router-dom";
@@ -15,7 +15,7 @@ import RegisterForm from "./RegisterForm";
 
 @withRouter
 @observer
-@inject("appStore")
+@inject("userInfoStore")
 class Login extends React.Component {
   state = {
     showBox: "register",
