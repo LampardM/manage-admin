@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-15 19:21:34
+ * @LastEditTime: 2020-04-15 19:56:03
  */
 import React, { useState, useEffect } from "react";
 import { Form, Input, Select, Button } from "antd";
@@ -38,16 +38,19 @@ const RegisterForm = () => {
   const afterSelector = (
     <Form.Item noStyle shouldUpdate>
       {() => (
-        <div
-          className="register-verify"
-          disabled={
-            !form.isFieldTouched("phone") ||
-            !form.isFieldTouched("password") ||
-            !form.isFieldTouched("confirm") ||
-            form.getFieldsError().filter(({ errors }) => errors.length).length
-          }
-        >
-          获取验证码
+        <div className="register-verify">
+          <Button
+            type="link"
+            block
+            disabled={
+              !form.isFieldTouched("phone") ||
+              !form.isFieldTouched("password") ||
+              !form.isFieldTouched("confirm") ||
+              form.getFieldsError().filter(({ errors }) => errors.length).length
+            }
+          >
+            获取验证码
+          </Button>
         </div>
       )}
     </Form.Item>
@@ -153,6 +156,7 @@ const RegisterForm = () => {
               type="primary"
               htmlType="submit"
               size="large"
+              block
               disabled={
                 !form.isFieldTouched("phone") ||
                 !form.isFieldTouched("password") ||
@@ -163,7 +167,7 @@ const RegisterForm = () => {
               }
               className="register-button"
             >
-              注册{JSON.stringify(form.isFieldTouched("password"))}
+              注册
             </Button>
           )}
         </Form.Item>
@@ -171,5 +175,7 @@ const RegisterForm = () => {
     </div>
   );
 };
+
+const styles = {};
 
 export default observer(RegisterForm);
