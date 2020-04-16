@@ -2,13 +2,13 @@
  * @Description: 登录后首页
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:16
- * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-16 22:39:42
+ * @LastEditors: jieq
+ * @LastEditTime: 2020-04-16 23:21:25
  */
 import React from 'react'
 import { Layout } from 'antd'
 import SiderNav from '../../components/SiderNav'
-// import ContentMain from '../../components/ContentMain'
+import MainContent from '../../components/MainContent'
 import HeaderBar from '../../components/HeaderBar'
 
 class Index extends React.Component {
@@ -41,14 +41,13 @@ class Index extends React.Component {
           {/* right sider */}
           <Layout>
             <Layout.Header style={{ background: '#fff', padding: '0 16px' }}>
-              <HeaderBar
-                collapsed={this.state.collapsed}
-                onToggle={this.toggle}
-              />
+              <HeaderBar collapsed={this.state.collapsed} onToggle={this.toggle} />
             </Layout.Header>
 
             {/* right content */}
-            <Layout.Content>{/* <ContentMain/> */}</Layout.Content>
+            <Layout.Content>
+              <MainContent />
+            </Layout.Content>
 
             {/* footer */}
             <Layout.Footer style={{ textAlign: 'center' }} />

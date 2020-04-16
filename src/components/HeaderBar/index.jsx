@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 01:31:45
  * @LastEditors: jieq
- * @LastEditTime: 2020-04-16 02:46:59
+ * @LastEditTime: 2020-04-16 23:16:44
  */
 /** officail */
 import React from 'react'
@@ -13,11 +13,7 @@ import { Link, withRouter } from 'react-router-dom'
 /** vendor */
 import styled from 'styled-components'
 import { Row, Col, Badge, Dropdown, Menu, Modal } from 'antd'
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  NotificationOutlined
-} from '@ant-design/icons'
+import { MenuFoldOutlined, MenuUnfoldOutlined, NotificationOutlined } from '@ant-design/icons'
 
 /** custom */
 import { isAuthenticated } from '../../utils/session'
@@ -102,11 +98,7 @@ class HeaderBar extends React.Component {
           ) : (
             <MenuFoldOutlined className="trigger" onClick={this.toggle} />
           )}
-          <Row
-            flex="auto"
-            align="center"
-            justify="center"
-            className="header-ul">
+          <Row flex="auto" align="center" justify="center" className="header-ul">
             <Col
               align="center"
               justify="center"
