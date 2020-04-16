@@ -1,0 +1,13 @@
+{
+  "tabWidth": 2,
+  "proseWrap": "preserve",
+  "useTabs": false,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": true,
+  "arrowParens": "avoid",
+  "endOfLine": "crlf",
+  "eslintIntegration": true
+}
