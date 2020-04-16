@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-16 22:44:07
+ * @LastEditTime: 2020-04-16 22:57:56
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button } from 'antd'
@@ -76,8 +76,8 @@ const RegisterForm = () => {
   )
 
   return (
-    <LoginContainer>
-      <LoginTitle>注册</LoginTitle>
+    <RegisterContainer>
+      <RegisterTitle>注册</RegisterTitle>
       <Form
         form={form}
         onFinish={onFinish}
@@ -183,15 +183,15 @@ const RegisterForm = () => {
           )}
         </Form.Item>
       </Form>
-    </LoginContainer>
+    </RegisterContainer>
   )
 }
 
-const LoginContainer = styled.div``
+const RegisterContainer = styled.div``
 
-const LoginTitle = styled.h3`
+const RegisterTitle = styled.h3`
   text-align: center;
-  color: #fff;
+  color: #000;
   font-size: 30px;
 `
 

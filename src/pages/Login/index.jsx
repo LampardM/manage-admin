@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-16 22:42:11
+ * @LastEditTime: 2020-04-16 23:03:36
  */
 import React from 'react'
 import { withRouter } from 'react-router-dom'
@@ -18,7 +18,7 @@ import RegisterForm from './RegisterForm'
 @inject('userInfoStore')
 class Login extends React.Component {
   state = {
-    showBox: 'register'
+    showBox: 'login'
   }
   componentDidMount() {
     // login().then(() => {});
@@ -58,7 +58,7 @@ export default styled(Login)`
     left: 0;
     width: 100%;
     height: 100%;
-    background: #283443;
+    background: #fff;
     z-index: 99;
   }
 
