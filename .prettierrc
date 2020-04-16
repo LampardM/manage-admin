@@ -9,5 +9,6 @@
   "jsxBracketSameLine": true,
   "arrowParens": "avoid",
   "endOfLine": "crlf",
-  "eslintIntegration": true
+  "eslintIntegration": true,
+  "printWidth": 100
 }
