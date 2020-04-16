@@ -44,6 +44,7 @@
     "mini-css-extract-plugin": "0.9.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
+    "nprogress": "0.2.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.6.4",
     "postcss-flexbugs-fixes": "4.1.0",
@@ -55,6 +56,7 @@
     "react-app-polyfill": "^1.0.6",
     "react-dev-utils": "^10.2.1",
     "react-dom": "^16.13.1",
+    "react-loadable": "5.4.0",
     "react-router-dom": "^5.1.2",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
@@ -138,6 +140,20 @@
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
+    ]
+  },
+  "devDependencies": {
+    "husky": "3.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "prettier --write",
+      "git add"
     ]
   }
 }
