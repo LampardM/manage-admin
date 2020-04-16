@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-16 22:57:56
+ * @LastEditTime: 2020-04-17 00:28:14
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button } from 'antd'
@@ -14,7 +14,7 @@ import { observer } from 'mobx-react'
 
 const { Option } = Select
 
-const RegisterForm = () => {
+const RegisterForm = props => {
   const { userInfoStore } = useStore()
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
@@ -28,6 +28,11 @@ const RegisterForm = () => {
 
   const verifyPhone = () => {
     setIsSendVerify(true)
+  }
+
+  const gologin = () => {
+    props.switchShowBox('login')
+    form.resetFields()
   }
 
   useInterval(
@@ -183,6 +188,7 @@ const RegisterForm = () => {
           )}
         </Form.Item>
       </Form>
+      <LoginAccount onClick={gologin}>已有账号，直接登录</LoginAccount>
     </RegisterContainer>
   )
 }
@@ -193,6 +199,14 @@ const RegisterTitle = styled.h3`
   text-align: center;
   color: #000;
   font-size: 30px;
+`
+
+const LoginAccount = styled.div`
+  display: flex;
+  margin-top: -10px;
+  justify-content: flex-end;
+  color: #1890ff;
+  cursor: pointer;
 `
 
 export default observer(RegisterForm)

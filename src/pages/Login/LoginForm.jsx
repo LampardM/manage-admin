@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-17 00:04:39
+ * @LastEditTime: 2020-04-17 00:25:39
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button } from 'antd'
@@ -13,7 +13,7 @@ import { observer } from 'mobx-react'
 
 const { Option } = Select
 
-const LoginForm = () => {
+const LoginForm = props => {
   const [form] = Form.useForm()
   const [loginType, setLoginType] = useState('password')
   const [isSendVerify, setIsSendVerify] = useState(false)
@@ -57,6 +57,11 @@ const LoginForm = () => {
   const onFinish = () => {}
 
   const onFinishFailed = () => {}
+
+  const register = () => {
+    props.switchShowBox('register')
+    form.resetFields()
+  }
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -200,6 +205,7 @@ const LoginForm = () => {
             )}
           </Form.Item>
         </Form>
+        <VerifyAccount onClick={register}>立即注册</VerifyAccount>
       </FormContainer>
     </LoginContainer>
   )
@@ -222,9 +228,17 @@ const SwitchItem = styled.span`
   font-size: 18px;
   margin-right: 5px;
   color: ${props =>
-    props.switchType === props.curLoginType ? '#000' : '#096dd9'};
+    props.switchType === props.curLoginType ? '#000' : '#1890ff'};
 `
 
 const FormContainer = styled.div``
+
+const VerifyAccount = styled.div`
+  display: flex;
+  margin-top: -10px;
+  justify-content: flex-end;
+  color: #1890ff;
+  cursor: pointer;
+`
 
 export default observer(LoginForm)

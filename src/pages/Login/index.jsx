@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-16 23:03:36
+ * @LastEditTime: 2020-04-17 00:26:02
  */
 import React from 'react'
 import { withRouter } from 'react-router-dom'
@@ -24,11 +24,16 @@ class Login extends React.Component {
     // login().then(() => {});
   }
 
-  switchShowBox() {}
+  switchShowBox = curbox => {
+    this.setState({
+      showBox: curbox
+    })
+  }
 
   render() {
     const { showBox } = this.state
     const { className } = this.props
+
     return (
       <div className={className}>
         <div id="login-page">
