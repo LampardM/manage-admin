@@ -3,13 +3,13 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: jieq
- * @LastEditTime: 2020-04-16 23:16:28
+ * @LastEditTime: 2020-04-17 21:38:53
  */
 import React from 'react'
 import Menu from '../Menu/index'
 
 /** Mock */
-import navMenus from './nav.config'
+import navMenus from '../../nav.config'
 
 class SiderNav extends React.Component {
   render() {

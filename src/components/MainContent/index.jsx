@@ -1,16 +1,16 @@
-/*
- * @Description: 后台Main路由
- * @brief LoadableComponent参数是函数，否则不会懒加载，只会代码拆分
- * @Author: jieq
- * @Date: 2020-04-16 22:30:43
- * @LastEditors: jieq
- * @LastEditTime: 2020-04-17 00:53:47
+/**
+ * @Desc 后台Main路由
+ * @exports MainContent
+ * @Author jieq
+ * @Date 2020-04-16 22:30:43
+ * @LastEditors jieq
+ * @LastEditTime 2020-04-17 21:47:00
  */
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from '../Breadcrumb'
 import PrivateRoute from '../PrivateRoute'
 import { Ext, LoadableComponent } from '../../utils'
-import navMenus from '../../components/SiderNav/nav.config'
+import navMenus from '../../nav.config'
 import { withRouter, Switch, Redirect } from 'react-router-dom'
 
 //首页
