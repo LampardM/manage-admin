@@ -9,7 +9,7 @@ import React from 'react'
 import Menu from '../Menu/index'
 
 /** Mock */
-import navMenus from '../../nav.config'
+import navMenus from '../../router.map'
 
 class SiderNav extends React.Component {
   render() {

@@ -4,13 +4,13 @@
  * @Author jieq
  * @Date 2020-04-16 22:30:43
  * @LastEditors jieq
- * @LastEditTime 2020-04-17 21:47:00
+ * @LastEditTime 2020-04-17 21:48:47
  */
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from '../Breadcrumb'
 import PrivateRoute from '../PrivateRoute'
 import { Ext, LoadableComponent } from '../../utils'
-import navMenus from '../../nav.config'
+import navMenus from '../../router.map'
 import { withRouter, Switch, Redirect } from 'react-router-dom'
 
 //首页
