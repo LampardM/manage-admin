@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:09:31
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 17:17:18
+ * @LastEditTime: 2020-04-18 17:55:35
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -31,7 +31,7 @@ export default styled(ArchitecturePage)`
   .arch-title {
     font-weight: bold;
     font-size: 20px;
-    padding: 0 16px;
+    padding: 0 16px 10px;
     background-color: #fff;
   }
 `

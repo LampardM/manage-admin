@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:16
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 15:41:46
+ * @LastEditTime: 2020-04-18 17:59:21
  */
 import React from 'react'
 import { Layout } from 'antd'
@@ -40,7 +40,8 @@ class Index extends React.Component {
 
           {/* right sider */}
           <Layout>
-            <Layout.Header style={{ background: '#fff', padding: '0 16px' }}>
+            <Layout.Header
+              style={{ background: '#fff', padding: '0 16px', borderBottom: '1px solid #f0f0f0' }}>
               <HeaderBar collapsed={this.state.collapsed} onToggle={this.toggle} />
             </Layout.Header>
 
