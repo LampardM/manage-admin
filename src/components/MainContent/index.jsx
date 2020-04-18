@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-16 22:30:43
  * @LastEditors jieq
- * @LastEditTime 2020-04-17 21:48:47
+ * @LastEditTime 2020-04-19 00:17:52
  */
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from '../Breadcrumb'
@@ -21,6 +21,7 @@ const OrganizationAuth = LoadableComponent(() => import('@/pages/Organization/Au
 const OrganizationCheck = LoadableComponent(() => import('@/pages/Organization/Check')) //待审核
 const OrganizationReject = LoadableComponent(() => import('@/pages/Organization/Reject')) //已驳回
 const OrganizationApprove = LoadableComponent(() => import('@/pages/Organization/Approve')) //已通过
+const OrganizationPrivilege = LoadableComponent(() => import('@/pages/Organization/Privilege')) //功能权限
 
 //团队管理
 const TeamMember = LoadableComponent(() => import('@/pages/Team/Member')) //成员管理
@@ -100,6 +101,7 @@ const MainContent = ({ location }) => {
         <PrivateRoute exact path="/organization/check" component={OrganizationCheck} />
         <PrivateRoute exact path="/organization/reject" component={OrganizationReject} />
         <PrivateRoute exact path="/organization/approve" component={OrganizationApprove} />
+        <PrivateRoute exact path="/organization/privilege" component={OrganizationPrivilege} />
 
         <PrivateRoute exact path="/team/member" component={TeamMember} />
         <PrivateRoute exact path="/team/character" component={TeamCharacter} />
