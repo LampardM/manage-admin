@@ -90,7 +90,7 @@ const MainContent = ({ location }) => {
   }, [pathname])
 
   return (
-    <div style={{ padding: 16, position: 'relative' }}>
+    <div style={{ position: 'relative' }}>
       <Breadcrumb arr={breadcrumb} />
 
       <Switch>

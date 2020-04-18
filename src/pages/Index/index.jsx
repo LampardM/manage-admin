@@ -2,14 +2,14 @@
  * @Description: 登录后首页
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:16
- * @LastEditors: jieq
- * @LastEditTime: 2020-04-16 23:21:25
+ * @LastEditors: longzhang6
+ * @LastEditTime: 2020-04-18 15:41:46
  */
 import React from 'react'
 import { Layout } from 'antd'
-import SiderNav from '../../components/SiderNav'
-import MainContent from '../../components/MainContent'
-import HeaderBar from '../../components/HeaderBar'
+import SiderNav from '@/components/SiderNav'
+import MainContent from '@/components/MainContent'
+import HeaderBar from '@/components/HeaderBar'
 
 class Index extends React.Component {
   state = {
