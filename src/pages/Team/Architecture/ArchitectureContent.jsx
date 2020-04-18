@@ -3,14 +3,13 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 17:54:38
+ * @LastEditTime: 2020-04-18 22:47:00
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Tree } from 'antd'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
 
-const { TreeNode } = Tree
 const treeData = [
   {
     title: '0-0',
@@ -83,14 +82,16 @@ const treeData = [
 ]
 
 const ArchitectureContent = () => {
-  const [expandedKeys, setExpandedKeys] = useState(['0-0-0', '0-0-1'])
-  const [checkedKeys, setCheckedKeys] = useState(['0-0-0'])
-  const [selectedKeys, setSelectedKeys] = useState([])
+  const [expandedKeys, setExpandedKeys] = useState([])
+  // const [checkedKeys, setCheckedKeys] = useState(['0-0-0'])
+  // const [selectedKeys, setSelectedKeys] = useState([])
   const [autoExpandParent, setAutoExpandParent] = useState(true)
+  const [defaultAllExpand, setDefaultAllExpand] = useState(false)
+  const [recursionResult, setRecursionResult] = useState([])
 
-  const onExpand = expandedKeys => {
-    console.log('onExpand', expandedKeys) // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-    // or, you can remove all expanded children keys.
+  const onExpand = (expandedKeys, info) => {
+    console.log('onExpand', expandedKeys)
+    console.log(info, 'info')
 
     setExpandedKeys(expandedKeys)
     setAutoExpandParent(false)
@@ -98,30 +99,59 @@ const ArchitectureContent = () => {
 
   const onCheck = checkedKeys => {
     console.log('onCheck', checkedKeys)
-    setCheckedKeys(checkedKeys)
+    // setCheckedKeys(checkedKeys)
   }
 
   const onSelect = (selectedKeys, info) => {
     console.log('onSelect', info)
-    setSelectedKeys(selectedKeys)
+    // setSelectedKeys(selectedKeys)
   }
+
+  const recursionExpandKeys = (arr, result) => {
+    arr.forEach(element => {
+      let exitIdx = result.findIndex(key => key === element.key)
+      if (exitIdx === -1) {
+        result.push(element.key)
+      }
+
+      if (element.children) {
+        recursionExpandKeys(element.children, result)
+      }
+    })
+    return result
+  }
+
+  useEffect(() => {
+    setRecursionResult(treeData)
+  })
+
+  const openOrCloseAllNode = () => {
+    setDefaultAllExpand(!defaultAllExpand)
+
+    if (defaultAllExpand === true) {
+      setExpandedKeys([])
+    } else {
+      setExpandedKeys(recursionExpandKeys(treeData, []))
+    }
+    setAutoExpandParent(false)
+  }
+
   return (
     <ArchitectureContainer>
       <ArchitectureTitle>
-        <OpenAll>全部展开</OpenAll>
+        <OpenAll onClick={openOrCloseAllNode}>{defaultAllExpand ? '全部收起' : '全部展开'}</OpenAll>
         <Button type="primary">添加部门</Button>
       </ArchitectureTitle>
       <ArchitectureMain>
         <Tree
-          checkable
           onExpand={onExpand}
           expandedKeys={expandedKeys}
+          defaultExpandAll={defaultAllExpand}
           autoExpandParent={autoExpandParent}
+          selectable={false}
           onCheck={onCheck}
-          checkedKeys={checkedKeys}
           onSelect={onSelect}
-          selectedKeys={selectedKeys}
-          treeData={treeData}
+          treeData={recursionResult}
         />
       </ArchitectureMain>
     </ArchitectureContainer>
