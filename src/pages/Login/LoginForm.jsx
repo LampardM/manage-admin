@@ -3,18 +3,20 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 12:25:37
+ * @LastEditTime: 2020-04-18 14:11:42
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button } from 'antd'
 import styled from 'styled-components'
 import useInterval from '@/hooks/useInterval'
+import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
 
 const { Option } = Select
 
 const LoginForm = props => {
   const [form] = Form.useForm()
+  const { userInfoStore } = useStore()
   const [loginType, setLoginType] = useState('password')
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
@@ -30,8 +32,16 @@ const LoginForm = props => {
   ])
   const [, forceUpdate] = useState()
 
-  const verifyPhone = () => {
+  const captchaCallback = () => {
+    // * 滑动验证成功回调
     setIsSendVerify(true)
+  }
+
+  const registerCaptcha = new window.TencentCaptcha(userInfoStore.appId, captchaCallback)
+
+  const verifyPhone = () => {
+    // * 滑动验证
+    registerCaptcha.show()
   }
 
   useInterval(

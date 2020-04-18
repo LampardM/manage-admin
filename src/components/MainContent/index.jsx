@@ -14,23 +14,23 @@ import { Ext, LoadableComponent } from '@/utils'
 import { withRouter, Switch, Redirect } from 'react-router-dom'
 
 //首页
-const Home = LoadableComponent(() => import('../../pages/Home'))
+const Home = LoadableComponent(() => import('@/pages/Home'))
 
 //团队审核
-const OrganizationAuth = LoadableComponent(() => import('../../pages/Organization/Auth')) //待授权
-const OrganizationCheck = LoadableComponent(() => import('../../pages/Organization/Check')) //待审核
-const OrganizationReject = LoadableComponent(() => import('../../pages/Organization/Reject')) //已驳回
-const OrganizationApprove = LoadableComponent(() => import('../../pages/Organization/Approve')) //已通过
+const OrganizationAuth = LoadableComponent(() => import('@/pages/Organization/Auth')) //待授权
+const OrganizationCheck = LoadableComponent(() => import('@/pages/Organization/Check')) //待审核
+const OrganizationReject = LoadableComponent(() => import('@/pages/Organization/Reject')) //已驳回
+const OrganizationApprove = LoadableComponent(() => import('@/pages/Organization/Approve')) //已通过
 
 //团队管理
-const TeamMember = LoadableComponent(() => import('../../pages/Team/Member')) //成员管理
-const TeamCharacter = LoadableComponent(() => import('../../pages/Team/Character')) //角色管理
-const TeamArchitecture = LoadableComponent(() => import('../../pages/Team/Architecture')) //组织架构
+const TeamMember = LoadableComponent(() => import('@/pages/Team/Member')) //成员管理
+const TeamCharacter = LoadableComponent(() => import('@/pages/Team/Character')) //角色管理
+const TeamArchitecture = LoadableComponent(() => import('@/pages/Team/Architecture')) //组织架构
 
 //终端管理
-const TerminalOnline = LoadableComponent(() => import('../../pages/Terminal/Online')) //在线设备
-const TerminalDevices = LoadableComponent(() => import('../../pages/Terminal/Devices')) //全部设备
-const TerminalAgreement = LoadableComponent(() => import('../../pages/Terminal/Agreement')) //协议设置
+const TerminalOnline = LoadableComponent(() => import('@/pages/Terminal/Online')) //在线设备
+const TerminalDevices = LoadableComponent(() => import('@/pages/Terminal/Devices')) //全部设备
+const TerminalAgreement = LoadableComponent(() => import('@/pages/Terminal/Agreement')) //协议设置
 
 const MainContent = ({ location }) => {
   const [breadcrumb, setBreadcrumb] = useState([])

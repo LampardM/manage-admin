@@ -3,45 +3,41 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:04:13
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-11 16:04:25
+ * @LastEditTime: 2020-04-18 13:13:58
  */
-const LOGIN_COOKIE_NAME = "sessionId";
+const LOGIN_COOKIE_NAME = 'sessionId'
 
 export function isAuthenticated() {
-  return _getCookie(LOGIN_COOKIE_NAME);
+  return _getCookie(LOGIN_COOKIE_NAME)
 }
 
 export function authenticateSuccess(token) {
-  _setCookie(LOGIN_COOKIE_NAME, token);
+  _setCookie(LOGIN_COOKIE_NAME, token)
 }
 
 export function logout() {
-  _setCookie(LOGIN_COOKIE_NAME, "", 0);
+  _setCookie(LOGIN_COOKIE_NAME, '', 0)
 }
 
 function _getCookie(name) {
-  let start, end;
+  let start, end
   if (document.cookie.length > 0) {
-    start = document.cookie.indexOf(name + "=");
+    start = document.cookie.indexOf(name + '=')
     if (start !== -1) {
-      start = start + name.length + 1;
-      end = document.cookie.indexOf(";", start);
+      start = start + name.length + 1
+      end = document.cookie.indexOf(';', start)
       if (end === -1) {
-        end = document.cookie.length;
+        end = document.cookie.length
       }
-      return unescape(document.cookie.substring(start, end));
+      return unescape(document.cookie.substring(start, end))
     }
   }
-  return "";
+  return ''
 }
 
 function _setCookie(name, value, expire) {
-  let date = new Date();
-  date.setDate(date.getDate() + expire);
+  let date = new Date()
+  date.setDate(date.getDate() + expire)
   document.cookie =
-    name +
-    "=" +
-    escape(value) +
-    "; path=/" +
-    (expire ? ";expires=" + date.toGMTString() : "");
+    name + '=' + escape(value) + '; path=/' + (expire ? ';expires=' + date.toGMTString() : '')
 }

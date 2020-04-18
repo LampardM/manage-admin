@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-17 00:28:14
+ * @LastEditTime: 2020-04-18 14:12:28
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button } from 'antd'
@@ -19,6 +19,12 @@ const RegisterForm = props => {
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
 
+  const captchaCallback = () => {
+    // * 滑动验证成功回调
+    setIsSendVerify(true)
+  }
+  const registerCaptcha = new window.TencentCaptcha(userInfoStore.appId, captchaCallback)
+
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
 
@@ -27,7 +33,8 @@ const RegisterForm = props => {
   const onFinishFailed = () => {}
 
   const verifyPhone = () => {
-    setIsSendVerify(true)
+    // * 滑动验证
+    registerCaptcha.show()
   }
 
   const gologin = () => {
