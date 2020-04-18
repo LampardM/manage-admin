@@ -69,9 +69,7 @@ const RegisterForm = props => {
           type="link"
           block
           disabled={
-            !form.isFieldTouched('phone') ||
-            form.getFieldError('phone').length ||
-            isSendVerify
+            !form.isFieldTouched('phone') || form.getFieldError('phone').length || isSendVerify
           }
           onClick={verifyPhone}>
           {!isSendVerify ? '获取验证码' : `${countDown}秒后重新获取`}
@@ -102,11 +100,7 @@ const RegisterForm = props => {
               message: '请输入正确的手机号'
             }
           ]}>
-          <Input
-            size="large"
-            placeholder="请输入手机号码"
-            addonBefore={prefixSelector}
-          />
+          <Input size="large" placeholder="请输入手机号码" addonBefore={prefixSelector} />
         </Form.Item>
         <Form.Item
           name="password"
@@ -161,11 +155,7 @@ const RegisterForm = props => {
               message: '验证码有误，请重新输入'
             }
           ]}>
-          <Input
-            placeholder="请输入验证码"
-            size="large"
-            addonAfter={afterSelector}
-          />
+          <Input placeholder="请输入验证码" size="large" addonAfter={afterSelector} />
         </Form.Item>
         <Form.Item shouldUpdate>
           {() => (
@@ -179,8 +169,7 @@ const RegisterForm = props => {
                 !form.isFieldTouched('password') ||
                 !form.isFieldTouched('confirm') ||
                 !form.isFieldTouched('Verification') ||
-                form.getFieldsError().filter(({ errors }) => errors.length)
-                  .length
+                form.getFieldsError().filter(({ errors }) => errors.length).length
               }
               className="register-button">
               注册
@@ -193,7 +182,9 @@ const RegisterForm = props => {
   )
 }
 
-const RegisterContainer = styled.div``
+const RegisterContainer = styled.div`
+  width: 420px;
+`
 
 const RegisterTitle = styled.h3`
   text-align: center;

@@ -9,8 +9,8 @@
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from '../Breadcrumb'
 import PrivateRoute from '../PrivateRoute'
-import { Ext, LoadableComponent } from '../../utils'
 import navMenus from '../../router.map'
+import { Ext, LoadableComponent } from '@/utils'
 import { withRouter, Switch, Redirect } from 'react-router-dom'
 
 //首页

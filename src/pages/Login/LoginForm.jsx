@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 12:09:25
+ * @LastEditTime: 2020-04-18 12:25:37
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button } from 'antd'
@@ -205,7 +205,9 @@ const LoginForm = props => {
   )
 }
 
-const LoginContainer = styled.div``
+const LoginContainer = styled.div`
+  width: 420px;
+`
 
 const LoginTitle = styled.h3`
   text-align: center;

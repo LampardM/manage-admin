@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 12:15:42
+ * @LastEditTime: 2020-04-18 12:25:17
  */
 import React from 'react'
 import { withRouter } from 'react-router-dom'
@@ -69,6 +69,6 @@ export default styled(Login)`
   }
 
   .container {
-    width: 420px;
+    // width: 420px;
   }
 `
