@@ -9,10 +9,12 @@
 import userInfoStore from './userInfoStore'
 
 /** partial */
+import OrganizationAuthStore from '../pages/Organization/Auth/store'
 import OrganizationCheckStore from '../pages/Organization/Check/store'
 
 const store = {
   userInfoStore,
+  OrganizationAuthStore,
   OrganizationCheckStore
 }
 
