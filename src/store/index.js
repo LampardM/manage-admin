@@ -5,10 +5,15 @@
  * @LastEditors: longzhang6
  * @LastEditTime: 2020-04-15 19:16:00
  */
-import userInfoStore from "./userInfoStore";
+/** global */
+import userInfoStore from './userInfoStore'
+
+/** partial */
+import OrganizationCheckStore from '../pages/Organization/Check/store'
 
 const store = {
   userInfoStore,
-};
+  OrganizationCheckStore
+}
 
-export { store };
+export { store }
