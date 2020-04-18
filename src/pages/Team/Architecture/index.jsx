@@ -3,19 +3,21 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:09:31
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 15:45:11
+ * @LastEditTime: 2020-04-18 17:17:18
  */
 import React from 'react'
 import styled from 'styled-components'
+import ArchitectureContent from './ArchitectureContent'
 
 class ArchitecturePage extends React.Component {
   render() {
     const { className } = this.props
 
     return (
-      <div className={className}>
+      <div className={className} style={{ padding: '0 16 16', marginTop: -16 }}>
         <div className="arch-container">
           <div className="arch-title">组织架构</div>
+          <ArchitectureContent></ArchitectureContent>
         </div>
       </div>
     )
@@ -24,12 +26,12 @@ class ArchitecturePage extends React.Component {
 
 export default styled(ArchitecturePage)`
   .arch-container {
-    background-color: #fff;
-    padding: 0 16px 16px;
-    margin-top: -16px;
   }
+
   .arch-title {
     font-weight: bold;
     font-size: 20px;
+    padding: 0 16px;
+    background-color: #fff;
   }
 `
