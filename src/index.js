@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 10:10:44
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 14:02:16
+ * @LastEditTime: 2020-04-19 12:10:07
  */
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -14,6 +14,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'mobx-react'
 import { ConfigProvider } from 'antd'
 import zh_CN from 'antd/lib/locale-provider/zh_CN'
+import 'element-theme-default'
 import { store } from '@/store'
 import { storeContext } from '@/contexts/storeContext'
 
