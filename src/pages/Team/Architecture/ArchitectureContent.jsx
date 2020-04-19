@@ -3,13 +3,16 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-19 16:22:32
+ * @LastEditTime: 2020-04-19 16:58:17
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { Tree } from 'element-react'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
+
+const { confirm, warning } = Modal
 
 const treeData = [
   {
@@ -72,6 +75,8 @@ const ArchitectureContent = () => {
   const [recursionResult, setRecursionResult] = useState([])
   const [reLoadTree, setReLoadTree] = useState(false)
   const [modalShow, setModalShow] = useState(false)
+  const [modalType, setModalType] = useState('create')
+  const [subInfo, setSubInfo] = useState({})
 
   const recursionExpandKeys = (arr, result) => {
     arr.forEach(element => {
@@ -101,19 +106,47 @@ const ArchitectureContent = () => {
     // nodeModel = true
   }
 
-  const addChildDepartment = (store, data) => {
-    console.log('addChildDepartment', store, data)
+  // 添加子部门
+  const addChildDepartment = (store, data, nodeModel) => {
+    console.log('data', data)
+    console.log('nodeModel', nodeModel)
+    setSubInfo(data)
+    setModalShow(true)
   }
 
+  // 编辑部门
   const editCurDepartment = () => {
-    console.log('editCurDepartment')
+    setModalType('edit')
+    setModalShow(true)
   }
 
+  // 删除部门
   const deleteCurDepartment = () => {
     console.log('editCurDepartment')
+    // TODO 查询信息
+
+    // warning({
+    //   title: 'This is a warning message',
+    //   content: 'some messages...some messages...'
+    // })
+
+    confirm({
+      title: 'Do you Want to delete these items?',
+      icon: <ExclamationCircleOutlined />,
+      okType: 'danger',
+      content: 'Some descriptions',
+      onOk() {
+        console.log('OK')
+      },
+      onCancel() {
+        console.log('Cancel')
+      }
+    })
   }
 
+  // 添加部门
   const addDepartment = () => {
+    setSubInfo({})
     setModalShow(true)
   }
 
@@ -135,21 +168,21 @@ const ArchitectureContent = () => {
         <span style={{ float: 'right', marginRight: '20px' }}>
           <span
             size="mini"
-            onClick={() => addChildDepartment(store, data)}
+            onClick={() => addChildDepartment(store, data, nodeModel)}
             style={{ padding: '5px', color: '#1890ff' }}
           >
             添加子部门
           </span>
           <span
             size="mini"
-            onClick={() => editCurDepartment(store, data)}
+            onClick={() => editCurDepartment(store, data, nodeModel)}
             style={{ padding: '5px', color: '#1890ff' }}
           >
             编辑
           </span>
           <span
             size="mini"
-            onClick={() => deleteCurDepartment(store, data)}
+            onClick={() => deleteCurDepartment(store, data, nodeModel)}
             style={{ padding: '5px', color: '#1890ff' }}
           >
             删除
@@ -159,7 +192,7 @@ const ArchitectureContent = () => {
     )
   }
 
-  const CollectionCreateForm = ({ modalShow, onCreate, onCancel }) => {
+  const CollectionCreateForm = ({ modalShow, modalType, onCreate, onCancel }) => {
     const [form] = Form.useForm()
     const [disabled, setDisabled] = useState(true)
 
@@ -198,7 +231,10 @@ const ArchitectureContent = () => {
       }
     ]
 
-    useEffect(() => {})
+    useEffect(() => {
+      console.log(modalType, 'modalType')
+      console.log(subInfo, 'subInfo')
+    })
 
     const setSubmitIsDisabled = () => {
       setDisabled(
@@ -215,7 +251,7 @@ const ArchitectureContent = () => {
     return (
       <Modal
         visible={modalShow}
-        title="创建部门"
+        title={modalType === 'create' ? '添加部门' : '编辑部门'}
         onCancel={onCancel}
         okButtonProps={{
           disabled: disabled
@@ -280,11 +316,12 @@ const ArchitectureContent = () => {
     <ArchitectureContainer>
       <CollectionCreateForm
         modalShow={modalShow}
+        modalType={modalType}
+        subInfo={subInfo}
         onCancel={modalHandleCancel}
         onCreate={modalHandleOk}
       />
       <ArchitectureTitle>
-        {/* <OpenAll onClick={openOrCloseAllNode}>{defaultAllExpand ? '全部收起' : '全部展开'}</OpenAll> */}
         <Button type="primary" onClick={addDepartment}>
           添加部门
         </Button>
