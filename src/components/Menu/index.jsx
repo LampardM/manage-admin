@@ -2,8 +2,8 @@
  * @Description: In User Settings Edit
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
- * @LastEditors: jieq
- * @LastEditTime: 2020-04-17 01:22:41
+ * @LastEditors: longzhang6
+ * @LastEditTime: 2020-04-19 23:43:39
  */
 /** official */
 import React from 'react'
@@ -47,7 +47,14 @@ class _Menu extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     //当点击面包屑导航时，侧边栏要同步响应
-    const pathname = nextProps.location.pathname
+    let pathname = nextProps.location.pathname
+    // FIXME 不推荐这么做
+    let _blacklist = ['/team/member/addmember']
+
+    if (_blacklist.includes(pathname)) {
+      pathname = '/team/member'
+    }
+
     if (this.props.location.pathname !== pathname) {
       this.setState({
         selectedKeys: [pathname]
@@ -99,10 +106,11 @@ class _Menu extends React.Component {
             {icon && <Icon type={icon} />}
             <span>{title}</span>
           </span>
-        }>
+        }
+      >
         {subs &&
           subs.map(item => {
-            return item.subs && item.subs.length > 0
+            return item.subs && item.subs.length > 0 && !item.unsub
               ? this.renderSubMenu(item)
               : this.renderMenuItem(item)
           })}
@@ -119,7 +127,8 @@ class _Menu extends React.Component {
         openKeys={openKeys}
         selectedKeys={selectedKeys}
         theme={this.props.theme ? this.props.theme : 'dark'}
-        mode="inline">
+        mode="inline"
+      >
         {this.props.menus &&
           this.props.menus.map(item => {
             return item.subs && item.subs.length > 0

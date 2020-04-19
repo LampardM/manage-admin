@@ -3,16 +3,22 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:10:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-19 19:26:27
+ * @LastEditTime: 2020-04-19 22:34:47
  */
 import React from 'react'
 import styled from 'styled-components'
 import MemberHeader from './MemberHeader'
 import FilterMember from './FilterMember'
 import MemberTable from './MemberTable'
-
+import { withRouter } from 'react-router-dom'
+import { Button, Space } from 'antd'
+@withRouter
 class MemberPage extends React.Component {
   switchCurSource(key) {}
+
+  addMember() {
+    this.props.history.push('/team/member/addmember')
+  }
 
   render() {
     const { className } = this.props
@@ -23,6 +29,14 @@ class MemberPage extends React.Component {
           <MemberHeader switchCurSource={this.switchCurSource} />
           <div className="member-con">
             <FilterMember></FilterMember>
+            <div className="add-remove">
+              <Space>
+                <Button type="primary" onClick={this.addMember.bind(this)}>
+                  添加成员
+                </Button>
+                <Button>删除</Button>
+              </Space>
+            </div>
             <MemberTable></MemberTable>
           </div>
         </div>
@@ -46,5 +60,9 @@ export default styled(MemberPage)`
     margin: 16px;
     padding: 16px;
     background: #fff;
+  }
+
+  .add-remove {
+    padding-bottom: 16px;
   }
 `

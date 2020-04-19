@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-19 17:11:13
+ * @LastEditTime: 2020-04-19 23:44:47
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader } from 'antd'
@@ -209,6 +209,7 @@ const ArchitectureContent = () => {
       </ArchitectureTitle>
       <ArchitectureMain>
         <Tree
+          style={{ border: 'none' }}
           data={recursionResult}
           options={options}
           nodeKey="id"
