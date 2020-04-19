@@ -4,11 +4,11 @@
  * @Author jieq
  * @Date 2020-04-18 10:47:22
  * @LastEditors jieq
- * @LastEditTime 2020-04-18 21:51:45
+ * @LastEditTime 2020-04-18 23:59:36
  */
 import { action, observable } from 'mobx'
 
-class OrganizationCheckStore {
+class OrganizationAuthStore {
   //分页数据
   @observable
   filters = {}
@@ -18,4 +18,4 @@ class OrganizationCheckStore {
   }
 }
 
-export default new OrganizationCheckStore()
+export default new OrganizationAuthStore()

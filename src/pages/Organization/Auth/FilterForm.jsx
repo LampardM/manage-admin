@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:47
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 00:01:25
+ * @LastEditTime 2020-04-19 00:00:39
  */
 /** official */
 import React, { useState } from 'react'
@@ -19,12 +19,12 @@ import { useStore } from '@/hooks/useStore'
 
 export default observer(() => {
   const [form] = Form.useForm()
-  const { OrganizationCheckStore } = useStore()
+  const { OrganizationAuthStore } = useStore()
 
   const onFinish = values => {
     console.log('Received values of form: ', values)
     // debugger
-    OrganizationCheckStore.setFilters(values)
+    OrganizationAuthStore.setFilters(values)
   }
 
   return (
@@ -38,7 +38,7 @@ export default observer(() => {
 
         <Col style={{ width: 130 }}>
           <Form.Item name="teamName">
-            <Input placeholder="请输入团队名称" value={OrganizationCheckStore.teamName} />
+            <Input placeholder="请输入团队名称" value={OrganizationAuthStore.teamName} />
           </Form.Item>
         </Col>
 
@@ -48,22 +48,22 @@ export default observer(() => {
               allowClear
               style={{ width: '100%' }}
               placeholder="请选择团队类型"
-              value={OrganizationCheckStore.teamName}
+              value={OrganizationAuthStore.teamName}
             >
-              <Select.Option value={OrganizationCheckStore.teamType}>Lucy</Select.Option>
+              <Select.Option value="lucy">Lucy</Select.Option>
             </Select>
           </Form.Item>
         </Col>
 
         <Col style={{ width: 150 }}>
           <Form.Item name="name">
-            <Input placeholder="请输入联系人姓名" value={OrganizationCheckStore.name} />
+            <Input placeholder="请输入联系人姓名" value={OrganizationAuthStore.name} />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 130 }}>
           <Form.Item name="phone">
-            <Input placeholder="请输入手机号码" value={OrganizationCheckStore.phone} />
+            <Input placeholder="请输入手机号码" value={OrganizationAuthStore.phone} />
           </Form.Item>
         </Col>
 

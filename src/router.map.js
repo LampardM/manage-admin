@@ -1,9 +1,10 @@
-/*
- * @Description: 左侧导航 map
- * @Author: jieq
- * @Date: 2020-04-16 21:31:20
- * @LastEditors: jieq
- * @LastEditTime: 2020-04-17 00:02:11
+/**
+ * @Desc In User Settings Edit
+ * @exports class
+ * @Author jieq
+ * @Date 2020-04-16 21:31:20
+ * @LastEditors jieq
+ * @LastEditTime 2020-04-19 00:15:26
  */
 const menus = [
   {
