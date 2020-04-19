@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-16 21:31:20
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 00:15:26
+ * @LastEditTime 2020-04-19 15:36:39
  */
 const menus = [
   {
@@ -22,6 +22,10 @@ const menus = [
       {
         title: '待授权',
         key: '/organization/auth'
+      },
+      {
+        title: '权限授权',
+        key: '/organization/auth/info'
       },
       {
         title: '已通过',
