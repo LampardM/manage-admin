@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 22:47:00
+ * @LastEditTime: 2020-04-19 00:22:18
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Tree } from 'antd'
@@ -83,8 +83,8 @@ const treeData = [
 
 const ArchitectureContent = () => {
   const [expandedKeys, setExpandedKeys] = useState([])
-  // const [checkedKeys, setCheckedKeys] = useState(['0-0-0'])
-  // const [selectedKeys, setSelectedKeys] = useState([])
+  const [checkedKeys, setCheckedKeys] = useState(['0-0-0'])
+  const [selectedKeys, setSelectedKeys] = useState([])
   const [autoExpandParent, setAutoExpandParent] = useState(true)
   const [defaultAllExpand, setDefaultAllExpand] = useState(false)
   const [recursionResult, setRecursionResult] = useState([])
@@ -99,12 +99,12 @@ const ArchitectureContent = () => {
 
   const onCheck = checkedKeys => {
     console.log('onCheck', checkedKeys)
-    // setCheckedKeys(checkedKeys)
+    setCheckedKeys(checkedKeys)
   }
 
   const onSelect = (selectedKeys, info) => {
     console.log('onSelect', info)
-    // setSelectedKeys(selectedKeys)
+    setSelectedKeys(selectedKeys)
   }
 
   const recursionExpandKeys = (arr, result) => {
@@ -148,11 +148,10 @@ const ArchitectureContent = () => {
           expandedKeys={expandedKeys}
           defaultExpandAll={defaultAllExpand}
           autoExpandParent={autoExpandParent}
-          selectable={false}
+          selectable={true}
           onCheck={onCheck}
           onSelect={onSelect}
-          treeData={recursionResult}
-        />
+          treeData={recursionResult}></Tree>
       </ArchitectureMain>
     </ArchitectureContainer>
   )
