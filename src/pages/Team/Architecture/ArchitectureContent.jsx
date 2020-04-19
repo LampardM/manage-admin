@@ -3,10 +3,10 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-19 13:09:26
+ * @LastEditTime: 2020-04-19 16:22:32
  */
 import React, { useState, useEffect } from 'react'
-import { Button } from 'antd'
+import { Button, Modal, Form, Input, Cascader } from 'antd'
 import { Tree } from 'element-react'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
@@ -71,7 +71,7 @@ const ArchitectureContent = () => {
   const [defaultAllExpand, setDefaultAllExpand] = useState(true)
   const [recursionResult, setRecursionResult] = useState([])
   const [reLoadTree, setReLoadTree] = useState(false)
-  const [isShowTree, setIsShowTree] = useState(true)
+  const [modalShow, setModalShow] = useState(false)
 
   const recursionExpandKeys = (arr, result) => {
     arr.forEach(element => {
@@ -89,18 +89,16 @@ const ArchitectureContent = () => {
 
   useEffect(() => {
     setRecursionResult(treeData)
-    setIsShowTree(true)
-  }, [reLoadTree])
+  })
 
   // TODO 后期补全
   const openOrCloseAllNode = () => {
     setDefaultAllExpand(!defaultAllExpand)
     setReLoadTree(!reLoadTree)
-    setIsShowTree(false)
   }
 
   const onNodeClicked = (nodeModel, node) => {
-    nodeModel = true
+    // nodeModel = true
   }
 
   const addChildDepartment = (store, data) => {
@@ -115,6 +113,19 @@ const ArchitectureContent = () => {
     console.log('editCurDepartment')
   }
 
+  const addDepartment = () => {
+    setModalShow(true)
+  }
+
+  const modalHandleOk = () => {
+    setModalShow(false)
+  }
+
+  const modalHandleCancel = () => {
+    setModalShow(false)
+  }
+
+  // Tree自定义内容
   const renderContent = (nodeModel, data, store) => {
     return (
       <span>
@@ -148,24 +159,146 @@ const ArchitectureContent = () => {
     )
   }
 
+  const CollectionCreateForm = ({ modalShow, onCreate, onCancel }) => {
+    const [form] = Form.useForm()
+    const [disabled, setDisabled] = useState(true)
+
+    const options = [
+      {
+        code: 'zhejiang',
+        name: 'Zhejiang',
+        items: [
+          {
+            code: 'hangzhou',
+            name: 'Hangzhou',
+            items: [
+              {
+                code: 'xihu',
+                name: 'West Lake'
+              }
+            ]
+          }
+        ]
+      },
+      {
+        code: 'jiangsu',
+        name: 'Jiangsu',
+        items: [
+          {
+            code: 'nanjing',
+            name: 'Nanjing',
+            items: [
+              {
+                code: 'zhonghuamen',
+                name: 'Zhong Hua Men'
+              }
+            ]
+          }
+        ]
+      }
+    ]
+
+    useEffect(() => {})
+
+    const setSubmitIsDisabled = () => {
+      setDisabled(
+        !form.isFieldTouched('department') ||
+          !form.isFieldTouched('updepartment') ||
+          form.getFieldsError().filter(({ errors }) => errors.length).length
+      )
+    }
+
+    const onFieldsChange = () => {
+      setSubmitIsDisabled()
+    }
+
+    return (
+      <Modal
+        visible={modalShow}
+        title="创建部门"
+        onCancel={onCancel}
+        okButtonProps={{
+          disabled: disabled
+        }}
+        onOk={() => {
+          form
+            .validateFields()
+            .then(values => {
+              form.resetFields()
+              onCreate(values)
+            })
+            .catch(info => {
+              console.log('Validate Failed:', info)
+            })
+        }}
+      >
+        <Form form={form} name="formModal" onFieldsChange={onFieldsChange}>
+          <Form.Item
+            name="department"
+            label="部门名称"
+            rules={[
+              {
+                required: true,
+                message: '请输入部门名称!'
+              },
+              {
+                pattern: '^[\u4e00-\u9fa5_a-zA-Z0-9]+$',
+                message: '部门名称由中文，数字，下划线和字母组成'
+              },
+              {
+                max: 25,
+                min: 1,
+                message: '部门名称长度为1到25位'
+              }
+            ]}
+          >
+            <Input placeholder="请输入部门名称" />
+          </Form.Item>
+          <Form.Item
+            name="updepartment"
+            label="上级部门"
+            rules={[
+              {
+                required: true,
+                message: '请选择上级部门!'
+              }
+            ]}
+          >
+            <Cascader
+              fieldNames={{ label: 'name', value: 'code', children: 'items' }}
+              changeOnSelect
+              options={options}
+              placeholder="选择上级部门"
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
+    )
+  }
+
   return (
     <ArchitectureContainer>
+      <CollectionCreateForm
+        modalShow={modalShow}
+        onCancel={modalHandleCancel}
+        onCreate={modalHandleOk}
+      />
       <ArchitectureTitle>
         {/* <OpenAll onClick={openOrCloseAllNode}>{defaultAllExpand ? '全部收起' : '全部展开'}</OpenAll> */}
-        <Button type="primary">添加部门</Button>
+        <Button type="primary" onClick={addDepartment}>
+          添加部门
+        </Button>
       </ArchitectureTitle>
       <ArchitectureMain>
-        {isShowTree ? (
-          <Tree
-            data={treeData}
-            options={options}
-            nodeKey="id"
-            defaultExpandAll={defaultAllExpand}
-            expandOnClickNode={false}
-            onNodeClicked={onNodeClicked}
-            renderContent={(...args) => renderContent(...args)}
-          />
-        ) : null}
+        <Tree
+          data={recursionResult}
+          options={options}
+          nodeKey="id"
+          defaultExpandAll={defaultAllExpand}
+          expandOnClickNode={false}
+          onNodeClicked={onNodeClicked}
+          renderContent={(...args) => renderContent(...args)}
+        />
       </ArchitectureMain>
     </ArchitectureContainer>
   )
