@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-20 22:09:23
+ * @LastEditTime: 2020-04-20 23:59:54
  */
 /** official */
 import React from 'react'
@@ -26,7 +26,7 @@ class _Menu extends React.Component {
   componentDidMount() {
     let pathname = this.props.location.pathname
     // FIXME 不推荐这么做
-    let _blacklist = ['/team/member/addmember']
+    let _blacklist = ['/team/member/addmember', '/team/member/editmember']
 
     if (_blacklist.includes(pathname)) {
       pathname = '/team/member'
