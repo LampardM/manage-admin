@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-16 21:31:20
  * @LastEditors jieq
- * @LastEditTime 2020-04-21 00:46:18
+ * @LastEditTime 2020-04-21 00:59:21
  */
 const menus = [
   {
@@ -99,6 +99,7 @@ const menus = [
 // FIXME 不推荐这么做
 const blackList = [
   '/team/member/addmember',
+  '/team/member/editmember',
   '/organization/auth/info',
   '/organization/approve/edit'
 ]
