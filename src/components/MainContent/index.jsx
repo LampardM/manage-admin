@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-16 22:30:43
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 15:36:27
+ * @LastEditTime 2020-04-20 21:57:31
  */
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from '../Breadcrumb'
@@ -24,14 +24,15 @@ const OrganizationApprove = LoadableComponent(() => import('@/pages/Organization
 const OrganizationAuthInfo = LoadableComponent(() => import('@/pages/Organization/AuthInfo')) //功能权限
 
 //团队管理
-const TeamMember = LoadableComponent(() => import('@/pages/Team/Member')) //成员管理
-const TeamCharacter = LoadableComponent(() => import('@/pages/Team/Character')) //角色管理
-const TeamArchitecture = LoadableComponent(() => import('@/pages/Team/Architecture')) //组织架构
+const TeamMember = LoadableComponent(() => import('@/pages/Team/Member')) // 成员管理
+const AddTeamMember = LoadableComponent(() => import('@/pages/Team/Member/AddMember')) // 添加成员
+const TeamCharacter = LoadableComponent(() => import('@/pages/Team/Character')) // 角色管理
+const TeamArchitecture = LoadableComponent(() => import('@/pages/Team/Architecture')) // 组织架构
 
 //终端管理
-const TerminalOnline = LoadableComponent(() => import('@/pages/Terminal/Online')) //在线设备
-const TerminalDevices = LoadableComponent(() => import('@/pages/Terminal/Devices')) //全部设备
-const TerminalAgreement = LoadableComponent(() => import('@/pages/Terminal/Agreement')) //协议设置
+const TerminalOnline = LoadableComponent(() => import('@/pages/Terminal/Online')) // 在线设备
+const TerminalDevices = LoadableComponent(() => import('@/pages/Terminal/Devices')) // 全部设备
+const TerminalAgreement = LoadableComponent(() => import('@/pages/Terminal/Agreement')) // 协议设置
 
 const MainContent = ({ location }) => {
   const [breadcrumb, setBreadcrumb] = useState([])
@@ -104,6 +105,7 @@ const MainContent = ({ location }) => {
         <PrivateRoute exact path="/organization/auth/info" component={OrganizationAuthInfo} />
 
         <PrivateRoute exact path="/team/member" component={TeamMember} />
+        <PrivateRoute exact path="/team/member/addmember" component={AddTeamMember} />
         <PrivateRoute exact path="/team/character" component={TeamCharacter} />
         <PrivateRoute exact path="/team/architecture" component={TeamArchitecture} />
 

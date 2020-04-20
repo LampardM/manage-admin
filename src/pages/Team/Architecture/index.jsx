@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:09:31
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 17:55:35
+ * @LastEditTime: 2020-04-19 18:26:51
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -12,7 +12,6 @@ import ArchitectureContent from './ArchitectureContent'
 class ArchitecturePage extends React.Component {
   render() {
     const { className } = this.props
-
     return (
       <div className={className} style={{ padding: '0 16 16', marginTop: -16 }}>
         <div className="arch-container">

@@ -47,7 +47,14 @@ const menus = [
       },
       {
         title: '成员管理',
-        key: '/team/member'
+        key: '/team/member',
+        unsub: true, // FIXME 不渲染下面的subs
+        subs: [
+          {
+            title: '添加成员',
+            key: '/team/member/addmember'
+          }
+        ]
       },
       {
         title: '角色管理',

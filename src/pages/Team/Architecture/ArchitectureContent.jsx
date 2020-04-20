@@ -3,13 +3,17 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-19 13:09:26
+ * @LastEditTime: 2020-04-19 23:44:47
  */
 import React, { useState, useEffect } from 'react'
-import { Button } from 'antd'
+import { Button, Modal, Form, Input, Cascader } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import ArchitectureModal from './ArchitectureModal'
 import { Tree } from 'element-react'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
+
+const { confirm, warning } = Modal
 
 const treeData = [
   {
@@ -71,7 +75,9 @@ const ArchitectureContent = () => {
   const [defaultAllExpand, setDefaultAllExpand] = useState(true)
   const [recursionResult, setRecursionResult] = useState([])
   const [reLoadTree, setReLoadTree] = useState(false)
-  const [isShowTree, setIsShowTree] = useState(true)
+  const [modalShow, setModalShow] = useState(false)
+  const [modalType, setModalType] = useState('create')
+  const [subInfo, setSubInfo] = useState({})
 
   const recursionExpandKeys = (arr, result) => {
     arr.forEach(element => {
@@ -89,32 +95,71 @@ const ArchitectureContent = () => {
 
   useEffect(() => {
     setRecursionResult(treeData)
-    setIsShowTree(true)
-  }, [reLoadTree])
+  })
 
   // TODO 后期补全
   const openOrCloseAllNode = () => {
     setDefaultAllExpand(!defaultAllExpand)
     setReLoadTree(!reLoadTree)
-    setIsShowTree(false)
   }
 
   const onNodeClicked = (nodeModel, node) => {
-    nodeModel = true
+    // nodeModel = true
   }
 
-  const addChildDepartment = (store, data) => {
-    console.log('addChildDepartment', store, data)
+  // 添加子部门
+  const addChildDepartment = (store, data, nodeModel) => {
+    console.log('data', data)
+    console.log('nodeModel', nodeModel)
+    setSubInfo(data)
+    setModalShow(true)
   }
 
+  // 编辑部门
   const editCurDepartment = () => {
-    console.log('editCurDepartment')
+    setModalType('edit')
+    setModalShow(true)
   }
 
+  // 删除部门
   const deleteCurDepartment = () => {
     console.log('editCurDepartment')
+    // TODO 查询信息
+
+    // warning({
+    //   title: 'This is a warning message',
+    //   content: 'some messages...some messages...'
+    // })
+
+    confirm({
+      title: 'Do you Want to delete these items?',
+      icon: <ExclamationCircleOutlined />,
+      okType: 'danger',
+      content: 'Some descriptions',
+      onOk() {
+        console.log('OK')
+      },
+      onCancel() {
+        console.log('Cancel')
+      }
+    })
   }
 
+  // 添加部门
+  const addDepartment = () => {
+    setSubInfo({})
+    setModalShow(true)
+  }
+
+  const modalHandleOk = () => {
+    setModalShow(false)
+  }
+
+  const modalHandleCancel = () => {
+    setModalShow(false)
+  }
+
+  // Tree自定义内容
   const renderContent = (nodeModel, data, store) => {
     return (
       <span>
@@ -124,21 +169,21 @@ const ArchitectureContent = () => {
         <span style={{ float: 'right', marginRight: '20px' }}>
           <span
             size="mini"
-            onClick={() => addChildDepartment(store, data)}
+            onClick={() => addChildDepartment(store, data, nodeModel)}
             style={{ padding: '5px', color: '#1890ff' }}
           >
             添加子部门
           </span>
           <span
             size="mini"
-            onClick={() => editCurDepartment(store, data)}
+            onClick={() => editCurDepartment(store, data, nodeModel)}
             style={{ padding: '5px', color: '#1890ff' }}
           >
             编辑
           </span>
           <span
             size="mini"
-            onClick={() => deleteCurDepartment(store, data)}
+            onClick={() => deleteCurDepartment(store, data, nodeModel)}
             style={{ padding: '5px', color: '#1890ff' }}
           >
             删除
@@ -150,22 +195,29 @@ const ArchitectureContent = () => {
 
   return (
     <ArchitectureContainer>
+      <ArchitectureModal
+        modalShow={modalShow}
+        modalType={modalType}
+        subInfo={subInfo}
+        onCancel={modalHandleCancel}
+        onCreate={modalHandleOk}
+      />
       <ArchitectureTitle>
-        {/* <OpenAll onClick={openOrCloseAllNode}>{defaultAllExpand ? '全部收起' : '全部展开'}</OpenAll> */}
-        <Button type="primary">添加部门</Button>
+        <Button type="primary" onClick={addDepartment}>
+          添加部门
+        </Button>
       </ArchitectureTitle>
       <ArchitectureMain>
-        {isShowTree ? (
-          <Tree
-            data={treeData}
-            options={options}
-            nodeKey="id"
-            defaultExpandAll={defaultAllExpand}
-            expandOnClickNode={false}
-            onNodeClicked={onNodeClicked}
-            renderContent={(...args) => renderContent(...args)}
-          />
-        ) : null}
+        <Tree
+          style={{ border: 'none' }}
+          data={recursionResult}
+          options={options}
+          nodeKey="id"
+          defaultExpandAll={defaultAllExpand}
+          expandOnClickNode={false}
+          onNodeClicked={onNodeClicked}
+          renderContent={(...args) => renderContent(...args)}
+        />
       </ArchitectureMain>
     </ArchitectureContainer>
   )
