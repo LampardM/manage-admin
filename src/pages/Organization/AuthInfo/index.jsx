@@ -4,23 +4,42 @@
  * @Author jieq
  * @Date 2020-04-19 00:18:10
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 00:19:30
+ * @LastEditTime 2020-04-19 15:37:22
  */
+/** offcial */
 import React from 'react'
+import { observer } from 'mobx-react'
 import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
 
-class PrivilegePage extends React.Component {
+/** custom */
+import Enhance from '../../../Enhance'
+
+/** ui */
+import Contianer from './Contianer'
+
+@withRouter
+@observer
+@Enhance
+class AuthInfoPage extends React.Component {
+  constructor(props) {
+    super(props)
+    console.log(`url query id: `, this.urlQuery('id'))
+  }
+
   render() {
     return (
       <div className={this.props.className}>
         <div className="page-title">授权</div>
-        <div className="container"></div>
+        <div className="container">
+          <Contianer />
+        </div>
       </div>
     )
   }
 }
 
-export default styled(PrivilegePage)`
+export default styled(AuthInfoPage)`
   margin-top: -16px;
 
   .page-title {

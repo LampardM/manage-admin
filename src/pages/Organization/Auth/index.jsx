@@ -4,13 +4,13 @@
  * @Author jieq
  * @Date 2020-04-18 12:11:39
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 00:47:36
+ * @LastEditTime 2020-04-19 14:35:10
  */
 /** offcial */
 import React from 'react'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router-dom'
+import { withRouter, useLocation } from 'react-router-dom'
 
 /** custom */
 import Enhance from '../../../Enhance'
@@ -29,7 +29,7 @@ class AuthPage extends React.Component {
         <div className="page-title">待授权</div>
         <div className="container">
           <FilterForm />
-          <TableData go={this.go.bind(this)} />
+          <TableData />
         </div>
       </div>
     )

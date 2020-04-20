@@ -4,18 +4,19 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:52
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 00:42:13
+ * @LastEditTime 2020-04-19 15:36:59
  */
 /** official */
 import { toJS } from 'mobx'
+import styled from 'styled-components'
 import { observer } from 'mobx-react'
+import { useHistory } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 
 /** vendor */
-import { Row, Col, Button, Table } from 'antd'
+import { Button, Table } from 'antd'
 
 /** custom */
-import { Ext } from '../../../utils'
 import request from '@/utils/request'
 import { useStore } from '@/hooks/useStore'
 
@@ -60,6 +61,7 @@ const columns = [
 ]
 
 const TableData = ({ filters, go }) => {
+  const history = useHistory()
   const [data, setData] = useState([])
   const [pagination, setPagination] = useState({})
   const [isTableLoading, setIsTableLoading] = useState(true)
@@ -95,9 +97,7 @@ const TableData = ({ filters, go }) => {
   const doAuthorization = item => {
     console.log('授权', item)
 
-    go('/organization/privilege', {
-      id: item.id
-    })
+    history.push(`/organization/auth/info?id=${3}`)
   }
 
   const handleTableChange = () => {}
@@ -112,14 +112,9 @@ const TableData = ({ filters, go }) => {
           width: 65,
           render: (_, item) => {
             return (
-              <a
-                href="js:void()"
-                onClick={() => {
-                  doAuthorization(item)
-                }}
-              >
+              <Button type="link" onClick={doAuthorization} styles={{ padding: 0 }}>
                 授权
-              </a>
+              </Button>
             )
           }
         })}
@@ -134,13 +129,5 @@ const TableData = ({ filters, go }) => {
     </>
   )
 }
-// class TableData extends React.Component {
-//   componentDidMount() {
-//     this.props.fetch()
-//   }
 
-//   render() {
-//     return <Table />
-//   }
-// }
 export default observer(TableData)
