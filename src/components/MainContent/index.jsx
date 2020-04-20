@@ -26,6 +26,7 @@ const OrganizationAuthInfo = LoadableComponent(() => import('@/pages/Organizatio
 //团队管理
 const TeamMember = LoadableComponent(() => import('@/pages/Team/Member')) // 成员管理
 const AddTeamMember = LoadableComponent(() => import('@/pages/Team/Member/AddMember')) // 添加成员
+const EditTeamMember = LoadableComponent(() => import('@/pages/Team/Member/EditMember')) // 添加成员
 const TeamCharacter = LoadableComponent(() => import('@/pages/Team/Character')) // 角色管理
 const TeamArchitecture = LoadableComponent(() => import('@/pages/Team/Architecture')) // 组织架构
 
@@ -106,6 +107,7 @@ const MainContent = ({ location }) => {
 
         <PrivateRoute exact path="/team/member" component={TeamMember} />
         <PrivateRoute exact path="/team/member/addmember" component={AddTeamMember} />
+        <PrivateRoute exact path="/team/member/editmember" component={EditTeamMember} />
         <PrivateRoute exact path="/team/character" component={TeamCharacter} />
         <PrivateRoute exact path="/team/architecture" component={TeamArchitecture} />
 

@@ -53,6 +53,10 @@ const menus = [
           {
             title: '添加成员',
             key: '/team/member/addmember'
+          },
+          {
+            title: '编辑成员',
+            key: '/team/member/editmember'
           }
         ]
       },
