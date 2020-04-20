@@ -4,11 +4,12 @@
  * @Author jieq
  * @Date 2020-04-19 15:38:09
  * @LastEditors jieq
- * @LastEditTime 2020-04-20 23:17:21
+ * @LastEditTime 2020-04-21 01:21:02
  */
 /** official */
 import { observer } from 'mobx-react'
-import React, { useState } from 'react'
+import styled from 'styled-components'
+import React, { useState, useEffect } from 'react'
 
 /** vendor */
 import { Table, Checkbox } from 'antd'
@@ -71,69 +72,103 @@ const _allNode = {
   ]
 }
 
-export default observer(() => {
+const Privilege = ({ className }) => {
+  const [tableData, setTableData] = useState([])
   const [checkedList, setCheckedList] = useState([])
+  const [isTableLoading, setIsTableLoading] = useState(true)
 
-  const renderCheckboxItem = (text, record, index) => {
-    return <Checkbox value={text}>{text}</Checkbox>
+  useEffect(() => {
+    fetch()
+  }, [])
+
+  const fetch = () => {
+    setTimeout(() => {
+      setTableData([
+        {
+          key: '1',
+          function: 'John Brown',
+          first: 32,
+          second: '0571-22098909'
+        },
+        {
+          key: '2',
+          function: 'Jim Green',
+          second: '0571-22098333',
+          first: 42
+        }
+      ])
+      setIsTableLoading(false)
+    }, 1000)
   }
 
-  const columns = [
-    {
-      title: '功能分类',
-      dataIndex: 'function',
-      render: (value, row, index) => {
-        const obj = {
-          children: value,
-          props: {}
-        }
-        if (index === 0) {
-          obj.props.rowSpan = 2
-        }
-        // These two are merged into above cell
-        if (index === 1) {
-          obj.props.rowSpan = 0
-        }
-        return obj
-      }
-    },
-    {
-      title: '一级菜单',
-      dataIndex: 'first',
-      render: renderCheckboxItem
-    },
-    {
-      title: '二级菜单',
-      colSpan: 2,
-      dataIndex: 'second',
-      render: renderCheckboxItem
-    }
-  ]
+  const renderCheckboxItem = (text, record, index) => {
+    return (
+      <Checkbox value={text} onChange={onItemChange}>
+        {text}
+      </Checkbox>
+    )
+  }
 
-  const data = [
-    {
-      key: '1',
-      function: 'John Brown',
-      first: 32,
-      second: '0571-22098909'
-    },
-    {
-      key: '2',
-      function: 'Jim Green',
-      second: '0571-22098333',
-      first: 42
+  const onAllChange = ({ target }) => {
+    console.log('onAllChange', target.checked)
+    if (target.checked) {
+    } else {
     }
-  ]
+  }
 
-  const onChange = checkedList => {
-    console.log(checkedList, 'checkedList')
+  const onItemChange = checkedList => {
+    console.log('checkedList', checkedList)
   }
 
   return (
-    <>
-      <Checkbox.Group options={allNode} value={checkedList} onChange={onChange}>
-        <Table columns={columns} dataSource={data} bordered />
-      </Checkbox.Group>
-    </>
+    <div className={className}>
+      <Checkbox onChange={onAllChange}>全选</Checkbox>
+
+      <Table
+        bordered
+        className="table"
+        dataSource={tableData}
+        loading={isTableLoading}
+        columns={[
+          {
+            title: '功能分类',
+            dataIndex: 'function',
+            render: (value, row, index) => {
+              const obj = {
+                children: renderCheckboxItem(value),
+                props: {}
+              }
+              if (index === 0) {
+                obj.props.rowSpan = 2
+              }
+              // These two are merged into above cell
+              if (index === 1) {
+                obj.props.rowSpan = 0
+              }
+              return obj
+            }
+          },
+          {
+            title: '一级菜单',
+            dataIndex: 'first',
+            render: renderCheckboxItem
+          },
+          {
+            title: '二级菜单',
+            colSpan: 2,
+            dataIndex: 'second',
+            render: renderCheckboxItem
+          }
+        ]}
+      />
+    </div>
   )
-})
+}
+
+export default observer(styled(Privilege)`
+  padding-top: 20px;
+
+  .table {
+    margin-top: 20px;
+  }
+`)
