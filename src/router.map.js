@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-16 21:31:20
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 15:36:39
+ * @LastEditTime 2020-04-21 00:46:18
  */
 const menus = [
   {
@@ -21,15 +21,25 @@ const menus = [
       },
       {
         title: '待授权',
-        key: '/organization/auth'
-      },
-      {
-        title: '权限授权',
-        key: '/organization/auth/info'
+        key: '/organization/auth',
+        unsub: true, // FIXME 不渲染下面的subs
+        subs: [
+          {
+            title: '权限授权',
+            key: '/organization/auth/info'
+          }
+        ]
       },
       {
         title: '已通过',
-        key: '/organization/approve'
+        key: '/organization/approve',
+        unsub: true, // FIXME 不渲染下面的subs
+        subs: [
+          {
+            title: '编辑',
+            key: '/organization/approve/edit'
+          }
+        ]
       },
       {
         title: '已驳回',
@@ -81,5 +91,14 @@ const menus = [
     ]
   }
 ]
+
+// FIXME 不推荐这么做
+const blackList = [
+  '/team/member/addmember',
+  '/organization/auth/info',
+  '/organization/approve/edit'
+]
+
+export { blackList }
 
 export default menus

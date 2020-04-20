@@ -12,6 +12,9 @@ import { Link, withRouter } from 'react-router-dom'
 /** vendor */
 import { Menu, Icon } from 'antd'
 
+/** custom */
+import { blackList } from '../../router.map'
+
 //此组件的意义就是将数据抽离出来，通过传递数据去渲染
 @withRouter
 class _Menu extends React.Component {
@@ -54,11 +57,10 @@ class _Menu extends React.Component {
   componentWillReceiveProps(nextProps) {
     //当点击面包屑导航时，侧边栏要同步响应
     let pathname = nextProps.location.pathname
-    // FIXME 不推荐这么做
-    let _blacklist = ['/team/member/addmember']
 
-    if (_blacklist.includes(pathname)) {
-      pathname = '/team/member'
+    if (blackList.includes(pathname)) {
+      const tmp = pathname.split('/')
+      pathname = tmp.slice(0, tmp.length - 1).join('/')
     }
 
     if (this.props.location.pathname !== pathname) {

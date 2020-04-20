@@ -4,66 +4,66 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:47
  * @LastEditors jieq
- * @LastEditTime 2020-04-20 23:32:23
+ * @LastEditTime 2020-04-20 23:40:30
  */
 /** official */
-import React, { useState } from 'react'
+import React from 'react'
 import { observer } from 'mobx-react'
 
 /** vendor */
-import { Form, Row, Col, Input, Button, Select, DatePicker } from 'antd'
+import { Form, Row, Col, Input, Button, Select } from 'antd'
 
 /** custom */
-import { Ext } from '../../../utils'
 import { useStore } from '@/hooks/useStore'
 
 export default observer(() => {
   const [form] = Form.useForm()
-  const { OrganizationCheckStore } = useStore()
+  const { OrganizationApproveStore } = useStore()
 
   const onFinish = values => {
     console.log('Received values of form: ', values)
     // debugger
-    OrganizationCheckStore.setFilters(values)
+    OrganizationApproveStore.setFilters(values)
   }
 
   return (
     <Form form={form} name="advanced-search" className="advanced-search" onFinish={onFinish}>
       <Row gutter={5}>
-        <Col style={{ width: 250 }}>
-          <Form.Item name="date">
-            <DatePicker.RangePicker />
+        <Col style={{ width: 160 }}>
+          <Form.Item name="teamNo">
+            <Input placeholder="请输入团队号" value={OrganizationApproveStore.teamNo} />
           </Form.Item>
         </Col>
 
-        <Col style={{ width: 130 }}>
+        <Col style={{ width: 160 }}>
           <Form.Item name="teamName">
-            <Input placeholder="请输入团队名称" value={OrganizationCheckStore.teamName} />
-          </Form.Item>
-        </Col>
-
-        <Col style={{ width: 170 }}>
-          <Form.Item name="teamType">
-            <Select
-              allowClear
-              style={{ width: '100%' }}
-              placeholder="请选择团队类型"
-              value={OrganizationCheckStore.teamType}
-            >
-              <Select.Option value={OrganizationCheckStore.teamType}>Lucy</Select.Option>
-            </Select>
+            <Input placeholder="请输入团队名称" value={OrganizationApproveStore.teamName} />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 150 }}>
           <Form.Item name="name">
-            <Input placeholder="请输入联系人姓名" value={OrganizationCheckStore.name} />
+            <Input placeholder="请输入联系人姓名" value={OrganizationApproveStore.name} />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 130 }}>
           <Form.Item name="phone">
-            <Input placeholder="请输入手机号码" value={OrganizationCheckStore.phone} />
+            <Input placeholder="请输入联系电话" value={OrganizationApproveStore.phone} />
+          </Form.Item>
+        </Col>
+
+        <Col style={{ width: 170 }}>
+          <Form.Item name="status">
+            <Select
+              allowClear
+              style={{ width: '100%' }}
+              placeholder="请选择状态"
+              value={OrganizationApproveStore.status}
+            >
+              <Select.Option value={'enable'}>启用</Select.Option>
+              <Select.Option value={'disable'}>禁用</Select.Option>
+            </Select>
           </Form.Item>
         </Col>
 

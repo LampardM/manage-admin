@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:52
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 15:36:59
+ * @LastEditTime 2020-04-21 00:55:59
  */
 /** official */
 import { toJS } from 'mobx'
@@ -60,7 +60,7 @@ const columns = [
   }
 ]
 
-const TableData = ({ filters, go }) => {
+const TableData = ({ className, filters, go }) => {
   const history = useHistory()
   const [data, setData] = useState([])
   const [pagination, setPagination] = useState({})
@@ -103,7 +103,7 @@ const TableData = ({ filters, go }) => {
   const handleTableChange = () => {}
 
   return (
-    <>
+    <div className={className}>
       <Table
         style={{ marginTop: 24 }}
         columns={columns.concat({
@@ -112,7 +112,7 @@ const TableData = ({ filters, go }) => {
           width: 65,
           render: (_, item) => {
             return (
-              <Button type="link" onClick={doAuthorization} styles={{ padding: 0 }}>
+              <Button type="link" className="action-item" onClick={doAuthorization}>
                 授权
               </Button>
             )
@@ -126,8 +126,12 @@ const TableData = ({ filters, go }) => {
         loading={isTableLoading}
         onChange={handleTableChange}
       />
-    </>
+    </div>
   )
 }
 
-export default observer(TableData)
+export default observer(styled(TableData)`
+  .action-item {
+    padding: 0 !important;
+  }
+`)

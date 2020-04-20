@@ -2,9 +2,9 @@
  * @Desc In User Settings Edit
  * @exports class
  * @Author jieq
- * @Date 2020-04-18 12:11:39
+ * @Date 2020-04-21 00:49:05
  * @LastEditors jieq
- * @LastEditTime 2020-04-20 23:23:59
+ * @LastEditTime 2020-04-21 00:52:19
  */
 /** offcial */
 import React from 'react'
@@ -12,27 +12,34 @@ import { observer } from 'mobx-react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
+/** custom */
+import Enhance from '../../../Enhance'
+
 /** ui */
-import TableData from './TableData'
-import FilterForm from './FilterForm'
+import Contianer from '../Auth/Contianer'
 
 @withRouter
 @observer
-class ApprovePage extends React.Component {
+@Enhance
+class AuthInfoPage extends React.Component {
+  constructor(props) {
+    super(props)
+    console.log(`url query id: `, this.urlQuery('id'))
+  }
+
   render() {
     return (
       <div className={this.props.className}>
-        <div className="page-title">已通过</div>
+        <div className="page-title">编辑</div>
         <div className="container">
-          <FilterForm />
-          <TableData />
+          <Contianer />
         </div>
       </div>
     )
   }
 }
 
-export default styled(ApprovePage)`
+export default styled(AuthInfoPage)`
   margin-top: -16px;
 
   .page-title {

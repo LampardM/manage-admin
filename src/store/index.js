@@ -11,11 +11,13 @@ import userInfoStore from './userInfoStore'
 /** partial */
 import OrganizationAuthStore from '../pages/Organization/Auth/store'
 import OrganizationCheckStore from '../pages/Organization/Check/store'
+import OrganizationApproveStore from '../pages/Organization/Approve/store'
 
 const store = {
   userInfoStore,
   OrganizationAuthStore,
-  OrganizationCheckStore
+  OrganizationCheckStore,
+  OrganizationApproveStore
 }
 
 export { store }

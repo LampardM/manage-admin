@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:47
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 00:00:39
+ * @LastEditTime 2020-04-20 23:32:13
  */
 /** official */
 import React, { useState } from 'react'
@@ -48,7 +48,7 @@ export default observer(() => {
               allowClear
               style={{ width: '100%' }}
               placeholder="请选择团队类型"
-              value={OrganizationAuthStore.teamName}
+              value={OrganizationAuthStore.teamType}
             >
               <Select.Option value="lucy">Lucy</Select.Option>
             </Select>
