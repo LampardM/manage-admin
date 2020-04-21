@@ -3,11 +3,12 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-20 23:13:25
+ * @LastEditTime: 2020-04-22 00:04:32
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space } from 'antd'
 import styled from 'styled-components'
+import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -41,18 +42,6 @@ const AddEditMemberForm = () => {
       value: '0-1'
     }
   ]
-
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select
-        style={{
-          width: 70
-        }}
-      >
-        <Option value="86">+86</Option>
-      </Select>
-    </Form.Item>
-  )
 
   const handleCharacterChange = () => {}
 
@@ -100,7 +89,7 @@ const AddEditMemberForm = () => {
             }
           ]}
         >
-          <Input placeholder="手机号码" addonBefore={prefixSelector} />
+          <Input placeholder="手机号码" addonBefore={PrefixSelector} />
         </Form.Item>
         <Form.Item
           name="character"

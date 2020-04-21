@@ -3,13 +3,14 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 14:12:28
+ * @LastEditTime: 2020-04-22 00:06:00
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import useInterval from '@/hooks/useInterval'
 import styled from 'styled-components'
+import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
 
 const { Option } = Select
@@ -58,17 +59,6 @@ const RegisterForm = props => {
     forceUpdate({})
   }, [countDown])
 
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select
-        style={{
-          width: 70
-        }}>
-        <Option value="86">+86</Option>
-      </Select>
-    </Form.Item>
-  )
-
   const afterSelector = (
     <Form.Item noStyle shouldUpdate>
       {() => (
@@ -78,7 +68,8 @@ const RegisterForm = props => {
           disabled={
             !form.isFieldTouched('phone') || form.getFieldError('phone').length || isSendVerify
           }
-          onClick={verifyPhone}>
+          onClick={verifyPhone}
+        >
           {!isSendVerify ? '获取验证码' : `${countDown}秒后重新获取`}
         </Button>
       )}
@@ -94,7 +85,8 @@ const RegisterForm = props => {
         onFinishFailed={onFinishFailed}
         initialValues={{
           prefix: '86'
-        }}>
+        }}
+      >
         <Form.Item
           name="phone"
           rules={[
@@ -106,8 +98,9 @@ const RegisterForm = props => {
               pattern: '^1[345789][0-9]{9}$',
               message: '请输入正确的手机号'
             }
-          ]}>
-          <Input size="large" placeholder="请输入手机号码" addonBefore={prefixSelector} />
+          ]}
+        >
+          <Input size="large" placeholder="请输入手机号码" addonBefore={PrefixSelector} />
         </Form.Item>
         <Form.Item
           name="password"
@@ -126,7 +119,8 @@ const RegisterForm = props => {
               message: '密码长度为6到16位'
             }
           ]}
-          hasFeedback>
+          hasFeedback
+        >
           <Input.Password placeholder="请输入登录密码" size="large" />
         </Form.Item>
         <Form.Item
@@ -147,7 +141,8 @@ const RegisterForm = props => {
                 return Promise.reject('两次输入密码不一致!')
               }
             })
-          ]}>
+          ]}
+        >
           <Input.Password placeholder="请确认登录密码" size="large" />
         </Form.Item>
         <Form.Item
@@ -161,7 +156,8 @@ const RegisterForm = props => {
               pattern: '^[0-9]+$',
               message: '验证码有误，请重新输入'
             }
-          ]}>
+          ]}
+        >
           <Input placeholder="请输入验证码" size="large" addonAfter={afterSelector} />
         </Form.Item>
         <Form.Item shouldUpdate>
@@ -178,7 +174,8 @@ const RegisterForm = props => {
                 !form.isFieldTouched('Verification') ||
                 form.getFieldsError().filter(({ errors }) => errors.length).length
               }
-              className="register-button">
+              className="register-button"
+            >
               注册
             </Button>
           )}

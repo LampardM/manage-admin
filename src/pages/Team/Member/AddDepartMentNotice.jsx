@@ -3,16 +3,16 @@
  * @Author: longzhang6
  * @Date: 2020-04-21 10:55:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-21 22:56:41
+ * @LastEditTime: 2020-04-22 00:03:57
  */
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Button, Form, Input, Space, Select } from 'antd'
-
-const { Option } = Select
+import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
+import { Button, Form, Input, Select } from 'antd'
 
 const AddDepartMentNotice = () => {
-  const { form } = Form.useForm()
+  const [form] = Form.useForm()
+  const [, forceUpdate] = useState()
 
   const tailLayout = {
     wrapperCol: {
@@ -20,17 +20,7 @@ const AddDepartMentNotice = () => {
     }
   }
 
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select
-        style={{
-          width: 70
-        }}
-      >
-        <Option value="86">+86</Option>
-      </Select>
-    </Form.Item>
-  )
+  const joinDepartMentHandle = () => {}
 
   return (
     <div style={{ padding: '0 16 16', marginTop: -16 }}>
@@ -78,7 +68,7 @@ const AddDepartMentNotice = () => {
                   }
                 ]}
               >
-                <Input placeholder="手机号码" addonBefore={prefixSelector} />
+                <Input placeholder="手机号码" addonBefore={PrefixSelector} />
               </Form.Item>
               <Form.Item
                 name="verify"
@@ -94,13 +84,41 @@ const AddDepartMentNotice = () => {
                   }
                 ]}
               >
-                <Space>
-                  <Input placeholder="请输入验证码" />
-                  <Button type="primary">获取验证码</Button>
-                </Space>
+                <VerifyContent>
+                  <VerifyInput>
+                    <Input placeholder="请输入验证码" />
+                  </VerifyInput>
+                  <Form.Item shouldUpdate>
+                    {() => (
+                      <Button
+                        type="primary"
+                        disabled={
+                          !form.isFieldTouched('phone') ||
+                          form.getFieldError('phone').filter(({ errors }) => errors.length).length
+                        }
+                      >
+                        获取验证码
+                      </Button>
+                    )}
+                  </Form.Item>
+                </VerifyContent>
               </Form.Item>
-              <Form.Item {...tailLayout}>
-                <Button type="primary">加入</Button>
+              <Form.Item {...tailLayout} shouldUpdate>
+                {() => (
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    onClick={joinDepartMentHandle}
+                    disabled={
+                      !form.isFieldTouched('phone') ||
+                      !form.isFieldTouched('name') ||
+                      !form.isFieldTouched('verify') ||
+                      form.getFieldsError().filter(({ errors }) => errors.length).length
+                    }
+                  >
+                    加入
+                  </Button>
+                )}
               </Form.Item>
             </Form>
           </RealContent>
@@ -139,6 +157,14 @@ const AddDepartMentTitle = styled.div`
   font-weight: bold;
   margin-bottom: 50px;
   text-align: center;
+`
+
+const VerifyContent = styled.div`
+  display: flex;
+`
+
+const VerifyInput = styled.div`
+  marign-right: 10px;
 `
 
 export default AddDepartMentNotice

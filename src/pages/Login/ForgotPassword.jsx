@@ -3,11 +3,12 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 12:03:05
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 13:07:22
+ * @LastEditTime: 2020-04-22 00:05:09
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, Steps, message } from 'antd'
 import { CheckCircleTwoTone } from '@ant-design/icons'
+import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
 
@@ -36,17 +37,6 @@ const ForgotPassword = props => {
 
   const onFinishFailed = () => {}
 
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select
-        style={{
-          width: 70
-        }}>
-        <Option value="86">+86</Option>
-      </Select>
-    </Form.Item>
-  )
-
   return (
     <ForgotContainer>
       <StepsContainer>
@@ -63,7 +53,8 @@ const ForgotPassword = props => {
           onFinishFailed={onFinishFailed}
           initialValues={{
             prefix: '86'
-          }}>
+          }}
+        >
           {step === 0 ? (
             <Form.Item
               name="phone"
@@ -76,8 +67,9 @@ const ForgotPassword = props => {
                   pattern: '^1[345789][0-9]{9}$',
                   message: '请输入正确的手机号'
                 }
-              ]}>
-              <Input size="large" placeholder="请输入手机号码" addonBefore={prefixSelector} />
+              ]}
+            >
+              <Input size="large" placeholder="请输入手机号码" addonBefore={PrefixSelector} />
             </Form.Item>
           ) : step === 1 ? (
             <React.Fragment>
@@ -98,7 +90,8 @@ const ForgotPassword = props => {
                     message: '密码长度为6到16位'
                   }
                 ]}
-                hasFeedback>
+                hasFeedback
+              >
                 <Input.Password placeholder="请输入登录密码" size="large" />
               </Form.Item>
               <Form.Item
@@ -119,7 +112,8 @@ const ForgotPassword = props => {
                       return Promise.reject('两次输入密码不一致!')
                     }
                   })
-                ]}>
+                ]}
+              >
                 <Input.Password placeholder="请确认登录密码" size="large" />
               </Form.Item>
             </React.Fragment>
@@ -144,7 +138,8 @@ const ForgotPassword = props => {
                       : !form.isFieldTouched('password') ||
                         !form.isFieldTouched('confirm') ||
                         form.getFieldsError().filter(({ errors }) => errors.length).length
-                  }>
+                  }
+                >
                   确认
                 </Button>
               )}
