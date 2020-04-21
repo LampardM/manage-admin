@@ -4,19 +4,12 @@
  * @Author jieq
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
- * @LastEditTime 2020-04-22 00:28:06
- * ```
- * TableCheckBox.propTypes = {
- *  columns: PropTypes.instanceOf(Columns),
- *  nodeData: PropTypes.instanceOf(Array<DataSource>),
- * }
- * ```
+ * @LastEditTime 2020-04-22 02:16:54
  */
 
 /** official */
 // import styled from 'styled-components'
-import PropTypes from 'prop-types'
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo /* useCallback */ } from 'react'
 
 /** vendor */
 import { Table, Checkbox } from 'antd'
@@ -35,7 +28,13 @@ interface DataSource {
   subs: Array<DataSource>; //子DataSource
 }
 
-const TableCheckBox = ({ columns, nodeData, ...restProps }) => {
+interface TableCheckBoxProps {
+  columns?: Array<Columns>;
+  nodeData?: Array<DataSource>;
+}
+
+const TableCheckBox: TableCheckBoxProps = ({ columns = [], nodeData = [], ...restProps }) => {
+  const [mergeCol, setMergeCol] = useState({})
   const [dataSource, setDataSource] = useState([])
   const [formatColumns, setFormatColumns] = useState(columns)
 
@@ -47,13 +46,15 @@ const TableCheckBox = ({ columns, nodeData, ...restProps }) => {
   const formatColumnsStructure: Columns => void = columns => {
     const formatColumns = columns.map(it => ({
       ...it,
-      render: (text: array, record, index) => {
-        console.log('render:', text, record, index)
-        mergeCol(dataSource)
-        return {
-          props: {},
-          children: renderCheckboxItem(text, record, index)
+      render: (text: array, record, rowIndex) => {
+        const res = {
+          props: {
+            rowSpan: mergeCol[it.dataIndex][rowIndex]
+          },
+          children: renderCheckboxItem(text, record, rowIndex)
         }
+
+        return res
       }
     }))
     setFormatColumns(formatColumns)
@@ -92,6 +93,7 @@ const TableCheckBox = ({ columns, nodeData, ...restProps }) => {
 
       console.log('formatData', formatData)
       setDataSource(formatData)
+      genMergeColArray(formatData)
 
       //表头依赖于内容数据结构
       formatColumnsStructure(columns)
@@ -104,7 +106,7 @@ const TableCheckBox = ({ columns, nodeData, ...restProps }) => {
    * @param {Number} arrIdx arr数组的第几项
    * @param {Number} layerIdx 递归层数
    */
-  const recursive: (Array, Number, Number) => DataSource[] | DataSource = (
+  const recursive: (Array<DataSource>, number, number) => Array<DataSource> | DataSource = (
     arr,
     arrIdx,
     layerIdx
@@ -121,7 +123,7 @@ const TableCheckBox = ({ columns, nodeData, ...restProps }) => {
    * @brief node结构递归
    * @param {Array<DataSource>} data
    */
-  const nodeToRow: (DataSource[]) => Number = nodeData => {
+  const nodeToRow: (Array<DataSource>) => number = nodeData => {
     if (nodeData.length) {
       if (nodeData[0].subs && !nodeData[0].subs[0].subs) {
         return nodeData.length
@@ -136,14 +138,37 @@ const TableCheckBox = ({ columns, nodeData, ...restProps }) => {
   /**
    * @description 某一列的哪几行要合并
    * @param {DataSource} dataSource
-   * @returns {Array}
+   * @returns {void}
    */
-  const mergeCol: DataSource => Array = dataSource => {
+  const genMergeColArray: DataSource => void = dataSource => {
     console.log('mergeCol:dataSource', dataSource)
-    const res = []
-    columns.forEach(({ dataIndex = '' }) => {})
+    let tmp = {}
+    const res = {}
+    columns.forEach(({ dataIndex = '' }) => {
+      let initalNotExist = 0
 
-    return res
+      tmp = {}
+      res[dataIndex] = []
+
+      dataSource.forEach((it, idx) => {
+        const existKey = it[dataIndex].join('@@@')
+        let existValue = tmp[existKey] || 0
+
+        if (existValue) {
+          ++existValue
+          res[dataIndex][idx] = 0
+          res[dataIndex][initalNotExist] = existValue
+        } else {
+          res[dataIndex][idx] = 1
+          initalNotExist = idx
+          ++existValue
+        }
+
+        tmp[existKey] = existValue
+      })
+    })
+    console.log('mergeCol', res)
+    setMergeCol(res)
   }
 
   /**
@@ -187,14 +212,9 @@ const TableCheckBox = ({ columns, nodeData, ...restProps }) => {
 
   useEffect(() => {
     formatDataStructure()
-  }, [columns, nodeData])
+  }, [columns, nodeData, formatDataStructure])
 
   return <Table columns={formatColumns} dataSource={dataSource} {...restProps} />
-}
-
-TableCheckBox.propTypes = {
-  columns: PropTypes.instanceOf(Columns),
-  nodeData: PropTypes.arrayOf(DataSource)
 }
 
 export default TableCheckBox
