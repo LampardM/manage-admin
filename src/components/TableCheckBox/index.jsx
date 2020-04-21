@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
- * @LastEditTime 2020-04-22 02:16:54
+ * @LastEditTime 2020-04-22 03:05:44
  */
 
 /** official */
@@ -17,20 +17,21 @@ import { Table, Checkbox } from 'antd'
 /** custom */
 import { Ext } from '../../utils'
 
-interface Columns {
+interface ColumnsItem {
   title: string; //表头项显示内容
   dataIndex: string; //表头项索引key
 }
 
-interface DataSource {
+interface DataSourceItem {
   key: string; //checkbox的value
   value: string; //checkbox显示内容
-  subs: Array<DataSource>; //子DataSource
+  checked?: boolean; //checkbox初始化是否勾选
+  subs?: Array<DataSourceItem>; //子DataSource
 }
 
 interface TableCheckBoxProps {
-  columns?: Array<Columns>;
-  nodeData?: Array<DataSource>;
+  columns?: Array<ColumnsItem>;
+  nodeData?: Array<DataSourceItem>;
 }
 
 const TableCheckBox: TableCheckBoxProps = ({ columns = [], nodeData = [], ...restProps }) => {
@@ -40,10 +41,10 @@ const TableCheckBox: TableCheckBoxProps = ({ columns = [], nodeData = [], ...res
 
   /**
    * @description 格式化表头
-   * @param {Columns} columns
+   * @param {ColumnsItem} columns
    * @return {void}
    */
-  const formatColumnsStructure: Columns => void = columns => {
+  const formatColumnsStructure: (Array<ColumnsItem>) => void = columns => {
     const formatColumns = columns.map(it => ({
       ...it,
       render: (text: array, record, rowIndex) => {
@@ -62,10 +63,12 @@ const TableCheckBox: TableCheckBoxProps = ({ columns = [], nodeData = [], ...res
 
   const formatDataStructure = useMemo(() => {
     return () => {
-      const cloneNodeData = deepCopy(nodeData)
+      let cloneNodeData = deepCopy(nodeData)
 
       console.log('columns', columns)
       console.log('cloneNodeData', cloneNodeData)
+
+      cloneNodeData = recursiveSetting(cloneNodeData)
 
       for (let i = 0; i < nodeToRow(cloneNodeData); i++) {
         cloneNodeData[i] = deepCopy(cloneNodeData[0])
@@ -76,14 +79,14 @@ const TableCheckBox: TableCheckBoxProps = ({ columns = [], nodeData = [], ...res
         const accItem = acc[nodeIdx]
         for (let colIdx = 0; colIdx < columns.length; colIdx++) {
           const dataProp = columns[colIdx].dataIndex
-          const res = recursive(cloneNodeData, nodeIdx, colIdx)
+          const res = recursiveQuery(cloneNodeData, nodeIdx, colIdx)
           accItem[dataProp] = []
           if (Ext.isArray(res)) {
             res.forEach((it, idx) => {
-              accItem[dataProp][idx] = `${it.key}###${it.value}`
+              accItem[dataProp][idx] = `${it.key}###${it.value}###${it.checked}`
             })
           } else {
-            accItem[dataProp][0] = `${res.key}###${res.value}`
+            accItem[dataProp][0] = `${res.key}###${res.value}###${res.checked}`
           }
         }
 
@@ -106,24 +109,53 @@ const TableCheckBox: TableCheckBoxProps = ({ columns = [], nodeData = [], ...res
    * @param {Number} arrIdx arr数组的第几项
    * @param {Number} layerIdx 递归层数
    */
-  const recursive: (Array<DataSource>, number, number) => Array<DataSource> | DataSource = (
-    arr,
-    arrIdx,
-    layerIdx
-  ) => {
+  const recursiveQuery: (
+    Array<DataSourceItem>,
+    number,
+    number
+  ) => Array<DataSourceItem> | DataSourceItem = (arr, arrIdx, layerIdx) => {
     if (layerIdx === 0) {
       return arr[arrIdx].subs ? arr[arrIdx] : arr
     } else {
-      return recursive(arr[arrIdx].subs, arrIdx, --layerIdx)
+      return recursiveQuery(arr[arrIdx].subs, arrIdx, --layerIdx)
     }
   }
 
   /**
-   * @description 查询当前索引为0的值是否有subs，如果没有，则将这层的length作为row的行数
-   * @brief node结构递归
-   * @param {Array<DataSource>} data
+   * @description 如果当前DataSourceItem的checked为true(勾选)，则他的子元素（subs）下面的每一个则需要勾选
+   * @brief 递归设置联动
+   * @param {Array<DataSourceItem>} data
+   * @param {boolean} [forceChecked=false] 因为联动，强制设置勾选
    */
-  const nodeToRow: (Array<DataSource>) => number = nodeData => {
+  const recursiveSetting: (Array<DataSourceItem>) => Array<DataSourceItem> = (
+    dataSource,
+    forceChecked = false
+  ) => {
+    if (dataSource.length) {
+      dataSource.forEach(it => {
+        if (it.subs) {
+          if (it.checked) {
+            return recursiveSetting(it.subs, true)
+          } else {
+            it.checked === undefined && (it.checked = forceChecked)
+            return recursiveSetting(it.subs, forceChecked)
+          }
+        } else {
+          it.checked === undefined && (it.checked = forceChecked)
+        }
+      })
+      return dataSource
+    } else {
+      return dataSource
+    }
+  }
+
+  /**
+   * @description 递归查询当前索引为0的值是否有subs，如果没有，则将这层的length作为row的行数
+   * @brief node结构递归
+   * @param {Array<DataSourceItem>} data
+   */
+  const nodeToRow: (Array<DataSourceItem>) => number = nodeData => {
     if (nodeData.length) {
       if (nodeData[0].subs && !nodeData[0].subs[0].subs) {
         return nodeData.length
@@ -137,10 +169,10 @@ const TableCheckBox: TableCheckBoxProps = ({ columns = [], nodeData = [], ...res
 
   /**
    * @description 某一列的哪几行要合并
-   * @param {DataSource} dataSource
+   * @param {DataSourceItem} dataSource
    * @returns {void}
    */
-  const genMergeColArray: DataSource => void = dataSource => {
+  const genMergeColArray: DataSourceItem => void = dataSource => {
     console.log('mergeCol:dataSource', dataSource)
     let tmp = {}
     const res = {}
@@ -196,12 +228,13 @@ const TableCheckBox: TableCheckBoxProps = ({ columns = [], nodeData = [], ...res
   }
 
   const renderCheckboxItem = (text: array, record, index) => {
+    console.log('checkboxItem', text)
     return (
       <>
         {text.map(it => {
-          const [value, label] = it.split('###')
+          const [value, label, checked] = it.split('###')
           return (
-            <Checkbox value={value} onChange={onCheckboxChange}>
+            <Checkbox value={value} checked={checked === 'true'} onChange={onCheckboxChange}>
               {label}
             </Checkbox>
           )

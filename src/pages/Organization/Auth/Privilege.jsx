@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-19 15:38:09
  * @LastEditors jieq
- * @LastEditTime 2020-04-22 01:32:30
+ * @LastEditTime 2020-04-22 03:06:55
  */
 /** official */
 import { observer } from 'mobx-react'
@@ -49,6 +49,7 @@ const Privilege = ({ className }) => {
             {
               key: 'teamManagement',
               value: '团队管理',
+              checked: true,
               subs: [
                 {
                   key: 'organizationalStructure',
@@ -78,7 +79,8 @@ const Privilege = ({ className }) => {
                 },
                 {
                   key: 'allDevices',
-                  value: '全部设备'
+                  value: '全部设备',
+                  checked: true
                 }
               ]
             }
@@ -103,6 +105,7 @@ const Privilege = ({ className }) => {
       <TableCheckBox
         bordered
         className="table"
+        pagination={false}
         loading={isTableLoading}
         columns={[
           {
