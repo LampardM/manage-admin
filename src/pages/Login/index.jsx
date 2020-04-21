@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-21 22:22:13
+ * @LastEditTime: 2020-04-22 00:46:30
  */
 import React from 'react'
 import { withRouter } from 'react-router-dom'
@@ -11,7 +11,6 @@ import { inject, observer } from 'mobx-react'
 import styled from 'styled-components'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
-import ForgotPassword from './ForgotPassword'
 import 'animate.css'
 
 // import { login } from "@/api/user";
@@ -28,9 +27,13 @@ class Login extends React.Component {
   }
 
   switchShowBox = curbox => {
-    this.setState({
-      showBox: curbox
-    })
+    if (curbox === 'forgotpassword') {
+      this.props.history.push('/forgotpassword')
+    } else {
+      this.setState({
+        showBox: curbox
+      })
+    }
   }
 
   render() {
@@ -42,15 +45,13 @@ class Login extends React.Component {
         <div id="login-page">
           <div className="container">
             {showBox === 'register' ? (
-              <div className="animated rotateInDownRight animated-content">
+              <div className="animated slideInLeft animated-content">
                 <RegisterForm switchShowBox={this.switchShowBox} showBox={showBox} />
               </div>
-            ) : showBox === 'login' ? (
-              <div className="animated rotateInDownLeft animated-content">
+            ) : (
+              <div className="animated fadeInLeft animated-content">
                 <LoginForm switchShowBox={this.switchShowBox} showBox={showBox} />
               </div>
-            ) : (
-              <ForgotPassword switchShowBox={this.switchShowBox} showBox={showBox}></ForgotPassword>
             )}
           </div>
         </div>

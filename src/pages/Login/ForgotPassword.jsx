@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 12:03:05
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 00:05:09
+ * @LastEditTime: 2020-04-22 00:48:24
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, Steps, message } from 'antd'
@@ -152,6 +152,11 @@ const ForgotPassword = props => {
 }
 
 const ForgotContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
