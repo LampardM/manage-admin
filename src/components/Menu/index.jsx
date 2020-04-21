@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-20 23:59:54
+ * @LastEditTime: 2020-04-21 22:17:09
  */
 /** official */
 import React from 'react'
@@ -24,14 +24,14 @@ class _Menu extends React.Component {
   }
 
   componentDidMount() {
-    let pathname = this.props.location.pathname
-    // FIXME 不推荐这么做
-    let _blacklist = ['/team/member/addmember', '/team/member/editmember']
-
-    if (_blacklist.includes(pathname)) {
-      pathname = '/team/member'
-    }
     // 防止页面刷新侧边栏又初始化了
+    let pathname = this.props.location.pathname
+
+    if (blackList.includes(pathname)) {
+      const tmp = pathname.split('/')
+      pathname = tmp.slice(0, tmp.length - 1).join('/')
+    }
+
     //获取当前所在的目录层级
     const rank = pathname.split('/')
     switch (rank.length) {

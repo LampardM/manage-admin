@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 13:15:24
+ * @LastEditTime: 2020-04-21 22:22:13
  */
 import React from 'react'
 import { withRouter } from 'react-router-dom'
@@ -12,6 +12,7 @@ import styled from 'styled-components'
 import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import ForgotPassword from './ForgotPassword'
+import 'animate.css'
 
 // import { login } from "@/api/user";
 
@@ -41,9 +42,13 @@ class Login extends React.Component {
         <div id="login-page">
           <div className="container">
             {showBox === 'register' ? (
-              <RegisterForm switchShowBox={this.switchShowBox} showBox={showBox} />
+              <div className="animated rotateInDownRight animated-content">
+                <RegisterForm switchShowBox={this.switchShowBox} showBox={showBox} />
+              </div>
             ) : showBox === 'login' ? (
-              <LoginForm switchShowBox={this.switchShowBox} showBox={showBox} />
+              <div className="animated rotateInDownLeft animated-content">
+                <LoginForm switchShowBox={this.switchShowBox} showBox={showBox} />
+              </div>
             ) : (
               <ForgotPassword switchShowBox={this.switchShowBox} showBox={showBox}></ForgotPassword>
             )}
@@ -70,5 +75,11 @@ export default styled(Login)`
 
   .container {
     // width: 420px;
+  }
+
+  .animated-content {
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 3px 3px #f0f0f0;
   }
 `
