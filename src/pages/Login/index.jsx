@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 00:46:30
+ * @LastEditTime: 2020-04-22 22:51:05
  */
 import React from 'react'
 import { withRouter } from 'react-router-dom'
@@ -45,11 +45,11 @@ class Login extends React.Component {
         <div id="login-page">
           <div className="container">
             {showBox === 'register' ? (
-              <div className="animated slideInLeft animated-content">
+              <div className="animated animated-content">
                 <RegisterForm switchShowBox={this.switchShowBox} showBox={showBox} />
               </div>
             ) : (
-              <div className="animated fadeInLeft animated-content">
+              <div className="animated animated-content">
                 <LoginForm switchShowBox={this.switchShowBox} showBox={showBox} />
               </div>
             )}

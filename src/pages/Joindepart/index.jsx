@@ -1,18 +1,28 @@
 /*
+ * @Description: 加入团队页
+ * @Author: longzhang6
+ * @Date: 2020-04-22 22:36:07
+ * @LastEditors: longzhang6
+ * @LastEditTime: 2020-04-22 22:50:28
+ */
+/*
  * @Description: 加入团队通知页
  * @Author: longzhang6
  * @Date: 2020-04-21 10:55:41
  * @LastEditors: longzhang6
  * @LastEditTime: 2020-04-22 00:03:57
  */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { Button, Form, Input, Select } from 'antd'
+import { isAuthenticated } from '@/utils/session'
+import { useHistory } from 'react-router-dom'
 
 const AddDepartMentNotice = () => {
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
+  let history = useHistory()
 
   const tailLayout = {
     wrapperCol: {
@@ -20,12 +30,17 @@ const AddDepartMentNotice = () => {
     }
   }
 
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      history.push('/login')
+    }
+  })
+
   const joinDepartMentHandle = () => {}
 
   return (
     <div style={{ padding: '0 16 16', marginTop: -16 }}>
       <AddDepartMentNoticeCon>
-        <AddDepartTitle>加入团队</AddDepartTitle>
         <AddDepartContent>
           <RealContent>
             <AddDepartMentTitle>浙江xx公司邀请您加入团队</AddDepartMentTitle>
@@ -132,14 +147,12 @@ const AddDepartMentNoticeCon = styled.div`
   width: 100%;
 `
 
-const AddDepartTitle = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  padding: 0 16px 10px;
-  background-color: #fff;
-`
-
 const AddDepartContent = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   margin: 16px;
   padding: 16px;
   background: #fff;

@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:10:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-21 22:35:39
+ * @LastEditTime: 2020-04-22 22:38:28
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -17,9 +17,7 @@ class MemberPage extends React.Component {
   switchCurSource(key) {}
 
   addMember() {
-    // TODO 暂时调试
-    // this.props.history.push('/team/member/addmember')
-    this.props.history.push('/team/member/joindepart')
+    this.props.history.push('/team/member/addmember')
   }
 
   render() {

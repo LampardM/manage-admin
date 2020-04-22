@@ -67,10 +67,6 @@ const menus = [
           {
             title: '编辑成员',
             key: '/team/member/editmember'
-          },
-          {
-            title: '加入团队',
-            key: '/team/member/joindepart'
           }
         ]
       },
@@ -104,7 +100,6 @@ const menus = [
 const blackList = [
   '/team/member/addmember',
   '/team/member/editmember',
-  '/team/member/joindepart',
   '/organization/auth/info',
   '/organization/approve/edit'
 ]

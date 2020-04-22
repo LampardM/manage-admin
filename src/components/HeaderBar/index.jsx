@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 01:31:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 12:51:58
+ * @LastEditTime: 2020-04-22 22:46:04
  */
 /** officail */
 import React from 'react'
@@ -16,7 +16,7 @@ import { Row, Col, Badge, Dropdown, Menu, Modal } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined, NotificationOutlined } from '@ant-design/icons'
 
 /** custom */
-import { isAuthenticated } from '../../utils/session'
+import { isAuthenticated } from '@/utils/session'
 
 //withRouter一定要写在前面，不然路由变化不会反映到props中去
 @withRouter
@@ -50,7 +50,8 @@ class HeaderBar extends React.Component {
       <div>
         <Link
           to={{ pathname: '/login', state: { from: location } }}
-          style={{ color: 'rgba(0, 0, 0, 0.65)' }}>
+          style={{ color: 'rgba(0, 0, 0, 0.65)' }}
+        >
           登录
         </Link>
         &nbsp;
@@ -103,11 +104,13 @@ class HeaderBar extends React.Component {
               align="center"
               justify="center"
               className="item"
-              onClick={() => this.setState({ count: 0 })}>
+              onClick={() => this.setState({ count: 0 })}
+            >
               <Badge
                 count={userInfoStore.isLogin ? count : 0}
                 overflowCount={99}
-                style={{ marginRight: -17 }}>
+                style={{ marginRight: -17 }}
+              >
                 <NotificationOutlined />
               </Badge>
             </Col>
@@ -122,7 +125,8 @@ class HeaderBar extends React.Component {
           closable={false}
           visible={visible}
           wrapClassName="vertical-center-modal"
-          onCancel={() => this.setState({ visible: false })}>
+          onCancel={() => this.setState({ visible: false })}
+        >
           {/* <img src={avatar} alt='' width='100%' /> */}
         </Modal>
       </div>

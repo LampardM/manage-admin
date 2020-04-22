@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 22:21:32
+ * @LastEditTime: 2020-04-22 22:25:01
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table } from 'antd'
@@ -121,7 +121,7 @@ const ArchitectureContent = () => {
 
   // 删除部门
   const deleteCurDepartment = () => {
-    console.log('editCurDepartment')
+    console.log('deleteCurDepartment')
     // TODO 查询信息
 
     // warning({
