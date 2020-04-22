@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 22:29:22
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-20 22:20:14
+ * @LastEditTime: 2020-04-22 23:06:06
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -35,7 +35,7 @@ const AddMemberTitle = styled.div`
 
 const AddMemberContent = styled.div`
   margin: 16px;
-  padding: 16px;
+  padding: 50px;
   background: #fff;
   display: flex;
   justify-content: center;

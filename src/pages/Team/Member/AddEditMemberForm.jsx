@@ -3,10 +3,10 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 00:04:32
+ * @LastEditTime: 2020-04-22 23:28:41
  */
 import React, { useState, useEffect } from 'react'
-import { Button, Form, Input, Select, TreeSelect, Checkbox, Space } from 'antd'
+import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col } from 'antd'
 import styled from 'styled-components'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 
@@ -21,6 +21,12 @@ const AddEditMemberForm = () => {
       offset: 5
     }
   }
+
+  const noticeMessage = [
+    { label: 'Apple', value: 'Apple' },
+    { label: 'Pear', value: 'Pear' },
+    { label: 'Orange', value: 'Orange' }
+  ]
 
   const treeData = [
     {
@@ -145,13 +151,49 @@ const AddEditMemberForm = () => {
             treeDefaultExpandAll
           />
         </Form.Item>
-        <Form.Item name="notice" label="通知方式">
+        <Form.Item name="checkbox-group" label="通知方式">
           <NoticeContent>
-            <Checkbox defaultChecked={true} disabled>
-              短信通知
-            </Checkbox>
-            <Checkbox onChange={changeNotice}>站内通知</Checkbox>
+            <Row>
+              <Col>
+                <Checkbox
+                  style={{
+                    lineHeight: '32px'
+                  }}
+                  defaultChecked
+                  disabled
+                >
+                  通过联系手机号发送短信通知
+                </Checkbox>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Checkbox
+                  style={{
+                    lineHeight: '32px'
+                  }}
+                >
+                  通过注册手机号发送站内通知
+                </Checkbox>
+              </Col>
+            </Row>
           </NoticeContent>
+        </Form.Item>
+        <Form.Item
+          name="registerphone"
+          label="注册手机号"
+          rules={[
+            {
+              required: true,
+              message: '请输入注册手机号'
+            },
+            {
+              pattern: '^1[345789][0-9]{9}$',
+              message: '请输入正确的手机号'
+            }
+          ]}
+        >
+          <Input placeholder="请输入注册手机号" addonBefore={PrefixSelector} />
         </Form.Item>
         <Form.Item name="desc" label="备注">
           <TextArea placeholder="备注" autoSize={{ minRows: 3, maxRows: 5 }} />

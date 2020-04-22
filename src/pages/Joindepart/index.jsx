@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-22 22:36:07
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 22:50:28
+ * @LastEditTime: 2020-04-22 22:55:38
  */
 /*
  * @Description: 加入团队通知页
@@ -85,7 +85,7 @@ const AddDepartMentNotice = () => {
               >
                 <Input placeholder="手机号码" addonBefore={PrefixSelector} />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 name="verify"
                 label="验证码"
                 rules={[
@@ -117,7 +117,7 @@ const AddDepartMentNotice = () => {
                     )}
                   </Form.Item>
                 </VerifyContent>
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item {...tailLayout} shouldUpdate>
                 {() => (
                   <Button
@@ -127,7 +127,7 @@ const AddDepartMentNotice = () => {
                     disabled={
                       !form.isFieldTouched('phone') ||
                       !form.isFieldTouched('name') ||
-                      !form.isFieldTouched('verify') ||
+                      // !form.isFieldTouched('verify') ||
                       form.getFieldsError().filter(({ errors }) => errors.length).length
                     }
                   >

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 22:25:01
+ * @LastEditTime: 2020-04-22 23:02:27
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table } from 'antd'
@@ -120,8 +120,8 @@ const ArchitectureContent = () => {
   }
 
   // 删除部门
-  const deleteCurDepartment = () => {
-    console.log('deleteCurDepartment')
+  const deleteCurDepartment = record => {
+    console.log('deleteCurDepartment', record)
     // TODO 查询信息
 
     // warning({
@@ -198,7 +198,7 @@ const ArchitectureContent = () => {
             render={(text, record) => (
               <span>
                 <a style={{ marginRight: 16 }}>Invite {record.lastName}</a>
-                <a onClick={deleteCurDepartment}>Delete</a>
+                <a onClick={() => deleteCurDepartment(record)}>Delete</a>
               </span>
             )}
           />
@@ -215,7 +215,7 @@ const ArchitectureContainer = styled.div`
 
 const ArchitectureTitle = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding: 16px;
   border-bottom: 1px solid #f0f0f0;
