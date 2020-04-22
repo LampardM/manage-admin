@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
- * @LastEditTime 2020-04-23 02:36:44
+ * @LastEditTime 2020-04-23 02:51:15
  * 
  * ```
  * interface ColumnsItem {
@@ -56,7 +56,7 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   const formatColumnsStructure = () => {
     const formatColumns = columns.map(it => ({
       ...it,
-      render: (text: array, record, rowIndex) => {
+      render: (text, record, rowIndex) => {
         const res = {
           props: {
             rowSpan: mergeCol[it.dataIndex][rowIndex]
@@ -242,7 +242,7 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
         }
       })
 
-      setCloneNodeData(nodeData)
+      setCloneNodeData(deepCopy(nodeData))
       // console.log('qiujie', nodeData);
     }
   }
