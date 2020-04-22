@@ -3,81 +3,89 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-20 22:04:39
+ * @LastEditTime: 2020-04-22 22:21:32
  */
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Cascader } from 'antd'
+import { Button, Modal, Form, Input, Cascader, Table } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ArchitectureModal from './ArchitectureModal'
-import { Tree } from 'element-react'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
 
 const { confirm, warning } = Modal
+const { Column, ColumnGroup } = Table
 
-const treeData = [
+const data = [
   {
-    id: 1,
-    label: '一级 1',
+    key: 1,
+    name: 'John Brown sr.',
+    age: 60,
+    address: 'New York No. 1 Lake Park',
     children: [
       {
-        id: 4,
-        label: '二级 1-1',
+        key: 11,
+        name: 'John Brown',
+        age: 42,
+        address: 'New York No. 2 Lake Park'
+      },
+      {
+        key: 12,
+        name: 'John Brown jr.',
+        age: 30,
+        address: 'New York No. 3 Lake Park',
         children: [
           {
-            id: 9,
-            label: '三级 1-1-1'
-          },
+            key: 121,
+            name: 'Jimmy Brown',
+            age: 16,
+            address: 'New York No. 3 Lake Park'
+          }
+        ]
+      },
+      {
+        key: 13,
+        name: 'Jim Green sr.',
+        age: 72,
+        address: 'London No. 1 Lake Park',
+        children: [
           {
-            id: 10,
-            label: '三级 1-1-2'
+            key: 131,
+            name: 'Jim Green',
+            age: 42,
+            address: 'London No. 2 Lake Park',
+            children: [
+              {
+                key: 1311,
+                name: 'Jim Green jr.',
+                age: 25,
+                address: 'London No. 3 Lake Park'
+              },
+              {
+                key: 1312,
+                name: 'Jimmy Green sr.',
+                age: 18,
+                address: 'London No. 4 Lake Park'
+              }
+            ]
           }
         ]
       }
     ]
   },
   {
-    id: 2,
-    label: '一级 2',
-    children: [
-      {
-        id: 5,
-        label: '二级 2-1'
-      },
-      {
-        id: 6,
-        label: '二级 2-2'
-      }
-    ]
-  },
-  {
-    id: 3,
-    label: '一级 3',
-    children: [
-      {
-        id: 7,
-        label: '二级 3-1'
-      },
-      {
-        id: 8,
-        label: '二级 3-2'
-      }
-    ]
+    key: 2,
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park'
   }
 ]
 
-const options = {
-  children: 'children',
-  label: 'label'
-}
-
 const ArchitectureContent = () => {
-  const [defaultAllExpand, setDefaultAllExpand] = useState(true)
   const [recursionResult, setRecursionResult] = useState([])
-  const [reLoadTree, setReLoadTree] = useState(false)
   const [modalShow, setModalShow] = useState(false)
   const [modalType, setModalType] = useState('create')
   const [subInfo, setSubInfo] = useState({})
+  const [expandedRowKeys, setExpandedRowKeys] = useState([])
 
   const recursionExpandKeys = (arr, result) => {
     arr.forEach(element => {
@@ -94,18 +102,8 @@ const ArchitectureContent = () => {
   }
 
   useEffect(() => {
-    setRecursionResult(treeData)
+    setRecursionResult(data)
   })
-
-  // TODO 后期补全
-  const openOrCloseAllNode = () => {
-    setDefaultAllExpand(!defaultAllExpand)
-    setReLoadTree(!reLoadTree)
-  }
-
-  const onNodeClicked = (nodeModel, node) => {
-    // nodeModel = true
-  }
 
   // 添加子部门
   const addChildDepartment = (store, data, nodeModel) => {
@@ -159,39 +157,14 @@ const ArchitectureContent = () => {
     setModalShow(false)
   }
 
-  // Tree自定义内容
-  const renderContent = (nodeModel, data, store) => {
-    return (
-      <span>
-        <span>
-          <span>{data.label}</span>
-        </span>
-        <span style={{ float: 'right', marginRight: '20px' }}>
-          <span
-            size="mini"
-            onClick={() => addChildDepartment(store, data, nodeModel)}
-            style={{ padding: '5px', color: '#1890ff' }}
-          >
-            添加子部门
-          </span>
-          <span
-            size="mini"
-            onClick={() => editCurDepartment(store, data, nodeModel)}
-            style={{ padding: '5px', color: '#1890ff' }}
-          >
-            编辑
-          </span>
-          <span
-            size="mini"
-            onClick={() => deleteCurDepartment(store, data, nodeModel)}
-            style={{ padding: '5px', color: '#1890ff' }}
-          >
-            删除
-          </span>
-        </span>
-      </span>
-    )
+  const onExpandedRowsChange = expandedRows => {
+    console.log(expandedRows, 'expandedRows')
+    setExpandedRowKeys(expandedRows)
   }
+
+  const onExpand = (expanded, record) => {}
+
+  const rowExpandable = record => {}
 
   return (
     <ArchitectureContainer>
@@ -208,16 +181,28 @@ const ArchitectureContent = () => {
         </Button>
       </ArchitectureTitle>
       <ArchitectureMain>
-        <Tree
-          style={{ border: 'none' }}
-          data={recursionResult}
-          options={options}
-          nodeKey="id"
-          defaultExpandAll={defaultAllExpand}
-          expandOnClickNode={false}
-          onNodeClicked={onNodeClicked}
-          renderContent={(...args) => renderContent(...args)}
-        />
+        <Table
+          showHeader={false}
+          dataSource={recursionResult}
+          onExpandedRowsChange={onExpandedRowsChange}
+          onExpand={onExpand}
+          rowExpandable={rowExpandable}
+          expandedRowKeys={expandedRowKeys}
+        >
+          <Column title="Name" dataIndex="name" key="name" />
+          <Column title="Age" dataIndex="age" key="age" />
+          <Column title="Address" dataIndex="address" key="address" />
+          <Column
+            title="Action"
+            key="action"
+            render={(text, record) => (
+              <span>
+                <a style={{ marginRight: 16 }}>Invite {record.lastName}</a>
+                <a onClick={deleteCurDepartment}>Delete</a>
+              </span>
+            )}
+          />
+        </Table>
       </ArchitectureMain>
     </ArchitectureContainer>
   )
