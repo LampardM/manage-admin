@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-19 15:38:09
  * @LastEditors jieq
- * @LastEditTime 2020-04-22 03:06:55
+ * @LastEditTime 2020-04-23 20:55:06
  */
 /** official */
 import { observer } from 'mobx-react'
@@ -49,7 +49,7 @@ const Privilege = ({ className }) => {
             {
               key: 'teamManagement',
               value: '团队管理',
-              checked: true,
+              // checked: true,
               subs: [
                 {
                   key: 'organizationalStructure',
@@ -79,8 +79,8 @@ const Privilege = ({ className }) => {
                 },
                 {
                   key: 'allDevices',
-                  value: '全部设备',
-                  checked: true
+                  value: '全部设备'
+                  // checked: true
                 }
               ]
             }

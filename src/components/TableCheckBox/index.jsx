@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
- * @LastEditTime 2020-04-23 02:51:15
+ * @LastEditTime 2020-04-23 23:22:56
  * 
  * ```
  * interface ColumnsItem {
@@ -73,11 +73,9 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   const formatDataStructure = () => {
     let _cloneNodeData = deepCopy(cloneNodeData)
 
-    console.log('columns', columns)
-    console.log('cloneNodeData', _cloneNodeData)
-
-    _cloneNodeData = recursiveSetting(_cloneNodeData)
-
+    console.log('before', _cloneNodeData)
+    // _cloneNodeData = recursiveSetting(_cloneNodeData)
+    console.log('after', _cloneNodeData)
     for (let i = 0; i < nodeToRow(_cloneNodeData); i++) {
       _cloneNodeData[i] = deepCopy(_cloneNodeData[0])
     }
@@ -101,7 +99,6 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
       return acc
     }, [])
 
-    console.log('formatData', formatData)
     setDataSource(formatData)
 
     //表头依赖于内容数据结构
@@ -127,21 +124,18 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @description 如果当前DataSourceItem的checked为true(勾选)，则他的子元素（subs）下面的每一个则需要勾选
    * @brief 递归设置联动
    * @param {Array<DataSourceItem>} data
-   * @param {boolean} [forceChecked=false] 因为联动，强制设置勾选
+   * @param {boolean} [forceFollowFather=false] 是否强制跟随父节点
+   * @param {boolean} fatherState 若forceFollowFather为true，父节点的勾选状态
    * @returns {Array<DataSourceItem>}
    */
-  const recursiveSetting = (dataSource, forceChecked = false) => {
+  const recursiveSetting = (dataSource, forceFollowFather = false, fatherState) => {
     if (dataSource.length) {
       dataSource.forEach(it => {
-        if (it.subs) {
-          if (it.checked) {
-            return recursiveSetting(it.subs, true)
-          } else {
-            it.checked === undefined && (it.checked = forceChecked)
-            return recursiveSetting(it.subs, forceChecked)
+        if (forceFollowFather) {
+          it.checked = fatherState
+          if (it.subs) {
+            it.subs = recursiveSetting(it.subs, forceFollowFather, fatherState)
           }
-        } else {
-          it.checked === undefined && (it.checked = forceChecked)
         }
       })
       return dataSource
@@ -174,7 +168,6 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @returns {void}
    */
   const genMergeColArray = dataSource => {
-    console.log('mergeCol:dataSource', dataSource)
     let tmp = {}
     const res = {}
     columns.forEach(({ dataIndex = '' }) => {
@@ -200,7 +193,6 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
         tmp[existKey] = existValue
       })
     })
-    console.log('mergeCol', res)
     setMergeCol(res)
   }
 
@@ -229,22 +221,25 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @param {Array<DataSourceItem>} nodeData 源data
    * @param {string} value
    * @param {boolean} newState
+   * @param {boolean} newState
    * @return {void}
    */
-  const queryNodeFromCloneNodeData = (nodeData, value, newState) => {
+  const setNodeAndLinkageState = (nodeData, value, newState) => {
     if (nodeData.length) {
-      nodeData.forEach(it => {
+      for (let i = 0; i < nodeData.length; i++) {
+        const it = nodeData[i]
         if (it.key === value) {
           it.checked = newState
-          return
-        } else if (it.subs && it.subs.length) {
-          return queryNodeFromCloneNodeData(it.subs, value, newState)
+          if (it.subs) {
+            const nodeDataAfterSetChild = recursiveSetting(it.subs, true, newState)
+            it.subs = nodeDataAfterSetChild
+          }
+        } else if (it.subs) {
+          it.subs = setNodeAndLinkageState(it.subs, value, newState)
         }
-      })
-
-      setCloneNodeData(deepCopy(nodeData))
-      // console.log('qiujie', nodeData);
+      }
     }
+    return nodeData
   }
 
   /**
@@ -256,7 +251,8 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   const onCheckboxChange = ({ target }) => {
     const { value, checked } = target
     console.log('checkedList', value, checked)
-    queryNodeFromCloneNodeData(cloneNodeData, value, checked)
+    const nodeData = setNodeAndLinkageState(cloneNodeData, value, checked)
+    setCloneNodeData(deepCopy(nodeData))
   }
 
   /**
@@ -267,7 +263,6 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @returns {React.ReactElement}
    */
   const renderCheckboxItem = (text, record, index) => {
-    console.log('checkboxItem', text)
     return (
       <>
         {text.map(it => {
