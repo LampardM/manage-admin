@@ -4,13 +4,13 @@
  * @Author jieq
  * @Date 2020-04-18 12:11:39
  * @LastEditors jieq
- * @LastEditTime 2020-04-19 14:35:10
+ * @LastEditTime 2020-04-24 02:01:14
  */
 /** offcial */
 import React from 'react'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import { withRouter, useLocation } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 /** custom */
 import Enhance from '../../../Enhance'

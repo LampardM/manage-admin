@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-19 15:38:09
  * @LastEditors jieq
- * @LastEditTime 2020-04-23 20:55:06
+ * @LastEditTime 2020-04-24 02:06:22
  */
 /** official */
 import { observer } from 'mobx-react'
@@ -12,27 +12,27 @@ import styled from 'styled-components'
 import React, { useState, useEffect } from 'react'
 
 /** custom */
-import { useStore } from '@/hooks/useStore'
+// import { useStore } from '@/hooks/useStore'
 
 /** ui */
 import { Checkbox } from 'antd'
 import TableCheckBox from '../../../components/TableCheckBox'
 
-const allNode = [
-  'managementFunction', //管理功能
-  'teamManagement', //团队管理
-  'IOTDeviceManagement', //IOT设备管理
-  'organizationalStructure', //组织架构
-  'memberManagement', //成员管理
-  'characterManagement', //角色管理
-  'agreementSetting', //协议设置
-  'onlineDevices', //在线设备
-  'allDevices' //全部设备
-]
+// const allNode = [
+//   'managementFunction', //管理功能
+//   'teamManagement', //团队管理
+//   'IOTDeviceManagement', //IOT设备管理
+//   'organizationalStructure', //组织架构
+//   'memberManagement', //成员管理
+//   'characterManagement', //角色管理
+//   'agreementSetting', //协议设置
+//   'onlineDevices', //在线设备
+//   'allDevices' //全部设备
+// ]
 
 const Privilege = ({ className }) => {
   const [tableData, setTableData] = useState([])
-  const [checkedList, setCheckedList] = useState([])
+  // const [checkedList, setCheckedList] = useState([])
   const [isTableLoading, setIsTableLoading] = useState(true)
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const Privilege = ({ className }) => {
             {
               key: 'teamManagement',
               value: '团队管理',
-              // checked: true,
+              checked: true,
               subs: [
                 {
                   key: 'organizationalStructure',
@@ -79,8 +79,8 @@ const Privilege = ({ className }) => {
                 },
                 {
                   key: 'allDevices',
-                  value: '全部设备'
-                  // checked: true
+                  value: '全部设备',
+                  checked: true
                 }
               ]
             }

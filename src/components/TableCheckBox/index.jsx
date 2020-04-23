@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
- * @LastEditTime 2020-04-23 23:22:56
+ * @LastEditTime 2020-04-24 02:02:12
  * 
  * ```
  * interface ColumnsItem {
@@ -30,6 +30,7 @@
 
 /** official */
 // import styled from 'styled-components'
+import { cloneDeep } from 'lodash'
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 
 /** vendor */
@@ -71,13 +72,10 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   }
 
   const formatDataStructure = () => {
-    let _cloneNodeData = deepCopy(cloneNodeData)
+    let _cloneNodeData = cloneDeep(cloneNodeData)
 
-    console.log('before', _cloneNodeData)
-    // _cloneNodeData = recursiveSetting(_cloneNodeData)
-    console.log('after', _cloneNodeData)
     for (let i = 0; i < nodeToRow(_cloneNodeData); i++) {
-      _cloneNodeData[i] = deepCopy(_cloneNodeData[0])
+      _cloneNodeData[i] = cloneDeep(_cloneNodeData[0])
     }
 
     const formatData = _cloneNodeData.reduce((acc, cur, nodeIdx) => {
@@ -123,18 +121,18 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   /**
    * @description 如果当前DataSourceItem的checked为true(勾选)，则他的子元素（subs）下面的每一个则需要勾选
    * @brief 递归设置联动
-   * @param {Array<DataSourceItem>} data
-   * @param {boolean} [forceFollowFather=false] 是否强制跟随父节点
-   * @param {boolean} fatherState 若forceFollowFather为true，父节点的勾选状态
+   * @param {Array<DataSourceItem>} dataSource
+   * @param {boolean} [forceFollowParent=false] 是否强制跟随父节点
+   * @param {boolean} parentState 若forceFollowParent为true，父节点的勾选状态
    * @returns {Array<DataSourceItem>}
    */
-  const recursiveSetting = (dataSource, forceFollowFather = false, fatherState) => {
+  const recursiveSetting = (dataSource, forceFollowParent = false, parentState) => {
     if (dataSource.length) {
       dataSource.forEach(it => {
-        if (forceFollowFather) {
-          it.checked = fatherState
+        if (forceFollowParent) {
+          it.checked = parentState
           if (it.subs) {
-            it.subs = recursiveSetting(it.subs, forceFollowFather, fatherState)
+            it.subs = recursiveSetting(it.subs, forceFollowParent, parentState)
           }
         }
       })
@@ -142,6 +140,28 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     } else {
       return dataSource
     }
+  }
+
+  /**
+   * @description 递归父节点设置
+   * @param {DataSourceItem} parentNodeData
+   * @param {Array<DataSourceItem>} childNodeData
+   * @param {boolean} childState
+   */
+  const recursiveParentSetting = (parentNodeData, childNodeData, childState) => {
+    if (childState) {
+      if (childNodeData.every(it => it.checked === childState)) {
+        //兄弟节点一致父节点勾选
+        parentNodeData.checked = childState
+      }
+    } else {
+      //兄弟节点不一致取消父节点勾选
+      parentNodeData.checked = childState
+    }
+    if (parentNodeData.parent) {
+      return recursiveParentSetting(parentNodeData.parent, parentNodeData.parent.subs, childState)
+    }
+    return parentNodeData
   }
 
   /**
@@ -197,49 +217,60 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   }
 
   /**
-   * @description 深拷贝
-   * @param {T} data
-   * @returns {T}
-   */
-  const deepCopy = data => {
-    let dataTmp = undefined
-
-    if (data === null || !(typeof data === 'object')) {
-      dataTmp = data
-    } else {
-      dataTmp = data.constructor.name === 'Array' ? [] : {}
-
-      for (let key in data) {
-        dataTmp[key] = deepCopy(data[key])
-      }
-    }
-    return dataTmp
-  }
-
-  /**
    * @description 递归于cloneNodeData里找到值为value的节点，将其checkbox状态更新
-   * @param {Array<DataSourceItem>} nodeData 源data
-   * @param {string} value
-   * @param {boolean} newState
-   * @param {boolean} newState
-   * @return {void}
+   * @brief 联动设置
+   * @param {object} argv 参数
+   * @param {DataSourceItem} argv.parentNode 父节点
+   * @param {Array<DataSourceItem>} argv.nodeData 源data
+   * @param {string} argv.value
+   * @param {boolean} argv.newState
+   * @param {boolean} argv.newState
+   * @return {Array<DataSourceItem, Array<DataSourceItem>>}
    */
-  const setNodeAndLinkageState = (nodeData, value, newState) => {
+  const setNodeAndLinkageState = ({ parentNode, nodeData, value, newState }) => {
     if (nodeData.length) {
       for (let i = 0; i < nodeData.length; i++) {
-        const it = nodeData[i]
+        let it = nodeData[i]
+
+        // if (parentNode) {
+        //   const { key, value, checked, parent } = parentNode
+        //   it.parent = parentNode /* {
+        //     key,
+        //     value,
+        //     parent,
+        //     checked
+        //   } */
+        // }
+
         if (it.key === value) {
+          //当前设置
           it.checked = newState
+
+          //下级设置
           if (it.subs) {
             const nodeDataAfterSetChild = recursiveSetting(it.subs, true, newState)
             it.subs = nodeDataAfterSetChild
           }
+
+          //上级级设置
+          if (it.parent) {
+            parentNode = recursiveParentSetting(parentNode, nodeData, newState)
+          }
         } else if (it.subs) {
-          it.subs = setNodeAndLinkageState(it.subs, value, newState)
+          //当前未找到，去下级继续查找
+          const res = setNodeAndLinkageState({
+            value,
+            newState,
+            parentNode: it,
+            nodeData: it.subs
+          })
+
+          it = res[0]
+          it.subs = res[1]
         }
       }
     }
-    return nodeData
+    return [parentNode, nodeData]
   }
 
   /**
@@ -251,8 +282,14 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   const onCheckboxChange = ({ target }) => {
     const { value, checked } = target
     console.log('checkedList', value, checked)
-    const nodeData = setNodeAndLinkageState(cloneNodeData, value, checked)
-    setCloneNodeData(deepCopy(nodeData))
+    const [parentNode, nodeData] = setNodeAndLinkageState({
+      value,
+      parentNode: null,
+      newState: checked,
+      nodeData: cloneNodeData
+    })
+
+    setCloneNodeData(cloneDeep(parentNode || nodeData))
   }
 
   /**
@@ -282,14 +319,57 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     )
   }
 
+  /**
+   * @description 递归查找默认勾选的项
+   * @param {Array<DataSourceItem>} nodeData
+   */
+  const recursiveQueryCheckedFromInital = ({ parentNode, nodeData }) => {
+    nodeData.forEach(it => {
+      if (it.checked) {
+        if (it.subs) {
+          it.subs = recursiveSetting(it.subs, true, it.checked)
+        }
+        if (it.parent) {
+          parentNode = recursiveParentSetting(parentNode, nodeData, !!it.checked)
+        }
+      } else {
+        if (it.subs) {
+          recursiveQueryCheckedFromInital({ parentNode: it, nodeData: it.subs })
+        }
+      }
+    })
+  }
+
+  /**
+   * @description 初始化遍历树结构，让其索引父节点
+   * @param {object} argv{ parentNode, nodeData }
+   * @param {DataSourceItem} argv.parentNode
+   * @param {Array<DataSourceItem>} argv.nodeData
+   * @returns {Array<DataSourceItem>}
+   */
+  const traverseNodeData = ({ parentNode, nodeData }) => {
+    if (nodeData.length) {
+      nodeData.forEach(it => {
+        if (parentNode) {
+          it.parent = parentNode
+        }
+        if (it.subs) {
+          it.subs = traverseNodeData({ parentNode: it, nodeData: it.subs })
+        }
+      })
+    }
+    return nodeData
+  }
+
   useEffect(() => {
-    setCloneNodeData(nodeData) //同步传进来的nodeData的一份备份
+    const cloneNodeData = cloneDeep(nodeData)
 
-    // const formatData = formatDataStructure()
-    // setDataSource(formatData)
-
-    // const mergeColArray = genMergeColArray(formatData)
-    // setMergeCol(mergeColArray)
+    const cloneNodeDataAftertraverse = traverseNodeData({
+      parentNode: null,
+      nodeData: cloneNodeData
+    })
+    recursiveQueryCheckedFromInital({ parentNode: null, nodeData: cloneNodeDataAftertraverse })
+    setCloneNodeData(cloneNodeData)
   }, [nodeData])
 
   useEffect(() => {
