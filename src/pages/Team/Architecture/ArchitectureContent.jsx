@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 23:02:27
+ * @LastEditTime: 2020-04-23 21:16:48
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table } from 'antd'
@@ -162,7 +162,32 @@ const ArchitectureContent = () => {
     setExpandedRowKeys(expandedRows)
   }
 
-  const onExpand = (expanded, record) => {}
+  // * 递归查同级节点
+  const findSameLevelNode = (data, key) => {
+    let result
+    if (!data) {
+      return
+    }
+    for (var i = 0; i < data.length; i++) {
+      let item = data[i]
+      if (item.key == key) {
+        result = data
+        return result
+      } else if (item.children && item.children.length > 0) {
+        result = findSameLevelNode(item.children, key)
+        if (result) {
+          return result
+        }
+      }
+    }
+    return result
+  }
+
+  const onExpand = (expanded, record) => {
+    console.log(record, 'expanded')
+    let sameLevelNode = findSameLevelNode(recursionResult, record.key)
+    console.log(sameLevelNode, 'sameLevelNode')
+  }
 
   const rowExpandable = record => {}
 
