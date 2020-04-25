@@ -4,17 +4,22 @@
  * @Author jieq
  * @Date 2020-04-18 10:47:22
  * @LastEditors jieq
- * @LastEditTime 2020-04-18 21:51:45
+ * @LastEditTime 2020-04-26 00:25:32
  */
-import { action, observable } from 'mobx'
+import { toJS, action, observable } from 'mobx'
 
 class OrganizationCheckStore {
-  //分页数据
+  initFilters = {}
+
   @observable
   filters = {}
 
   @action setFilters(value) {
     this.filters = value
+  }
+
+  @action clearFilters() {
+    this.filters = this.initFilters
   }
 }
 

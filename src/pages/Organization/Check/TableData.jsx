@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:52
  * @LastEditors jieq
- * @LastEditTime 2020-04-18 23:55:09
+ * @LastEditTime 2020-04-25 23:34:42
  */
 /** official */
 import { toJS } from 'mobx'
@@ -65,6 +65,7 @@ const TableData = ({ filters }) => {
   }, [OrganizationCheckStore.filters])
 
   const fetch = async (params = {}) => {
+    setIsTableLoading(true)
     console.log('fetch', params)
     // request({
     //   url: 'https://randomuser.me/api',

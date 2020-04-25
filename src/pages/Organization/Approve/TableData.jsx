@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:52
  * @LastEditors jieq
- * @LastEditTime 2020-04-21 00:51:43
+ * @LastEditTime 2020-04-26 00:22:51
  */
 /** official */
 import { toJS } from 'mobx'
@@ -61,7 +61,7 @@ const columns = [
   }
 ]
 
-const TableData = ({ className, filters }) => {
+const TableData = observer(({ className, filters }) => {
   const history = useHistory()
   const [data, setData] = useState([])
   const { OrganizationApproveStore } = useStore()
@@ -202,9 +202,9 @@ const TableData = ({ className, filters }) => {
       />
     </div>
   )
-}
+})
 
-export default observer(styled(TableData)`
+export default styled(TableData)`
   .ant-menu-submenu-title {
     color: #1890ff;
     margin: 0 !important;
@@ -239,4 +239,4 @@ export default observer(styled(TableData)`
     line-height: inherit !important;
     display: inline-block !important;
   }
-`)
+`

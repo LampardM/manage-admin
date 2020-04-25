@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:47
  * @LastEditors jieq
- * @LastEditTime 2020-04-24 02:04:02
+ * @LastEditTime 2020-04-26 00:04:38
  */
 /** official */
 import React /* , { useState } */ from 'react'
@@ -28,7 +28,13 @@ export default observer(() => {
   }
 
   return (
-    <Form form={form} name="advanced-search" className="advanced-search" onFinish={onFinish}>
+    <Form
+      form={form}
+      name="advanced-search"
+      className="advanced-search"
+      initialValues={OrganizationCheckStore.filters}
+      onFinish={onFinish}
+    >
       <Row gutter={5}>
         <Col style={{ width: 250 }}>
           <Form.Item name="date">
@@ -38,32 +44,27 @@ export default observer(() => {
 
         <Col style={{ width: 130 }}>
           <Form.Item name="teamName">
-            <Input placeholder="请输入团队名称" value={OrganizationCheckStore.teamName} />
+            <Input placeholder="请输入团队名称" />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 170 }}>
           <Form.Item name="teamType">
-            <Select
-              allowClear
-              style={{ width: '100%' }}
-              placeholder="请选择团队类型"
-              value={OrganizationCheckStore.teamType}
-            >
-              <Select.Option value={OrganizationCheckStore.teamType}>Lucy</Select.Option>
+            <Select allowClear style={{ width: '100%' }} placeholder="请选择团队类型">
+              <Select.Option value={'Lucy'}>Lucy</Select.Option>
             </Select>
           </Form.Item>
         </Col>
 
         <Col style={{ width: 150 }}>
           <Form.Item name="name">
-            <Input placeholder="请输入联系人姓名" value={OrganizationCheckStore.name} />
+            <Input placeholder="请输入联系人姓名" />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 130 }}>
           <Form.Item name="phone">
-            <Input placeholder="请输入手机号码" value={OrganizationCheckStore.phone} />
+            <Input placeholder="请输入手机号码" />
           </Form.Item>
         </Col>
 
@@ -77,6 +78,7 @@ export default observer(() => {
             }}
             onClick={() => {
               form.resetFields()
+              OrganizationCheckStore.clearFilters()
             }}
           >
             重置

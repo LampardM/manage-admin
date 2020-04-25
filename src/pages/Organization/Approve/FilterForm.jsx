@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:47
  * @LastEditors jieq
- * @LastEditTime 2020-04-20 23:40:30
+ * @LastEditTime 2020-04-26 00:11:09
  */
 /** official */
 import React from 'react'
@@ -27,40 +27,41 @@ export default observer(() => {
   }
 
   return (
-    <Form form={form} name="advanced-search" className="advanced-search" onFinish={onFinish}>
+    <Form
+      form={form}
+      onFinish={onFinish}
+      name="advanced-search"
+      className="advanced-search"
+      initialValues={OrganizationApproveStore.filters}
+    >
       <Row gutter={5}>
         <Col style={{ width: 160 }}>
           <Form.Item name="teamNo">
-            <Input placeholder="请输入团队号" value={OrganizationApproveStore.teamNo} />
+            <Input placeholder="请输入团队号" />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 160 }}>
           <Form.Item name="teamName">
-            <Input placeholder="请输入团队名称" value={OrganizationApproveStore.teamName} />
+            <Input placeholder="请输入团队名称" />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 150 }}>
           <Form.Item name="name">
-            <Input placeholder="请输入联系人姓名" value={OrganizationApproveStore.name} />
+            <Input placeholder="请输入联系人姓名" />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 130 }}>
           <Form.Item name="phone">
-            <Input placeholder="请输入联系电话" value={OrganizationApproveStore.phone} />
+            <Input placeholder="请输入联系电话" />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 170 }}>
           <Form.Item name="status">
-            <Select
-              allowClear
-              style={{ width: '100%' }}
-              placeholder="请选择状态"
-              value={OrganizationApproveStore.status}
-            >
+            <Select allowClear style={{ width: '100%' }} placeholder="请选择状态">
               <Select.Option value={'enable'}>启用</Select.Option>
               <Select.Option value={'disable'}>禁用</Select.Option>
             </Select>
@@ -77,6 +78,7 @@ export default observer(() => {
             }}
             onClick={() => {
               form.resetFields()
+              OrganizationApproveStore.clearFilters()
             }}
           >
             重置
