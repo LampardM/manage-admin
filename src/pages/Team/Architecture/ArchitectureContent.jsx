@@ -18,25 +18,25 @@ const { Column, ColumnGroup } = Table
 const data = [
   {
     key: 1,
-    name: 'John Brown sr.',
+    name: '1',
     age: 60,
     address: 'New York No. 1 Lake Park',
     children: [
       {
         key: 11,
-        name: 'John Brown',
+        name: '1.1',
         age: 42,
         address: 'New York No. 2 Lake Park'
       },
       {
         key: 12,
-        name: 'John Brown jr.',
+        name: '1.2',
         age: 30,
         address: 'New York No. 3 Lake Park',
         children: [
           {
             key: 121,
-            name: 'Jimmy Brown',
+            name: '2.1',
             age: 16,
             address: 'New York No. 3 Lake Park'
           }
@@ -44,25 +44,25 @@ const data = [
       },
       {
         key: 13,
-        name: 'Jim Green sr.',
+        name: '1.3',
         age: 72,
         address: 'London No. 1 Lake Park',
         children: [
           {
             key: 131,
-            name: 'Jim Green',
+            name: '2.2',
             age: 42,
             address: 'London No. 2 Lake Park',
             children: [
               {
                 key: 1311,
-                name: 'Jim Green jr.',
+                name: '3.1',
                 age: 25,
                 address: 'London No. 3 Lake Park'
               },
               {
                 key: 1312,
-                name: 'Jimmy Green sr.',
+                name: '3.2',
                 age: 18,
                 address: 'London No. 4 Lake Park'
               }
@@ -74,7 +74,7 @@ const data = [
   },
   {
     key: 2,
-    name: 'Joe Black',
+    name: '2',
     age: 32,
     address: 'Sidney No. 1 Lake Park'
   }
@@ -157,10 +157,10 @@ const ArchitectureContent = () => {
     setModalShow(false)
   }
 
-  const onExpandedRowsChange = expandedRows => {
-    console.log(expandedRows, 'expandedRows')
-    setExpandedRowKeys(expandedRows)
-  }
+  // const onExpandedRowsChange = expandedRows => {
+  //   console.log(expandedRows, 'expandedRows')
+  //   setExpandedRowKeys(expandedRows)
+  // }
 
   // * 递归查同级节点
   const findSameLevelNode = (data, key) => {
@@ -184,9 +184,24 @@ const ArchitectureContent = () => {
   }
 
   const onExpand = (expanded, record) => {
-    console.log(record, 'expanded')
-    let sameLevelNode = findSameLevelNode(recursionResult, record.key)
-    console.log(sameLevelNode, 'sameLevelNode')
+    let cloneExpandedRowKeys = [...expandedRowKeys]
+    const sameLevelNode = findSameLevelNode(recursionResult, record.key)
+    const siblingNodeKey = sameLevelNode.reduce((acc, cur, curIdx) => {
+      if (cur.key !== record.key) {
+        acc.push(cur.key)
+      }
+      return acc
+    }, [])
+
+    if (expanded) {
+      cloneExpandedRowKeys = cloneExpandedRowKeys.filter(key => !siblingNodeKey.includes(key))
+      cloneExpandedRowKeys.push(record.key)
+    } else {
+      const curIdx = cloneExpandedRowKeys.findIndex(key => key === record.key)
+      cloneExpandedRowKeys.splice(curIdx, 1)
+    }
+
+    setExpandedRowKeys(cloneExpandedRowKeys)
   }
 
   const rowExpandable = record => {}
@@ -209,7 +224,7 @@ const ArchitectureContent = () => {
         <Table
           showHeader={false}
           dataSource={recursionResult}
-          onExpandedRowsChange={onExpandedRowsChange}
+          // onExpandedRowsChange={onExpandedRowsChange}
           onExpand={onExpand}
           rowExpandable={rowExpandable}
           expandedRowKeys={expandedRowKeys}
