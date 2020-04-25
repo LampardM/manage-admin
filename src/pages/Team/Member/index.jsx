@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:10:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 22:38:28
+ * @LastEditTime: 2020-04-25 21:42:27
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -14,7 +14,14 @@ import { withRouter } from 'react-router-dom'
 import { Button, Space } from 'antd'
 @withRouter
 class MemberPage extends React.Component {
-  switchCurSource(key) {}
+  state = {
+    curselect: 'joined'
+  }
+  switchCurSource(key) {
+    this.setState({
+      curselect: key
+    })
+  }
 
   addMember() {
     this.props.history.push('/team/member/addmember')
@@ -22,22 +29,36 @@ class MemberPage extends React.Component {
 
   render() {
     const { className } = this.props
+    const { curselect } = this.state
+
     return (
       <div className={className} style={{ padding: '0 16 16', marginTop: -16 }}>
         <div className="member-container">
           <div className="member-title">成员管理</div>
-          <MemberHeader switchCurSource={this.switchCurSource} />
+          <MemberHeader switchCurSource={this.switchCurSource.bind(this)} />
           <div className="member-con">
             <FilterMember></FilterMember>
-            <div className="add-remove">
-              <Space>
-                <Button type="primary" onClick={this.addMember.bind(this)}>
-                  添加成员
-                </Button>
-                <Button>删除</Button>
-              </Space>
-            </div>
-            <MemberTable></MemberTable>
+            {curselect === 'joined' ? (
+              <div className="add-remove">
+                <Space>
+                  <Button type="primary" onClick={this.addMember.bind(this)}>
+                    添加成员
+                  </Button>
+                  <Button>删除</Button>
+                </Space>
+              </div>
+            ) : (
+              <div className="add-remove">
+                <Space>
+                  <Button type="primary" onClick={this.addMember.bind(this)}>
+                    再发送
+                  </Button>
+                  <Button>取消邀请</Button>
+                </Space>
+              </div>
+            )}
+
+            <MemberTable curselect={curselect}></MemberTable>
           </div>
         </div>
       </div>
