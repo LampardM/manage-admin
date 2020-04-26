@@ -104,6 +104,10 @@ const menus = [
   {
     title: '创建团队',
     key: '/create'
+  },
+  {
+    title: '团队设置',
+    key: '/setting'
   }
 ]
 

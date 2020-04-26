@@ -1,16 +1,9 @@
 /*
- * @Description: 加入团队页
- * @Author: longzhang6
- * @Date: 2020-04-22 22:36:07
- * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 22:55:38
- */
-/*
  * @Description: 加入团队通知页
  * @Author: longzhang6
  * @Date: 2020-04-21 10:55:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 00:03:57
+ * @LastEditTime: 2020-04-26 14:38:52
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'

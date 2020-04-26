@@ -41,6 +41,8 @@ const TerminalOnline = LoadableComponent(() => import('@/pages/Terminal/Online')
 const TerminalDevices = LoadableComponent(() => import('@/pages/Terminal/Devices')) // 全部设备
 const TerminalAgreement = LoadableComponent(() => import('@/pages/Terminal/Agreement')) // 协议设置
 
+const Settings = LoadableComponent(() => import('@/pages/Setting')) // 团队设置
+
 const MainContent = ({ location }) => {
   const [breadcrumb, setBreadcrumb] = useState([])
   const { pathname } = location
@@ -123,6 +125,8 @@ const MainContent = ({ location }) => {
         <PrivateRoute exact path="/terminal/online" component={TerminalOnline} />
         <PrivateRoute exact path="/terminal/devices" component={TerminalDevices} />
         <PrivateRoute exact path="/terminal/agreement" component={TerminalAgreement} />
+
+        <PrivateRoute exact path="/setting" component={Settings} />
 
         <Redirect exact from="/" to="/home" />
       </Switch>
