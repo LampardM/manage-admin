@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 00:04:23
+ * @LastEditTime: 2020-04-26 09:05:00
  */
 import { observer } from 'mobx-react'
 import React, { useState, useEffect, useCallback } from 'react'
@@ -44,9 +44,8 @@ const joinMenuHandler = (record, item, key) => {}
 const joinedMenu = record => {
   return (
     <Menu onClick={(item, key) => joinMenuHandler(record, item, key)}>
-      <Menu.Item key="1">1st menu item</Menu.Item>
-      <Menu.Item key="2">2nd memu item</Menu.Item>
-      <Menu.Item key="3">3rd menu item</Menu.Item>
+      <Menu.Item key="1">详情</Menu.Item>
+      <Menu.Item key="2">删除</Menu.Item>
     </Menu>
   )
 }
@@ -54,9 +53,8 @@ const joinedMenu = record => {
 const invitedMenu = record => {
   return (
     <Menu onClick={(item, key) => joinMenuHandler(record, item, key)}>
-      <Menu.Item key="1">1st menu item</Menu.Item>
-      <Menu.Item key="2">2nd memu item</Menu.Item>
-      <Menu.Item key="3">3rd menu item</Menu.Item>
+      <Menu.Item key="1">复制链接</Menu.Item>
+      <Menu.Item key="2">取消邀请</Menu.Item>
     </Menu>
   )
 }
@@ -64,7 +62,7 @@ const invitedMenu = record => {
 const joinedAction = record => {
   return (
     <Space>
-      <span>编辑</span>
+      <span style={{ color: '#1890ff' }}>编辑</span>
       <Dropdown overlay={() => joinedMenu(record)}>
         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
           更多
@@ -78,7 +76,7 @@ const joinedAction = record => {
 const invitedAction = record => {
   return (
     <Space>
-      <span>再邀请</span>
+      <span style={{ color: '#1890ff' }}>再邀请</span>
       <Dropdown overlay={() => invitedMenu(record)}>
         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
           更多
@@ -90,6 +88,7 @@ const invitedAction = record => {
 }
 
 const MemberTable = props => {
+  const { curselect } = props
   const [data, setData] = useState([
     {
       key: '1',
@@ -111,6 +110,11 @@ const MemberTable = props => {
 
   const handleTableChange = () => {}
 
+  useEffect(() => {
+    console.log(curselect, 'curselect')
+    // TODO 更新列表
+  }, [curselect])
+
   return (
     <TableContainer>
       <Table
@@ -120,7 +124,11 @@ const MemberTable = props => {
           dataIndex: 'action',
           width: 260,
           render: (_, item) => {
-            return joinedAction(item)
+            if (curselect === 'joined') {
+              return joinedAction(item)
+            } else {
+              return invitedAction(item)
+            }
           }
         })}
         rowKey={(row, idx, self) => {
