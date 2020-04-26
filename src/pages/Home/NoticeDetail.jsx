@@ -3,20 +3,49 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 10:28:03
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 11:14:53
+ * @LastEditTime: 2020-04-26 11:29:55
  */
 import React, { useState, useEffect } from 'react'
-import { Button, Space, Divider, Message } from 'antd'
+import { Button, Space, Divider, Message, Modal } from 'antd'
 import styled from 'styled-components'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
+
+const { confirm } = Modal
 
 const NoticeDetail = () => {
   const [inviteUrl, setInviteUrl] = useState('www.baidu.com')
   const [copied, setCopied] = useState(false)
+  const [disableJoin, setDisableJoin] = useState(false)
 
   const copyInviteUrl = () => {
+    // TODO 服务端将此链接标示置为失效
     setCopied(true)
-    Message.success('链接复制成功！')
+    if (disableJoin) {
+      Message.error('该链接已失效')
+    } else {
+      Message.success('链接复制成功！')
+    }
+  }
+
+  const refusedInvite = () => {
+    confirm({
+      title: '确认拒绝该邀请么?',
+      icon: <ExclamationCircleOutlined />,
+      content: '拒绝后该邀请链接失效，不能再通过此链接加入',
+      onOk() {
+        console.log('OK')
+        setDisableJoin(true)
+      },
+      onCancel() {
+        console.log('Cancel')
+      }
+    })
+  }
+
+  const acceptInvite = () => {
+    // TODO 服务端将此链接标示置为已加入
+    Message.success('成功加入团队！')
   }
 
   return (
@@ -29,8 +58,12 @@ const NoticeDetail = () => {
           <div style={{ fontSize: '16px', fontWeight: 'bold' }}>团队邀请</div>
           <div>
             <Space>
-              <Button>拒绝</Button>
-              <Button type="primary">加入</Button>
+              <Button onClick={refusedInvite} disabled={disableJoin}>
+                拒绝
+              </Button>
+              <Button type="primary" onClick={acceptInvite} disabled={disableJoin}>
+                加入
+              </Button>
             </Space>
           </div>
         </NoticeHeader>
