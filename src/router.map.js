@@ -9,7 +9,14 @@
 const menus = [
   {
     title: '首页',
-    key: '/home'
+    key: '/home',
+    unsub: true, // FIXME 不渲染下面的subs
+    subs: [
+      {
+        title: '通知详情',
+        key: '/home/notice'
+      }
+    ]
   },
   {
     title: '团队审核',
@@ -105,7 +112,8 @@ const blackList = [
   '/team/member/addmember',
   '/team/member/editmember',
   '/organization/auth/info',
-  '/organization/approve/edit'
+  '/organization/approve/edit',
+  '/home/notice'
 ]
 
 export { blackList }

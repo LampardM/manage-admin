@@ -15,6 +15,8 @@ import { withRouter, Switch, Redirect } from 'react-router-dom'
 
 //首页
 const Home = LoadableComponent(() => import('@/pages/Home'))
+//通知详情
+const NoticeDetail = LoadableComponent(() => import('@/pages/Home/NoticeDetail'))
 
 //创建团队
 const Create = LoadableComponent(() => import('@/pages/Create'))
@@ -102,6 +104,7 @@ const MainContent = ({ location }) => {
 
       <Switch>
         <PrivateRoute exact path="/home" component={Home} />
+        <PrivateRoute exact path="/home/notice" component={NoticeDetail} />
         <PrivateRoute exact path="/create" component={Create} />
 
         <PrivateRoute exact path="/organization/auth" component={OrganizationAuth} />

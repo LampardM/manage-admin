@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 09:40:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 09:56:28
+ * @LastEditTime: 2020-04-26 10:15:47
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -15,7 +15,8 @@ const { Option } = Select
 const { TextArea } = Input
 
 const CreateDepartForm = () => {
-  const { form } = Form.useForm()
+  const [form] = Form.useForm()
+  const [, forceUpdate] = useState()
 
   const tailLayout = {
     wrapperCol: {
@@ -24,6 +25,8 @@ const CreateDepartForm = () => {
   }
 
   const handleDepartKindChange = () => {}
+
+  const creatrDepartHandler = () => {}
 
   return (
     <DepartFormCon>
@@ -124,13 +127,25 @@ const CreateDepartForm = () => {
           <Form.Item name="desc" label="备注">
             <TextArea placeholder="备注" autoSize={{ minRows: 3, maxRows: 5 }} />
           </Form.Item>
-          <Form.Item {...tailLayout}>
-            <HandleContainer>
+          <Form.Item {...tailLayout} shouldUpdate>
+            {() => (
               <Space>
                 <Button>取消</Button>
-                <Button type="primary">提交申请</Button>
+                <Button
+                  type="primary"
+                  onClick={creatrDepartHandler}
+                  disabled={
+                    !form.isFieldTouched('name') ||
+                    !form.isFieldTouched('character') ||
+                    !form.isFieldTouched('connect') ||
+                    !form.isFieldTouched('phone') ||
+                    form.getFieldsError().filter(({ errors }) => errors.length).length
+                  }
+                >
+                  提交申请
+                </Button>
               </Space>
-            </HandleContainer>
+            )}
           </Form.Item>
         </Form>
       </FormContainer>
@@ -149,7 +164,4 @@ const DepartFormCon = styled.div`
 const FormContainer = styled.div`
   width: 450px;
 `
-
-const HandleContainer = styled.div``
-
 export default observer(CreateDepartForm)
