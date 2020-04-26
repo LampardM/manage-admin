@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:10:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-25 21:42:27
+ * @LastEditTime: 2020-04-26 09:00:24
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -37,7 +37,7 @@ class MemberPage extends React.Component {
           <div className="member-title">成员管理</div>
           <MemberHeader switchCurSource={this.switchCurSource.bind(this)} />
           <div className="member-con">
-            <FilterMember></FilterMember>
+            <FilterMember curselect={curselect}></FilterMember>
             {curselect === 'joined' ? (
               <div className="add-remove">
                 <Space>

@@ -15,6 +15,11 @@ import { withRouter, Switch, Redirect } from 'react-router-dom'
 
 //首页
 const Home = LoadableComponent(() => import('@/pages/Home'))
+//通知详情
+const NoticeDetail = LoadableComponent(() => import('@/pages/Home/NoticeDetail'))
+
+//创建团队
+const Create = LoadableComponent(() => import('@/pages/Create'))
 
 //团队审核
 const OrganizationAuth = LoadableComponent(() => import('@/pages/Organization/Auth')) //待授权
@@ -35,6 +40,8 @@ const TeamArchitecture = LoadableComponent(() => import('@/pages/Team/Architectu
 const TerminalOnline = LoadableComponent(() => import('@/pages/Terminal/Online')) // 在线设备
 const TerminalDevices = LoadableComponent(() => import('@/pages/Terminal/Devices')) // 全部设备
 const TerminalAgreement = LoadableComponent(() => import('@/pages/Terminal/Agreement')) // 协议设置
+
+const Settings = LoadableComponent(() => import('@/pages/Setting')) // 团队设置
 
 const MainContent = ({ location }) => {
   const [breadcrumb, setBreadcrumb] = useState([])
@@ -99,6 +106,8 @@ const MainContent = ({ location }) => {
 
       <Switch>
         <PrivateRoute exact path="/home" component={Home} />
+        <PrivateRoute exact path="/home/notice" component={NoticeDetail} />
+        <PrivateRoute exact path="/create" component={Create} />
 
         <PrivateRoute exact path="/organization/auth" component={OrganizationAuth} />
         <PrivateRoute exact path="/organization/check" component={OrganizationCheck} />
@@ -116,6 +125,8 @@ const MainContent = ({ location }) => {
         <PrivateRoute exact path="/terminal/online" component={TerminalOnline} />
         <PrivateRoute exact path="/terminal/devices" component={TerminalDevices} />
         <PrivateRoute exact path="/terminal/agreement" component={TerminalAgreement} />
+
+        <PrivateRoute exact path="/setting" component={Settings} />
 
         <Redirect exact from="/" to="/home" />
       </Switch>

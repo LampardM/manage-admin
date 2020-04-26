@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-21 22:17:09
+ * @LastEditTime: 2020-04-26 10:27:40
  */
 /** official */
 import React from 'react'
@@ -139,7 +139,7 @@ class _Menu extends React.Component {
       >
         {this.props.menus &&
           this.props.menus.map(item => {
-            return item.subs && item.subs.length > 0
+            return item.subs && item.subs.length > 0 && !item.unsub // * 不渲染subs
               ? this.renderSubMenu(item)
               : this.renderMenuItem(item)
           })}
