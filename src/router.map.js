@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-16 21:31:20
  * @LastEditors jieq
- * @LastEditTime 2020-04-21 00:59:21
+ * @LastEditTime 2020-04-26 22:22:42
  */
 const menus = [
   {
@@ -79,7 +79,18 @@ const menus = [
       },
       {
         title: '角色管理',
-        key: '/team/character'
+        key: '/team/character',
+        unsub: true, // FIXME 不渲染下面的subs
+        subs: [
+          {
+            title: '添加角色',
+            key: '/team/character/add'
+          },
+          {
+            title: '编辑角色',
+            key: '/team/character/edit'
+          }
+        ]
       }
     ]
   },
@@ -113,11 +124,13 @@ const menus = [
 
 // FIXME 不推荐这么做
 const blackList = [
+  '/home/notice',
+  '/team/character/add',
+  '/team/character/edit',
   '/team/member/addmember',
   '/team/member/editmember',
   '/organization/auth/info',
-  '/organization/approve/edit',
-  '/home/notice'
+  '/organization/approve/edit'
 ]
 
 export { blackList }

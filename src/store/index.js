@@ -9,6 +9,7 @@
 import userInfoStore from './userInfoStore'
 
 /** partial */
+import TeamCharacterStore from '../pages/Team/Character/store'
 import OrganizationAuthStore from '../pages/Organization/Auth/store'
 import OrganizationCheckStore from '../pages/Organization/Check/store'
 import OrganizationRejectStore from '../pages/Organization/Reject/store'
@@ -16,6 +17,7 @@ import OrganizationApproveStore from '../pages/Organization/Approve/store'
 
 const store = {
   userInfoStore,
+  TeamCharacterStore,
   OrganizationAuthStore,
   OrganizationCheckStore,
   OrganizationRejectStore,
