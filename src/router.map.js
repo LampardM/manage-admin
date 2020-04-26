@@ -93,6 +93,10 @@ const menus = [
         key: '/terminal/devices'
       }
     ]
+  },
+  {
+    title: '创建团队',
+    key: '/create'
   }
 ]
 
