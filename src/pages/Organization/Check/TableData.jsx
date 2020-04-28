@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:52
  * @LastEditors jieq
- * @LastEditTime 2020-04-25 23:34:42
+ * @LastEditTime 2020-04-27 21:13:47
  */
 /** official */
 import { toJS } from 'mobx'
@@ -67,6 +67,17 @@ const TableData = ({ filters }) => {
   const fetch = async (params = {}) => {
     setIsTableLoading(true)
     console.log('fetch', params)
+    setTimeout(() => {
+      setData([
+        {
+          teamName: '浙江xx公司',
+          teamType: '维修商',
+          name: '张三三',
+          phone: '134445630102'
+        }
+      ])
+      setIsTableLoading(false)
+    }, 1000)
     // request({
     //   url: 'https://randomuser.me/api',
     //   method: 'get',
@@ -78,7 +89,6 @@ const TableData = ({ filters }) => {
     // }).then(data => {
     //   setData(dataformat(data.results))
     //   setPagination(data.pages)
-    setIsTableLoading(false)
     // })
   }
 

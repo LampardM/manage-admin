@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-19 15:38:09
  * @LastEditors jieq
- * @LastEditTime 2020-04-24 02:06:22
+ * @LastEditTime 2020-04-27 21:27:57
  */
 /** official */
 import { observer } from 'mobx-react'
@@ -107,6 +107,10 @@ const Privilege = ({ className }) => {
         className="table"
         pagination={false}
         loading={isTableLoading}
+        rowKey={(row, idx, self) => {
+          console.log('rowKey', row)
+          return idx
+        }}
         columns={[
           {
             title: '功能分类',
