@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:15:30
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 15:45:17
+ * @LastEditTime: 2020-05-06 21:44:26
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -91,7 +91,7 @@ const VerifyNewAccountPhone = () => {
                     disabled={
                       !form.isFieldTouched('phone') ||
                       isSendVerify ||
-                      form.getFieldsError().filter(({ errors }) => errors.length).length
+                      form.getFieldError('phone').filter(({ errors }) => errors.length).length
                     }
                   >
                     {!isSendVerify ? '获取验证码' : `${countDown}秒后重新获取`}

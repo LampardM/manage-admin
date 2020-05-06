@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 09:05:00
+ * @LastEditTime: 2020-05-06 21:45:55
  */
 import { observer } from 'mobx-react'
 import React, { useState, useEffect, useCallback } from 'react'
@@ -17,18 +17,21 @@ const columns = [
     title: '姓名',
     dataIndex: 'memname',
     ellipsis: true,
+    width: 150,
     textWrap: 'word-break'
   },
   {
     title: '手机号码',
     dataIndex: 'phone',
     ellipsis: true,
+    width: 150,
     textWrap: 'word-break'
   },
   {
     title: '角色',
     dataIndex: 'character',
     ellipsis: true,
+    width: 200,
     textWrap: 'word-break'
   },
   {
@@ -122,7 +125,7 @@ const MemberTable = props => {
         columns={columns.concat({
           title: '操作',
           dataIndex: 'action',
-          width: 260,
+          width: 150,
           render: (_, item) => {
             if (curselect === 'joined') {
               return joinedAction(item)

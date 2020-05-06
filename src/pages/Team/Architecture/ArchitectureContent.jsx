@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-23 21:16:48
+ * @LastEditTime: 2020-05-06 21:44:56
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table } from 'antd'
@@ -235,6 +235,7 @@ const ArchitectureContent = () => {
           <Column
             title="Action"
             key="action"
+            align="right"
             render={(text, record) => (
               <span>
                 <a style={{ marginRight: 16 }}>Invite {record.lastName}</a>

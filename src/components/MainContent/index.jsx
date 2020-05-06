@@ -43,6 +43,8 @@ const TerminalAgreement = LoadableComponent(() => import('@/pages/Terminal/Agree
 
 const Settings = LoadableComponent(() => import('@/pages/Setting')) // 团队设置
 
+const NotFound = LoadableComponent(() => import('@/pages/404'))
+
 const MainContent = ({ location }) => {
   const [breadcrumb, setBreadcrumb] = useState([])
   const { pathname } = location
@@ -129,6 +131,8 @@ const MainContent = ({ location }) => {
         <PrivateRoute exact path="/setting" component={Settings} />
 
         <Redirect exact from="/" to="/home" />
+
+        <PrivateRoute exact path="*" component={NotFound} />
       </Switch>
     </div>
   )

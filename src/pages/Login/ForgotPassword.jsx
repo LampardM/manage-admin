@@ -3,21 +3,23 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 12:03:05
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 00:48:24
+ * @LastEditTime: 2020-05-06 21:47:10
  */
 import React, { useState, useEffect } from 'react'
-import { Form, Input, Select, Button, Steps, message } from 'antd'
+import { Form, Input, Select, Button, Steps, message, Result } from 'antd'
 import { CheckCircleTwoTone } from '@ant-design/icons'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 
 const { Step } = Steps
 const { Option } = Select
 
-const ForgotPassword = props => {
+const ForgotPassword = () => {
   const [form] = Form.useForm()
   const [step, setStep] = useState(0)
+  const history = useHistory()
 
   const onFinish = () => {
     if (step === 0) {
@@ -27,13 +29,14 @@ const ForgotPassword = props => {
       // TODO 重置密码
       setStep(step + 1)
       message.success('密码重置成功！')
-      setTimeout(() => {
-        props.switchShowBox('login')
-      }, 1500)
     }
   }
 
   useEffect(() => {})
+
+  const goLogin = () => {
+    history.push('/login')
+  }
 
   const onFinishFailed = () => {}
 
@@ -118,9 +121,14 @@ const ForgotPassword = props => {
               </Form.Item>
             </React.Fragment>
           ) : (
-            <CheckCircleTwoTone
-              twoToneColor="#52c41a"
-              style={{ fontSize: '50px', display: 'flex', justifyContent: 'center' }}
+            <Result
+              status="success"
+              title="密码重置成功"
+              extra={
+                <Button type="primary" size="large" onClick={goLogin}>
+                  去登录
+                </Button>
+              }
             />
           )}
           {step < 2 ? (
