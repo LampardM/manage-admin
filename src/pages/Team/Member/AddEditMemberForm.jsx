@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 23:28:41
+ * @LastEditTime: 2020-05-06 23:24:44
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col } from 'antd'
@@ -14,19 +14,13 @@ const { Option } = Select
 const { TextArea } = Input
 
 const AddEditMemberForm = () => {
-  const { form } = Form.useForm()
+  const [form] = Form.useForm()
 
   const tailLayout = {
     wrapperCol: {
       offset: 5
     }
   }
-
-  const noticeMessage = [
-    { label: 'Apple', value: 'Apple' },
-    { label: 'Pear', value: 'Pear' },
-    { label: 'Orange', value: 'Orange' }
-  ]
 
   const treeData = [
     {
