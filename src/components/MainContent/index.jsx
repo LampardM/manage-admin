@@ -34,6 +34,8 @@ const TeamMember = LoadableComponent(() => import('@/pages/Team/Member')) // 成
 const AddTeamMember = LoadableComponent(() => import('@/pages/Team/Member/AddMember')) // 添加成员
 const EditTeamMember = LoadableComponent(() => import('@/pages/Team/Member/EditMember')) // 添加成员
 const TeamCharacter = LoadableComponent(() => import('@/pages/Team/Character')) // 角色管理
+const AddCharacter = LoadableComponent(() => import('@/pages/Team/Character/AddCharacter')) // 角色管理
+
 const TeamArchitecture = LoadableComponent(() => import('@/pages/Team/Architecture')) // 组织架构
 
 //终端管理
@@ -122,6 +124,7 @@ const MainContent = ({ location }) => {
         <PrivateRoute exact path="/team/member/addmember" component={AddTeamMember} />
         <PrivateRoute exact path="/team/member/editmember" component={EditTeamMember} />
         <PrivateRoute exact path="/team/character" component={TeamCharacter} />
+        <PrivateRoute exact path="/team/character/add" component={AddCharacter} />
         <PrivateRoute exact path="/team/architecture" component={TeamArchitecture} />
 
         <PrivateRoute exact path="/terminal/online" component={TerminalOnline} />
