@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 00:06:00
+ * @LastEditTime: 2020-05-08 00:55:59
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button } from 'antd'
@@ -12,6 +12,7 @@ import useInterval from '@/hooks/useInterval'
 import styled from 'styled-components'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
+import { register, registerPhoneVerify } from '@/api/user'
 
 const { Option } = Select
 
@@ -19,15 +20,26 @@ const RegisterForm = props => {
   const { userInfoStore } = useStore()
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
+  const [form] = Form.useForm()
+  const [, forceUpdate] = useState()
 
   const captchaCallback = () => {
     // * 滑动验证成功回调
+    let registerFormValue = form.getFieldsValue()
+    let _params = {
+      phone: registerFormValue.phone
+    }
+    registerPhoneVerify(_params)
+      .then(_result => {
+        console.log(_result)
+      })
+      .catch(err => {
+        console.log(err, 'err')
+      })
+
     setIsSendVerify(true)
   }
   const registerCaptcha = new window.TencentCaptcha(userInfoStore.appId, captchaCallback)
-
-  const [form] = Form.useForm()
-  const [, forceUpdate] = useState()
 
   const onFinish = () => {}
 

@@ -3,16 +3,15 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 15:07:54
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-11 18:07:40
+ * @LastEditTime: 2020-05-08 00:13:42
  */
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL: '', // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
+  baseURL: process.env.NODE_ENV === 'development' ? process.env.REACT_APP_BASE_API : '',
+  withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
-
 // request interceptor
 service.interceptors.request.use(
   config => {
