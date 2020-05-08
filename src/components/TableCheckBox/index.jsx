@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
- * @LastEditTime 2020-04-24 02:02:12
+ * @LastEditTime 2020-05-09 02:35:25
  * 
  * ```
  * interface ColumnsItem {
@@ -72,30 +72,41 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   }
 
   const formatDataStructure = () => {
-    let _cloneNodeData = cloneDeep(cloneNodeData)
+    // const [, cutOffRow] = nodeToRow(_cloneNodeData)
+    const _cloneNodeData = []
+    const [, cutOffRow] = nodeToRow(cloneDeep(cloneNodeData))
 
-    for (let i = 0; i < nodeToRow(_cloneNodeData); i++) {
-      _cloneNodeData[i] = cloneDeep(_cloneNodeData[0])
-    }
-
-    const formatData = _cloneNodeData.reduce((acc, cur, nodeIdx) => {
-      acc[nodeIdx] = {}
-      const accItem = acc[nodeIdx]
-      for (let colIdx = 0; colIdx < columns.length; colIdx++) {
-        const dataProp = columns[colIdx].dataIndex
-        const res = recursiveQuery(_cloneNodeData, nodeIdx, colIdx)
-        accItem[dataProp] = []
-        if (Ext.isArray(res)) {
-          res.forEach((it, idx) => {
-            accItem[dataProp][idx] = `${it.key}###${it.value}###${it.checked}`
-          })
-        } else {
-          accItem[dataProp][0] = `${res.key}###${res.value}###${res.checked}`
-        }
+    cutOffRow.forEach((it, idx) => {
+      for (let i = 0; i < it; i++) {
+        // if (!_cloneNodeData[idx]) _cloneNodeData[idx] = []
+        _cloneNodeData /* [idx] */
+          .push(cloneNodeData[idx])
       }
+    })
+    // console.log(cutOffRow, _cloneNodeData)
+    // ### _cloneNodeData需要再套一层 ###
+    const formatData = nodePackageRow(_cloneNodeData, cutOffRow, [])
+    // let formatData = _cloneNodeData.reduce((acc, cur, nodeIdx, self) => {
+    //   let res;
+    //   const accItem = (acc[acc.length] = {})
+    //   for (let colIdx = 0; colIdx < columns.length; colIdx++) {
+    //     const dataProp = columns[colIdx].dataIndex
+    //     res = recursiveQuery(Ext.isArray(cur) ? cur : res.subs, nodeIdx, colIdx)
+    //     console.log('recursiveQuery', res)
+    //     accItem[dataProp] = []
+    //     if (Ext.isArray(res)) {
+    //       res.forEach((it, idx) => {
+    //         accItem[dataProp][idx] = `${it.key}###${it.value}###${it.checked}`
+    //       })
+    //     } else {
+    //       accItem[dataProp][0] = `${res.key}###${res.value}###${res.checked}`
+    //     }
+    //   }
+    //   console.log('acc', acc, cur)
+    //   return acc
+    // }, [])
 
-      return acc
-    }, [])
+    // const formatData = recursivePackageCheckbox(_cloneNodeData, _cloneNodeData, [])
 
     setDataSource(formatData)
 
@@ -103,18 +114,111 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     // formatColumnsStructure(columns)
   }
 
+  const nodePackageRow = (nodeData, cutOffRow, formatData) => {
+    const cutOff = nodeData.every(nd => !nd.subs || nd.subs.every(it => !it.subs))
+    if (cutOff) {
+    } else {
+      for (let i = 0; i < nodeData.length; i++) {
+        formatData = packageRecursive(formatData, i, nodeData, cutOffRow)
+        // if (nodeData[i].subs) {
+        //   for (let subi = 0; subi < nodeData[i].subs.length; subi++) {
+        //     formatData = packageRecursive(formatData, subi, nodeData)
+        //   }
+        // }
+      }
+    }
+    return formatData
+  }
+
+  /**
+   * @description 计算数组前n项和
+   * @param {Array<number>} array
+   * @param {number} num
+   * @returns {number}
+   */
+  const getNumArrayTotal = (array, num) => {
+    return array.reduce((pre, cur, index, arr) => {
+      if (num <= 0) {
+        return 0
+      }
+      if (index > num - 1) {
+        return pre + 0
+      }
+      return pre + cur
+    })
+  }
+
+  /**
+   * @param {*} formatData
+   * @param {*} nodeIdx
+   * @param {*} nodeData
+   * @param {*} cutOffRow
+   */
+  const packageRecursive = (formatData, nodeIdx, nodeData, cutOffRow) => {
+    const cardinal = formatData.length
+    const accItem = (formatData[cardinal] = {})
+    columns.forEach((column, cIdx) => {
+      accItem[column.dataIndex] = []
+
+      let cutOffRowItem = 0
+      if (cutOffRow.length) {
+        for (let idx = 0; idx < cutOffRow.length; idx++) {
+          if (nodeIdx < getNumArrayTotal(cutOffRow, idx + 1)) {
+            cutOffRowItem = nodeIdx
+            break
+          } else if (
+            getNumArrayTotal(cutOffRow, idx + 1) <= nodeIdx &&
+            nodeIdx < getNumArrayTotal(cutOffRow, idx + 2)
+          ) {
+            cutOffRowItem = nodeIdx - getNumArrayTotal(cutOffRow, idx + 1)
+            break
+          } /*  else if(getNumArrayTotal(cutOffRow, idx + 2) <= nodeIdx && nodeIdx < getNumArrayTotal(cutOffRow, idx + 3)) {
+          cutOffRowItem = nodeIdx - getNumArrayTotal(cutOffRow, idx + 2)
+          break
+        } */
+        }
+      }
+
+      const recursiveQueryRes = recursiveQuery(nodeData, nodeIdx, cIdx, cutOffRowItem)
+      console.log('recursiveQueryRes', recursiveQueryRes)
+      if (Ext.isArray(recursiveQueryRes)) {
+        recursiveQueryRes.forEach((it, idx) => {
+          accItem[column.dataIndex][idx] = `${it.key}###${it.value}###${it.checked}`
+        })
+      } else {
+        accItem[
+          column.dataIndex
+        ][0] = `${recursiveQueryRes.key}###${recursiveQueryRes.value}###${recursiveQueryRes.checked}`
+      }
+      // console.log('accItem', accItem)
+      // console.log('formatData', formatData)
+      console.log('1- - - - - - - - - - - - - - - - - - - -')
+      console.log('\n')
+    })
+    return formatData
+  }
+
   /**
    * @description 递归取多维数组中某层的值array
-   * @param {Array<DataSourceItem>} arr 源数组
+   * @param {Array<DataSourceItem> | DataSourceItem} DataSourceItemOrArray 源数组
    * @param {number} arrIdx arr数组的第几项
    * @param {number} layerIdx 递归层数
    * @returns {Array<DataSourceItem> | DataSourceItem}
    */
-  const recursiveQuery = (arr, arrIdx, layerIdx) => {
-    if (layerIdx === 0) {
-      return arr[arrIdx].subs ? arr[arrIdx] : arr
+  const recursiveQuery = (DataSourceItemOrArray, arrIdx, layerIdx, reckon) => {
+    let DataSourceItemArray
+    if (Ext.isArray(DataSourceItemOrArray)) {
+      DataSourceItemArray = DataSourceItemOrArray
     } else {
-      return recursiveQuery(arr[arrIdx].subs, arrIdx, --layerIdx)
+      DataSourceItemArray = DataSourceItemOrArray.subs
+    }
+    if (layerIdx === 0) {
+      return DataSourceItemArray[arrIdx] && DataSourceItemArray[arrIdx].subs
+        ? DataSourceItemArray[arrIdx]
+        : DataSourceItemArray
+    } else {
+      let cutOffArrIdx = arrIdx
+      return recursiveQuery(DataSourceItemArray[arrIdx].subs, reckon, --layerIdx, reckon)
     }
   }
 
@@ -170,18 +274,30 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @param {Array<DataSourceItem>} data
    * @return {number}
    */
-  const nodeToRow = nodeData => {
-    if (nodeData.length) {
-      if (nodeData[0].subs && !nodeData[0].subs[0].subs) {
-        return nodeData.length
-      } else {
-        return nodeToRow(nodeData[0].subs)
-      }
-    } else {
-      return 0
+  const nodeToRow = (nodeData, rowlen, cutOffRow) => {
+    if (!rowlen) {
+      rowlen = 0
+      cutOffRow = []
     }
-  }
 
+    const cutOff = nodeData.every(nd => !nd.subs || nd.subs.every(it => !it.subs))
+
+    if (cutOff) {
+      rowlen = nodeData.length
+      cutOffRow.push(rowlen)
+    } else {
+      for (let i = 0; i < nodeData.length; i++) {
+        if (nodeData[i].subs) {
+          const res = nodeToRow(nodeData[i].subs, rowlen, cutOffRow)
+          rowlen = res[0]
+          cutOffRow = res[1]
+        } else {
+          continue
+        }
+      }
+    }
+    return [rowlen, cutOffRow]
+  }
   /**
    * @description 某一列的哪几行要合并
    * @param {DataSourceItem} dataSource

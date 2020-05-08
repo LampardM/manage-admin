@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-19 15:38:09
  * @LastEditors jieq
- * @LastEditTime 2020-04-27 21:27:57
+ * @LastEditTime 2020-05-09 02:31:03
  */
 /** official */
 import { observer } from 'mobx-react'
@@ -108,7 +108,7 @@ const Privilege = ({ className }) => {
         pagination={false}
         loading={isTableLoading}
         rowKey={(row, idx, self) => {
-          console.log('rowKey', row)
+          // console.log('rowKey', row)
           return idx
         }}
         columns={[

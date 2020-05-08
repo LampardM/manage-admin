@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-18 10:41:52
  * @LastEditors jieq
- * @LastEditTime 2020-04-21 00:55:59
+ * @LastEditTime 2020-05-09 02:30:13
  */
 /** official */
 import { toJS } from 'mobx'
@@ -73,19 +73,21 @@ const TableData = ({ className, filters, go }) => {
 
   const fetch = async (params = {}) => {
     console.log('fetch', params)
-    request({
-      url: 'https://randomuser.me/api',
-      method: 'get',
-      data: {
-        results: 10,
-        ...params
-      },
-      type: 'json'
-    }).then(data => {
+    setTimeout(() => {
+      const data = {
+        results: [
+          {
+            id: 1,
+            teamName: '示例',
+            phone: '13111335599'
+          }
+        ],
+        pages: {}
+      }
       setData(dataformat(data.results))
       setPagination(data.pages)
       setIsTableLoading(false)
-    })
+    }, 1000)
   }
 
   const dataformat = dataFormRESTful => {
@@ -119,7 +121,7 @@ const TableData = ({ className, filters, go }) => {
           }
         })}
         rowKey={(row, idx, self) => {
-          return row.cell
+          return row.id
         }}
         dataSource={data}
         pagination={pagination}
