@@ -73,7 +73,8 @@ const TableData = ({ filters }) => {
           teamName: '浙江xx公司',
           teamType: '维修商',
           name: '张三三',
-          phone: '134445630102'
+          phone: '134445630102',
+          uuid: '123456'
         }
       ])
       setIsTableLoading(false)
