@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-21 22:16:12
+ * @LastEditTime: 2020-05-08 23:00:33
  */
 import React from 'react'
 import Menu from '../Menu/index'
@@ -14,11 +14,12 @@ import navMenus from '@/router.map'
 
 class SiderNav extends React.Component {
   render() {
-    const { className } = this.props.className
+    const { className } = this.props
     return (
       <div className={className}>
         <div className="nav-container">
           <div style={styles.logo}></div>
+          <div className="department-list">团队列表</div>
           <Menu menus={navMenus} />
         </div>
       </div>
@@ -42,5 +43,12 @@ export default styled(SiderNav)`
 
   .nav-container::-webkit-scrollbar {
     width: 0;
+  }
+
+  .department-list {
+    padding-left: 24px;
+    color: #fff;
+    height: 40px;
+    line-height: 40px;
   }
 `
