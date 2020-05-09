@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
- * @LastEditTime 2020-05-10 01:32:26
+ * @LastEditTime 2020-05-10 02:17:53
  * 
  * ```
  * interface ColumnsItem {
@@ -22,6 +22,7 @@
  * interface TableCheckBoxProps {
  *   columns?: Array<ColumnsItem>;
  *   nodeData?: Array<DataSourceItem>;
+ *   showAllChecked?: boolean;
  *   [restProps: string]?: any;
  * }
  * ```
@@ -42,11 +43,13 @@ import { Ext } from '../../utils'
 const TableCheckBox /**: TableCheckBoxProps */ = ({
   columns = [],
   nodeData = [],
+  showAllChecked = false,
   ...restProps
 }) => {
   const [mergeCol, setMergeCol] = useState({})
   const [dataSource, setDataSource] = useState([])
   const [cloneNodeData, setCloneNodeData] = useState([])
+  const [isAllChecked, setIsAllChecked] = useState(false)
   const [formatColumns, setFormatColumns] = useState(columns)
 
   /**
@@ -72,50 +75,22 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   }
 
   const formatDataStructure = () => {
-    // const [, cutOffRow] = nodeToRow(_cloneNodeData)
     let _cloneNodeData = []
     const [, cutOffRow] = nodeToRow(cloneNodeData)
 
     if (cutOffRow.length) {
       cutOffRow.forEach((it, idx) => {
         for (let i = 0; i < it; i++) {
-          // if (!_cloneNodeData[idx]) _cloneNodeData[idx] = []
-          _cloneNodeData /* [idx] */
-            .push(cloneNodeData[idx])
+          _cloneNodeData.push(cloneNodeData[idx])
         }
       })
     } else {
       _cloneNodeData = cloneNodeData
     }
-    // console.log(cutOffRow, _cloneNodeData)
-    // ### _cloneNodeData需要再套一层 ###
-    const formatData = nodePackageRow(_cloneNodeData, cutOffRow, [])
-    // let formatData = _cloneNodeData.reduce((acc, cur, nodeIdx, self) => {
-    //   let res;
-    //   const accItem = (acc[acc.length] = {})
-    //   for (let colIdx = 0; colIdx < columns.length; colIdx++) {
-    //     const dataProp = columns[colIdx].dataIndex
-    //     res = recursiveQuery(Ext.isArray(cur) ? cur : res.subs, nodeIdx, colIdx)
-    //     console.log('recursiveQuery', res)
-    //     accItem[dataProp] = []
-    //     if (Ext.isArray(res)) {
-    //       res.forEach((it, idx) => {
-    //         accItem[dataProp][idx] = `${it.key}###${it.value}###${it.checked}`
-    //       })
-    //     } else {
-    //       accItem[dataProp][0] = `${res.key}###${res.value}###${res.checked}`
-    //     }
-    //   }
-    //   console.log('acc', acc, cur)
-    //   return acc
-    // }, [])
 
-    // const formatData = recursivePackageCheckbox(_cloneNodeData, _cloneNodeData, [])
+    const formatData = nodePackageRow(_cloneNodeData, cutOffRow, [])
 
     setDataSource(formatData)
-
-    //表头依赖于内容数据结构
-    // formatColumnsStructure(columns)
   }
 
   /**
@@ -126,18 +101,9 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @returns {Array<DataSourceItem>} formatData
    */
   const nodePackageRow = (nodeData, cutOffRow, formatData) => {
-    const cutOff = nodeData.every(nd => !nd.subs || nd.subs.every(it => !it.subs))
-    // if (cutOff) {
-    // } else {
     for (let i = 0; i < nodeData.length; i++) {
       formatData = packageRecursive(formatData, i, nodeData, cutOffRow)
-      // if (nodeData[i].subs) {
-      //   for (let subi = 0; subi < nodeData[i].subs.length; subi++) {
-      //     formatData = packageRecursive(formatData, subi, nodeData)
-      //   }
-      // }
     }
-    // }
     return formatData
   }
 
@@ -203,8 +169,6 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
           column.dataIndex
         ][0] = `${recursiveQueryRes.key}###${recursiveQueryRes.value}###${recursiveQueryRes.checked}`
       }
-      // console.log('accItem', accItem)
-      // console.log('formatData', formatData)
       console.log('1- - - - - - - - - - - - - - - - - - - -')
       console.log('\n')
     })
@@ -364,16 +328,6 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
       for (let i = 0; i < nodeData.length; i++) {
         let it = nodeData[i]
 
-        // if (parentNode) {
-        //   const { key, value, checked, parent } = parentNode
-        //   it.parent = parentNode /* {
-        //     key,
-        //     value,
-        //     parent,
-        //     checked
-        //   } */
-        // }
-
         if (it.key === value) {
           //当前设置
           it.checked = newState
@@ -421,7 +375,14 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
       nodeData: cloneNodeData
     })
 
-    setCloneNodeData(cloneDeep(parentNode || nodeData))
+    const newCloneNodeData = cloneDeep(parentNode || nodeData)
+
+    if (showAllChecked) {
+      const allCheckedStatus = checkAllChecked(newCloneNodeData)
+      setIsAllChecked(allCheckedStatus)
+    }
+
+    setCloneNodeData(newCloneNodeData)
   }
 
   /**
@@ -493,6 +454,55 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     return nodeData
   }
 
+  /**
+   * @description 遍历树结构，设置所有为勾选或者不勾选
+   * @param {Array<DataSourceItem>} nodeData
+   * @returns {Array<DataSourceItem>} cloneNodeData
+   */
+  const traverseSetChecked = (isChecked, nodeData) => {
+    if (nodeData.length) {
+      nodeData.forEach(it => {
+        it.checked = isChecked
+
+        if (it.subs) {
+          it.subs = traverseSetChecked(isChecked, it.subs)
+        }
+      })
+    }
+    return nodeData
+  }
+
+  /**
+   * @description 某个checkbox状态改变，反查'全部'是否勾选或未勾选
+   * @param {boolean} [status=true] 所有是否勾选状态
+   * @returns {void}
+   */
+  const checkAllChecked = (nodeData, status = true) => {
+    if (nodeData.length) {
+      for (let i = 0; i < nodeData.length; i++) {
+        const it = nodeData[i]
+        if (!it.checked) {
+          status = false
+          return status
+        }
+        if (it.subs) {
+          status = checkAllChecked(it.subs, status)
+        }
+      }
+      return true
+    } else {
+      return false
+    }
+  }
+
+  const onAllChange = ({ target }) => {
+    console.log('onAllChange', target.checked)
+    setIsAllChecked(target.checked)
+
+    const cloneNodeDataAfterSetAll = traverseSetChecked(target.checked, cloneNodeData)
+    setCloneNodeData(cloneDeep(cloneNodeDataAfterSetAll))
+  }
+
   useEffect(() => {
     const cloneNodeData = cloneDeep(nodeData)
 
@@ -516,7 +526,16 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     formatColumnsStructure()
   }, [mergeCol])
 
-  return <Table columns={formatColumns} dataSource={dataSource} {...restProps} />
+  return (
+    <>
+      {showAllChecked ? (
+        <Checkbox checked={isAllChecked} onChange={onAllChange}>
+          全选
+        </Checkbox>
+      ) : null}
+      <Table columns={formatColumns} dataSource={dataSource} {...restProps} />
+    </>
+  )
 }
 
 export default TableCheckBox
