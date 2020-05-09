@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
- * @LastEditTime 2020-05-09 02:35:25
+ * @LastEditTime 2020-05-10 01:32:26
  * 
  * ```
  * interface ColumnsItem {
@@ -73,16 +73,20 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
 
   const formatDataStructure = () => {
     // const [, cutOffRow] = nodeToRow(_cloneNodeData)
-    const _cloneNodeData = []
-    const [, cutOffRow] = nodeToRow(cloneDeep(cloneNodeData))
+    let _cloneNodeData = []
+    const [, cutOffRow] = nodeToRow(cloneNodeData)
 
-    cutOffRow.forEach((it, idx) => {
-      for (let i = 0; i < it; i++) {
-        // if (!_cloneNodeData[idx]) _cloneNodeData[idx] = []
-        _cloneNodeData /* [idx] */
-          .push(cloneNodeData[idx])
-      }
-    })
+    if (cutOffRow.length) {
+      cutOffRow.forEach((it, idx) => {
+        for (let i = 0; i < it; i++) {
+          // if (!_cloneNodeData[idx]) _cloneNodeData[idx] = []
+          _cloneNodeData /* [idx] */
+            .push(cloneNodeData[idx])
+        }
+      })
+    } else {
+      _cloneNodeData = cloneNodeData
+    }
     // console.log(cutOffRow, _cloneNodeData)
     // ### _cloneNodeData需要再套一层 ###
     const formatData = nodePackageRow(_cloneNodeData, cutOffRow, [])
@@ -114,19 +118,26 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     // formatColumnsStructure(columns)
   }
 
+  /**
+   * @description 平铺的行组合成循环
+   * @param {Array<DataSourceItem>} nodeData
+   * @param {array} cutOffRow
+   * @param {Array<DataSourceItem>} formatData
+   * @returns {Array<DataSourceItem>} formatData
+   */
   const nodePackageRow = (nodeData, cutOffRow, formatData) => {
     const cutOff = nodeData.every(nd => !nd.subs || nd.subs.every(it => !it.subs))
-    if (cutOff) {
-    } else {
-      for (let i = 0; i < nodeData.length; i++) {
-        formatData = packageRecursive(formatData, i, nodeData, cutOffRow)
-        // if (nodeData[i].subs) {
-        //   for (let subi = 0; subi < nodeData[i].subs.length; subi++) {
-        //     formatData = packageRecursive(formatData, subi, nodeData)
-        //   }
-        // }
-      }
+    // if (cutOff) {
+    // } else {
+    for (let i = 0; i < nodeData.length; i++) {
+      formatData = packageRecursive(formatData, i, nodeData, cutOffRow)
+      // if (nodeData[i].subs) {
+      //   for (let subi = 0; subi < nodeData[i].subs.length; subi++) {
+      //     formatData = packageRecursive(formatData, subi, nodeData)
+      //   }
+      // }
     }
+    // }
     return formatData
   }
 
@@ -149,10 +160,12 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
   }
 
   /**
-   * @param {*} formatData
-   * @param {*} nodeIdx
-   * @param {*} nodeData
-   * @param {*} cutOffRow
+   * @description 切分好的行组合成checkbox的cell
+   * @param {Array<DataSourceItem>} formatData 目标数组
+   * @param {number} nodeIdx 索引
+   * @param {Array<DataSourceItem>} nodeData 源素组
+   * @param {Array<number>} cutOffRow 源分组数组
+   * @returns {Array<DataSourceItem>} formatData
    */
   const packageRecursive = (formatData, nodeIdx, nodeData, cutOffRow) => {
     const cardinal = formatData.length
@@ -275,12 +288,14 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @return {number}
    */
   const nodeToRow = (nodeData, rowlen, cutOffRow) => {
-    if (!rowlen) {
+    const cutOff = nodeData.every(nd => !nd.subs || nd.subs.every(it => !it.subs))
+
+    if (rowlen === undefined) {
+      // 第一次进来
       rowlen = 0
       cutOffRow = []
+      if (cutOff) return [rowlen, cutOffRow]
     }
-
-    const cutOff = nodeData.every(nd => !nd.subs || nd.subs.every(it => !it.subs))
 
     if (cutOff) {
       rowlen = nodeData.length
@@ -298,6 +313,7 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     }
     return [rowlen, cutOffRow]
   }
+
   /**
    * @description 某一列的哪几行要合并
    * @param {DataSourceItem} dataSource
