@@ -4,7 +4,7 @@
  * @Author jieq
  * @Date 2020-04-19 15:38:09
  * @LastEditors jieq
- * @LastEditTime 2020-05-09 02:31:03
+ * @LastEditTime 2020-05-10 01:42:07
  */
 /** official */
 import { observer } from 'mobx-react'
@@ -91,21 +91,13 @@ const Privilege = ({ className }) => {
     }, 1000)
   }
 
-  const onAllChange = ({ target }) => {
-    console.log('onAllChange', target.checked)
-    if (target.checked) {
-    } else {
-    }
-  }
-
   return (
     <div className={className}>
-      <Checkbox onChange={onAllChange}>全选</Checkbox>
-
       <TableCheckBox
         bordered
         className="table"
         pagination={false}
+        showAllChecked={true}
         loading={isTableLoading}
         rowKey={(row, idx, self) => {
           // console.log('rowKey', row)

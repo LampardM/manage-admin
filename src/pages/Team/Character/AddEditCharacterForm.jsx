@@ -20,7 +20,6 @@ const AddEditCharacterForm = () => {
   const [permissionsTableData, setPermissionsTableData] = useState([])
   const [authorisedPermissionsTableData, setAuthorisedPermissionsTableData] = useState([])
   const [permission, setPermission] = useState(false)
-  const [authorisedPermission, setAuthorisedPermission] = useState(false)
   const [isPermissionsTableLoading, setIsPermissionsTableLoading] = useState(true)
   const [isAuthorisedPermissionsTableLoading, setIsAuthorisedPermissionsTableLoading] = useState(
     true
@@ -44,14 +43,6 @@ const AddEditCharacterForm = () => {
       setAuthorisedPermissionsTableData(AuthorisedPermissions)
       setIsAuthorisedPermissionsTableLoading(false)
     }, 1000)
-  }
-
-  const changePermission = () => {
-    setPermission(!permission)
-  }
-
-  const changeAuthorisedPermission = () => {
-    setAuthorisedPermission(!authorisedPermission)
   }
 
   return (
@@ -83,23 +74,22 @@ const AddEditCharacterForm = () => {
           <TextArea placeholder="备注" autoSize={{ minRows: 3, maxRows: 5 }} />
         </Form.Item>
         <Form.Item name="permission" label="权限" style={{ width: '450px' }} required>
-          <>
-            <Checkbox
-              checked={permission}
-              onChange={changePermission}
-              style={{
-                lineHeight: '32px'
-              }}
-            >
-              全部
-            </Checkbox>
-          </>
+          {/* <Checkbox
+            checked={permission}
+            onChange={changePermission}
+            style={{
+              lineHeight: '32px'
+            }}
+          >
+            全部
+          </Checkbox> */}
         </Form.Item>
-        <Form.Item name="permission" style={{ width: '100%' }} required>
+        <Form.Item style={{ width: '100%' }} required>
           <TableCheckBox
             bordered
             className="table"
             pagination={false}
+            showAllChecked={true}
             loading={isPermissionsTableLoading}
             rowKey={(row, idx, self) => {
               // console.log('rowKey', row)
@@ -128,26 +118,24 @@ const AddEditCharacterForm = () => {
           labelAlign="left"
           label="可授权角色权限"
           style={{ width: '450px' }}
-          name="authorisedPermission"
           labelCol={{ span: 7, offset: 0 }}
         >
-          <>
-            <Checkbox
-              checked={authorisedPermission}
-              onChange={changeAuthorisedPermission}
-              style={{
-                lineHeight: '32px'
-              }}
-            >
-              全部
-            </Checkbox>
-          </>
+          {/*  <Checkbox
+            checked={authorisedPermission}
+            onChange={changeAuthorisedPermission}
+            style={{
+              lineHeight: '32px'
+            }}
+          >
+            全部
+          </Checkbox> */}
         </Form.Item>
         <Form.Item name="permission" style={{ width: '100%' }} required>
           <TableCheckBox
             bordered
             className="table"
             pagination={false}
+            showAllChecked={true}
             loading={isAuthorisedPermissionsTableLoading}
             rowKey={(row, idx, self) => {
               // console.log('rowKey', row)
