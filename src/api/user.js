@@ -3,15 +3,30 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 17:40:46
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-07 23:18:58
+ * @LastEditTime: 2020-05-10 17:04:32
  */
 import request from '@/utils/request'
 
-export function login(data) {
+export function LoginByPhone(data) {
   return request({
-    url: '/login',
+    url: '/User/LoginByPhone',
     method: 'post',
     data
+  })
+}
+
+export function LoginByPassword(data) {
+  return request({
+    url: '/User/LoginByPassword',
+    method: 'post',
+    data
+  })
+}
+
+export function loginPhoneVerify(params) {
+  return request({
+    url: `/User/LoginVcode/${params.ticket}/${params.rand}/${params.phone}`,
+    method: 'get'
   })
 }
 
@@ -32,8 +47,7 @@ export function register(data) {
 
 export function registerPhoneVerify(params) {
   return request({
-    url: '/User/Regist',
-    method: 'get',
-    params
+    url: `/User/RegistVcode/${params.ticket}/${params.rand}/${params.phone}`,
+    method: 'get'
   })
 }

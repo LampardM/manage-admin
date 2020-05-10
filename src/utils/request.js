@@ -3,9 +3,10 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 15:07:54
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-08 00:13:42
+ * @LastEditTime: 2020-05-10 16:58:37
  */
 import axios from 'axios'
+import { message } from 'antd'
 
 const service = axios.create({
   baseURL: process.env.NODE_ENV === 'development' ? process.env.REACT_APP_BASE_API : '',
@@ -35,12 +36,11 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    // if the custom code is not 0, it is judged as an error.
-    // if (res.code !== 200) {
-    //   return Promise.reject(new Error(res.message || 'Error'))
-    // } else {
-    return res
-    // }
+    if (res.errorCode !== 200) {
+      return Promise.reject(new Error(res.errorMsg || 'Error'))
+    } else {
+      return res
+    }
   },
   error => {
     return Promise.reject(error)

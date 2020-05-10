@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:08:12
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 13:34:22
+ * @LastEditTime: 2020-05-10 17:02:28
  */
 import { observable, action } from 'mobx'
 import { isAuthenticated, authenticateSuccess, logout } from '../utils/session'
@@ -13,6 +13,7 @@ class UserInfoStore {
   @observable users = [] // 模拟用户数据库
   @observable appId = '2049930508' // 验证码id
   @observable loginUser = {} // 当前登录用户信息
+  @observable appCode = 'yed6GiAqtl' // 关联平台号
 
   @action toggleLogin(flag, info = {}) {
     this.loginUser = info // 设置登录用户信息

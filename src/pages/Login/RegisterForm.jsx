@@ -3,10 +3,10 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-08 00:55:59
+ * @LastEditTime: 2020-05-10 17:00:07
  */
 import React, { useState, useEffect } from 'react'
-import { Form, Input, Select, Button } from 'antd'
+import { Form, Input, Select, Button, message } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import useInterval from '@/hooks/useInterval'
 import styled from 'styled-components'
@@ -23,14 +23,18 @@ const RegisterForm = props => {
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
 
-  const captchaCallback = () => {
+  const captchaCallback = res => {
     // * 滑动验证成功回调
     let registerFormValue = form.getFieldsValue()
     let _params = {
-      phone: registerFormValue.phone
+      phone: registerFormValue.phone,
+      rand: res.randstr,
+      ticket: res.ticket
     }
+    // * 获取注册手机验证码
     registerPhoneVerify(_params)
       .then(_result => {
+        message.success('验证码发送成功！')
         console.log(_result)
       })
       .catch(err => {
@@ -41,7 +45,23 @@ const RegisterForm = props => {
   }
   const registerCaptcha = new window.TencentCaptcha(userInfoStore.appId, captchaCallback)
 
-  const onFinish = () => {}
+  const onFinish = () => {
+    let registerFormValue = form.getFieldsValue(),
+      _registParam = {
+        appCode: userInfoStore.appCode,
+        password: registerFormValue.password,
+        phone: registerFormValue.phone,
+        vCode: registerFormValue.Verification
+      }
+    register(_registParam)
+      .then(result => {
+        console.log(result)
+        message.success('注册成功！')
+      })
+      .catch(err => {
+        console.log(err, 'err')
+      })
+  }
 
   const onFinishFailed = () => {}
 
