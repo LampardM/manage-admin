@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-11 23:19:47
+ * @LastEditTime: 2020-05-11 23:29:48
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, message } from 'antd'
@@ -112,7 +112,6 @@ const LoginForm = props => {
         _loginByVerParam = {
           appCode: userInfoStore.appCode,
           phone: loginFormValue.phone,
-          vCode: loginFormValue.Verification,
           validateCode: loginFormValue.Verification
         }
       LoginByPhone(_loginByVerParam)
