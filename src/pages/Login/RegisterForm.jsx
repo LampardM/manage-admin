@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-10 17:00:07
+ * @LastEditTime: 2020-05-11 22:36:59
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, message } from 'antd'
@@ -13,8 +13,6 @@ import styled from 'styled-components'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
 import { register, registerPhoneVerify } from '@/api/user'
-
-const { Option } = Select
 
 const RegisterForm = props => {
   const { userInfoStore } = useStore()
@@ -183,6 +181,11 @@ const RegisterForm = props => {
             {
               required: true,
               message: '请输入验证码!'
+            },
+            {
+              max: 6,
+              min: 6,
+              message: '验证码长度为6位'
             },
             {
               pattern: '^[0-9]+$',

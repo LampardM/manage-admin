@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 15:07:54
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-10 16:58:37
+ * @LastEditTime: 2020-05-11 22:01:26
  */
 import axios from 'axios'
 import { message } from 'antd'
@@ -36,7 +36,8 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    if (res.errorCode !== 200) {
+    if (res.success !== 1) {
+      message.error(res.errorMsg)
       return Promise.reject(new Error(res.errorMsg || 'Error'))
     } else {
       return res

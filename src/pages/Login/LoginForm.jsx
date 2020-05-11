@@ -3,17 +3,16 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 00:05:34
+ * @LastEditTime: 2020-05-11 23:19:47
  */
 import React, { useState, useEffect } from 'react'
-import { Form, Input, Select, Button } from 'antd'
+import { Form, Input, Select, Button, message } from 'antd'
 import styled from 'styled-components'
 import useInterval from '@/hooks/useInterval'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
-
-const { Option } = Select
+import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
 
 const LoginForm = props => {
   const [form] = Form.useForm()
@@ -21,6 +20,9 @@ const LoginForm = props => {
   const [loginType, setLoginType] = useState('password')
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
+
+  let isLogining = false
+
   const [loginKindList] = useState([
     {
       type: 'password',
@@ -33,9 +35,45 @@ const LoginForm = props => {
   ])
   const [, forceUpdate] = useState()
 
-  const captchaCallback = () => {
+  const captchaCallback = res => {
     // * 滑动验证成功回调
-    setIsSendVerify(true)
+    let loginFormValue = form.getFieldsValue()
+    // 密码登录
+    if (isLogining) {
+      isLogining = false // 重置状态
+      let _loginByPassParam = {
+        appCode: userInfoStore.appCode,
+        password: loginFormValue.password,
+        phone: loginFormValue.phone,
+        rand: res.randstr,
+        ticket: res.ticket
+      }
+      LoginByPassword(_loginByPassParam)
+        .then(_result => {
+          console.log(_result)
+          userInfoStore.toggleLogin(true, _result)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    } else {
+      // 获取手机验证码
+      let _params = {
+        phone: loginFormValue.phone,
+        rand: res.randstr,
+        ticket: res.ticket
+      }
+      // * 获取登录手机验证码
+      loginPhoneVerify(_params)
+        .then(_result => {
+          message.success('验证码发送成功！')
+          console.log(_result)
+        })
+        .catch(err => {
+          console.log(err, 'err')
+        })
+      setIsSendVerify(true)
+    }
   }
 
   const registerCaptcha = new window.TencentCaptcha(userInfoStore.appId, captchaCallback)
@@ -65,7 +103,28 @@ const LoginForm = props => {
     form.resetFields()
   }, [loginType])
 
-  const onFinish = () => {}
+  const onFinish = () => {
+    isLogining = true
+    if (loginType === 'password') {
+      verifyPhone()
+    } else {
+      let loginFormValue = form.getFieldsValue(),
+        _loginByVerParam = {
+          appCode: userInfoStore.appCode,
+          phone: loginFormValue.phone,
+          vCode: loginFormValue.Verification,
+          validateCode: loginFormValue.Verification
+        }
+      LoginByPhone(_loginByVerParam)
+        .then(_result => {
+          console.log(_result)
+          userInfoStore.toggleLogin(true, _result)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  }
 
   const onFinishFailed = () => {}
 

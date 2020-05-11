@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 17:40:46
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-10 17:04:32
+ * @LastEditTime: 2020-05-11 22:21:42
  */
 import request from '@/utils/request'
 
@@ -25,7 +25,7 @@ export function LoginByPassword(data) {
 
 export function loginPhoneVerify(params) {
   return request({
-    url: `/User/LoginVcode/${params.ticket}/${params.rand}/${params.phone}`,
+    url: `/User/LoingVcode/${params.ticket}/${params.rand}/${params.phone}`,
     method: 'get'
   })
 }
