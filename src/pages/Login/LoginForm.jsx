@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-11 23:29:48
+ * @LastEditTime: 2020-05-12 23:09:31
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, message } from 'antd'
@@ -51,7 +51,7 @@ const LoginForm = props => {
       LoginByPassword(_loginByPassParam)
         .then(_result => {
           console.log(_result)
-          userInfoStore.toggleLogin(true, _result)
+          userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
           console.log(err)
@@ -117,7 +117,7 @@ const LoginForm = props => {
       LoginByPhone(_loginByVerParam)
         .then(_result => {
           console.log(_result)
-          userInfoStore.toggleLogin(true, _result)
+          userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
           console.log(err)

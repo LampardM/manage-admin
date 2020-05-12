@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:04:13
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-18 15:23:42
+ * @LastEditTime: 2020-05-12 23:11:47
  */
 const LOGIN_COOKIE_NAME = 'sessionId'
 
@@ -36,6 +36,7 @@ function _getCookie(name) {
 }
 
 function _setCookie(name, value, expire) {
+  debugger
   let date = new Date()
   date.setDate(date.getDate() + expire)
   document.cookie =
