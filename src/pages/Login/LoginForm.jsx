@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-12 23:09:31
+ * @LastEditTime: 2020-05-13 22:00:39
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, message } from 'antd'
@@ -12,6 +12,7 @@ import useInterval from '@/hooks/useInterval'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
+import { useHistory } from 'react-router-dom'
 import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
 
 const LoginForm = props => {
@@ -20,6 +21,7 @@ const LoginForm = props => {
   const [loginType, setLoginType] = useState('password')
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
+  const history = useHistory()
 
   let isLogining = false
 
@@ -51,6 +53,8 @@ const LoginForm = props => {
       LoginByPassword(_loginByPassParam)
         .then(_result => {
           console.log(_result)
+          message.success('登录成功！')
+          history.push('/home')
           userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
@@ -117,6 +121,8 @@ const LoginForm = props => {
       LoginByPhone(_loginByVerParam)
         .then(_result => {
           console.log(_result)
+          message.success('登录成功！')
+          history.push('/home')
           userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
