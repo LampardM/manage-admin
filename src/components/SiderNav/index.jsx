@@ -3,24 +3,35 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-08 23:00:33
+ * @LastEditTime: 2020-05-13 22:43:48
  */
 import React from 'react'
 import Menu from '../Menu/index'
+import { withRouter } from 'react-router-dom'
+import { inject, observer } from 'mobx-react'
 import styled from 'styled-components'
+import SideDepartmentList from './SideDepartmentList'
 
 /** Mock */
 import navMenus from '@/router.map'
-
+@withRouter
+@observer
+@inject('userInfoStore')
 class SiderNav extends React.Component {
   render() {
-    const { className } = this.props
+    const { className, userInfoStore } = this.props
     return (
       <div className={className}>
         <div className="nav-container">
           <div style={styles.logo}></div>
-          <div className="department-list">团队列表</div>
-          <Menu menus={navMenus} />
+          <SideDepartmentList />
+          <Menu
+            menus={
+              userInfoStore.organizes.length > 0
+                ? navMenus
+                : [navMenus[0], navMenus[navMenus.length - 2]]
+            }
+          />
         </div>
       </div>
     )
@@ -43,12 +54,5 @@ export default styled(SiderNav)`
 
   .nav-container::-webkit-scrollbar {
     width: 0;
-  }
-
-  .department-list {
-    padding-left: 24px;
-    color: #fff;
-    height: 40px;
-    line-height: 40px;
   }
 `

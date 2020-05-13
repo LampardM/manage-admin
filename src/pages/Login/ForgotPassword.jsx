@@ -3,11 +3,10 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 12:03:05
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-06 21:47:10
+ * @LastEditTime: 2020-05-13 22:22:24
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, Steps, message, Result } from 'antd'
-import { CheckCircleTwoTone } from '@ant-design/icons'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
