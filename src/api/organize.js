@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:08:44
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-13 22:09:58
+ * @LastEditTime: 2020-05-13 22:53:48
  */
 import request from '@/utils/request'
 
@@ -11,6 +11,15 @@ import request from '@/utils/request'
 export function createOrganization(data) {
   return request({
     url: '/Organize/CreateOrganize',
+    method: 'post',
+    data
+  })
+}
+
+// 获取团队类型
+export function getOrganizationType(data) {
+  return request({
+    url: '/Organize/OrganizeTypes',
     method: 'post',
     data
   })

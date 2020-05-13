@@ -3,13 +3,15 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 09:40:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 10:15:47
+ * @LastEditTime: 2020-05-13 23:13:48
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
-import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col } from 'antd'
+import { Button, Form, Input, Select, Space } from 'antd'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
+import { useStore } from '@/hooks/useStore'
+import { createOrganization, getOrganizationType } from '@/api/organize'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -17,12 +19,31 @@ const { TextArea } = Input
 const CreateDepartForm = () => {
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
+  const { userInfoStore } = useStore()
+  const [organizeTypes, setOrganizeTypes] = useState([])
 
   const tailLayout = {
     wrapperCol: {
       offset: 5
     }
   }
+
+  const getCurOrganizeType = () => {
+    let _params = {
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: '1.0.0'
+    }
+    getOrganizationType(_params)
+      .then(_result => {
+        setOrganizeTypes(_result.data)
+      })
+      .catch(err => console.log(err))
+  }
+
+  useEffect(() => {
+    getCurOrganizeType()
+  }, [])
 
   const handleDepartKindChange = () => {}
 
@@ -59,11 +80,11 @@ const CreateDepartForm = () => {
           </Form.Item>
           <Form.Item
             name="character"
-            label="角色"
+            label="团队类型"
             rules={[
               {
                 required: true,
-                message: '请选择角色'
+                message: '请选择团队类型'
               }
             ]}
           >

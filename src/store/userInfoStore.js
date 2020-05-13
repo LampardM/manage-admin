@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:08:12
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-12 23:16:04
+ * @LastEditTime: 2020-05-13 23:09:55
  */
 import { observable, action } from 'mobx'
 import { isAuthenticated, authenticateSuccess, logout } from '@/utils/session'
@@ -15,17 +15,18 @@ class UserInfoStore {
   @observable appCode = 'yedmYB6NtF' // 关联平台号
   @observable platformCode = 'yedmY86Ntd' // 关联平台号
   @observable organizes = [] // 当前用户已加入团队
-  @observable token = '' // 当前用户token
+  @observable token = isAuthenticated() // 当前用户token(获取cookie防止页面刷新会丢失)
 
   @action toggleLogin(flag, info = {}) {
     this.loginUser = info // 设置登录用户信息
-    this.token = info.token // 设置登录用户token
     this.organizes = info.organizes // 设置登录用户加入团队信息
     if (flag) {
       authenticateSuccess(info.token)
+      this.token = info.token // 设置登录用户token
       this.isLogin = true
     } else {
       logout()
+      this.token = ''
       this.isLogin = false
     }
   }

@@ -22,7 +22,6 @@ export default observer(() => {
 
   const onFinish = values => {
     console.log('Received values of form: ', values)
-    // debugger
     OrganizationApproveStore.setFilters(values)
   }
 
