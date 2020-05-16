@@ -1,5 +1,5 @@
 /**
- * @Desc In User Settings Edit
+ * @Desc store
  * @exports class
  * @Author jieq
  * @Date 2020-04-18 10:47:22

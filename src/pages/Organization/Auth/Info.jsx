@@ -1,5 +1,5 @@
 /**
- * @Desc In User Settings Edit
+ * @Desc 授权
  * @exports class
  * @Author jieq
  * @Date 2020-04-19 00:18:10
