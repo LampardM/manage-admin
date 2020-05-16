@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-16 14:04:58
+ * @LastEditTime: 2020-05-16 14:22:03
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -13,7 +13,7 @@ import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
-import { usesSessionStorage } from 'react-use'
+import { useSessionStorage } from 'react-use'
 
 import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
 
@@ -23,7 +23,7 @@ const LoginForm = props => {
   const [loginType, setLoginType] = useState('password')
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
-  const [userOrganizes, setUserOrganizes] = usesSessionStorage('user-organizes', []) // 防止页面刷新左侧团队列表被重置
+  const [userOrganizes, setUserOrganizes] = useSessionStorage('user-organizes', []) // 防止页面刷新左侧团队列表被重置
   const history = useHistory()
 
   let isLogining = false
