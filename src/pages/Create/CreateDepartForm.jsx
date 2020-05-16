@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 09:40:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-16 14:16:32
+ * @LastEditTime: 2020-05-16 14:38:01
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -55,7 +55,18 @@ const CreateDepartForm = () => {
   // 创建团队
   const creatrDepartHandler = () => {
     let createFormValue = form.getFieldsValue(),
-      _params = {}
+      _params = {
+        param: {
+          contract: createFormValue.connect, // 联系人
+          memo: createFormValue.desc, // 备注
+          organizeName: createFormValue.name, // 团队名称
+          organizeTypeCode: curOriganize, // 团队类型编码
+          phone: createFormValue.phone // 手机号
+        },
+        timestamp: JSON.stringify(new Date().getTime()),
+        token: userInfoStore.token,
+        version: userInfoStore.version
+      }
 
     createOrganization(_params)
       .then(_result => {
@@ -105,20 +116,22 @@ const CreateDepartForm = () => {
               }
             ]}
           >
-            <Select
-              style={{ width: '100%' }}
-              loading={organizeTypes.length === 0}
-              onChange={handleDepartKindChange}
-              placeholder="请选择团队类型"
-              optionLabelProp="label"
-              value={curOriganize}
-            >
-              {organizeTypes.map(type => (
-                <Option key={type.code} value={type.name} label={type.name}>
-                  {type.name}
-                </Option>
-              ))}
-            </Select>
+            <>
+              <Select
+                style={{ width: '100%' }}
+                loading={organizeTypes.length === 0}
+                onChange={handleDepartKindChange}
+                placeholder="请选择团队类型"
+                optionLabelProp="label"
+                value={curOriganize}
+              >
+                {organizeTypes.map(type => (
+                  <Option key={type.code} value={type.code} label={type.name}>
+                    {type.name}
+                  </Option>
+                ))}
+              </Select>
+            </>
           </Form.Item>
           <Form.Item
             name="connect"

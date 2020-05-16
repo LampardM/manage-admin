@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-16 14:22:03
+ * @LastEditTime: 2020-05-16 14:26:15
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -58,7 +58,9 @@ const LoginForm = props => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
           message.success('登录成功！')
-          history.push('/home')
+          setTimeout(() => {
+            history.push('/home')
+          }, 500)
           userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
@@ -127,7 +129,9 @@ const LoginForm = props => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
           message.success('登录成功！')
-          history.push('/home')
+          setTimeout(() => {
+            history.push('/home')
+          }, 500)
           userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
