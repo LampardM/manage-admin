@@ -3,12 +3,12 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 09:40:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-13 23:13:48
+ * @LastEditTime: 2020-05-16 14:16:32
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
-import { Button, Form, Input, Select, Space } from 'antd'
+import { Button, Form, Input, Select, Space, message } from 'antd'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { useStore } from '@/hooks/useStore'
 import { createOrganization, getOrganizationType } from '@/api/organize'
@@ -21,6 +21,7 @@ const CreateDepartForm = () => {
   const [, forceUpdate] = useState()
   const { userInfoStore } = useStore()
   const [organizeTypes, setOrganizeTypes] = useState([])
+  const [curOriganize, setCurOriganize] = useState('')
 
   const tailLayout = {
     wrapperCol: {
@@ -28,15 +29,17 @@ const CreateDepartForm = () => {
     }
   }
 
+  // 获取当前团队类型
   const getCurOrganizeType = () => {
     let _params = {
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
-      version: '1.0.0'
+      version: userInfoStore.version
     }
     getOrganizationType(_params)
       .then(_result => {
         setOrganizeTypes(_result.data)
+        _result.data.length && setCurOriganize(_result.data[0].code)
       })
       .catch(err => console.log(err))
   }
@@ -45,9 +48,24 @@ const CreateDepartForm = () => {
     getCurOrganizeType()
   }, [])
 
-  const handleDepartKindChange = () => {}
+  const handleDepartKindChange = value => {
+    setCurOriganize(value)
+  }
 
-  const creatrDepartHandler = () => {}
+  // 创建团队
+  const creatrDepartHandler = () => {
+    let createFormValue = form.getFieldsValue(),
+      _params = {}
+
+    createOrganization(_params)
+      .then(_result => {
+        console.log(_result)
+        message.success('创建团队成功！')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
   return (
     <DepartFormCon>
@@ -58,8 +76,7 @@ const CreateDepartForm = () => {
             span: 5
           }}
           initialValues={{
-            prefix: '86',
-            character: ['china']
+            prefix: '86'
           }}
         >
           <Form.Item
@@ -89,28 +106,18 @@ const CreateDepartForm = () => {
             ]}
           >
             <Select
-              mode="multiple"
               style={{ width: '100%' }}
-              placeholder="select one country"
+              loading={organizeTypes.length === 0}
               onChange={handleDepartKindChange}
+              placeholder="请选择团队类型"
               optionLabelProp="label"
+              value={curOriganize}
             >
-              <Option value="china" label="China">
-                <div className="demo-option-label-item">
-                  <span role="img" aria-label="China">
-                    🇨🇳
-                  </span>
-                  China (中国)
-                </div>
-              </Option>
-              <Option value="usa" label="USA">
-                <div className="demo-option-label-item">
-                  <span role="img" aria-label="USA">
-                    🇺🇸
-                  </span>
-                  USA (美国)
-                </div>
-              </Option>
+              {organizeTypes.map(type => (
+                <Option key={type.code} value={type.name} label={type.name}>
+                  {type.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item
@@ -157,7 +164,6 @@ const CreateDepartForm = () => {
                   onClick={creatrDepartHandler}
                   disabled={
                     !form.isFieldTouched('name') ||
-                    !form.isFieldTouched('character') ||
                     !form.isFieldTouched('connect') ||
                     !form.isFieldTouched('phone') ||
                     form.getFieldsError().filter(({ errors }) => errors.length).length

@@ -3,14 +3,16 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-13 22:28:42
+ * @LastEditTime: 2020-05-16 14:17:46
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useStore } from '@/hooks/useStore'
+import { usesSessionStorage } from 'react-use'
 
 const SideDepartmentList = () => {
   const { userInfoStore } = useStore()
+  const [userOrganizes] = usesSessionStorage('user-organizes')
 
   return (
     <>

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-13 22:49:48
+ * @LastEditTime: 2020-05-16 14:04:58
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -13,6 +13,8 @@ import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
+import { usesSessionStorage } from 'react-use'
+
 import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
 
 const LoginForm = props => {
@@ -21,6 +23,7 @@ const LoginForm = props => {
   const [loginType, setLoginType] = useState('password')
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
+  const [userOrganizes, setUserOrganizes] = usesSessionStorage('user-organizes', []) // 防止页面刷新左侧团队列表被重置
   const history = useHistory()
 
   let isLogining = false
@@ -53,6 +56,7 @@ const LoginForm = props => {
       LoginByPassword(_loginByPassParam)
         .then(_result => {
           console.log(_result)
+          setUserOrganizes(_result.data.organizes)
           message.success('登录成功！')
           history.push('/home')
           userInfoStore.toggleLogin(true, _result.data)
@@ -121,6 +125,7 @@ const LoginForm = props => {
       LoginByPhone(_loginByVerParam)
         .then(_result => {
           console.log(_result)
+          setUserOrganizes(_result.data.organizes)
           message.success('登录成功！')
           history.push('/home')
           userInfoStore.toggleLogin(true, _result.data)
@@ -234,6 +239,11 @@ const LoginForm = props => {
                 {
                   required: true,
                   message: '请输入验证码!'
+                },
+                {
+                  max: 6,
+                  min: 6,
+                  message: '验证码长度为6位'
                 },
                 {
                   pattern: '^[0-9]+$',
