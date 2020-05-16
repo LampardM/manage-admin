@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 01:31:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 22:46:04
+ * @LastEditTime: 2020-05-16 15:02:29
  */
 /** officail */
 import React from 'react'
@@ -64,7 +64,8 @@ class HeaderBar extends React.Component {
     const { name = 'name' } = this.props.userInfoStore
     return (
       <Dropdown overlay={this.menu()}>
-        <span onClick={() => this.setState({ visible: true })}>{name}</span>
+        {/* <span onClick={() => this.setState({ visible: true })}>{name}</span> */}
+        <span style={{ cursor: 'pointer' }}>{name}</span>
       </Dropdown>
     )
   }
@@ -104,7 +105,7 @@ class HeaderBar extends React.Component {
               align="center"
               justify="center"
               className="item"
-              onClick={() => this.setState({ count: 0 })}
+              onClick={() => this.setState({ count: 0, visible: true })}
             >
               <Badge
                 count={userInfoStore.isLogin ? count : 0}
@@ -127,6 +128,7 @@ class HeaderBar extends React.Component {
           wrapClassName="vertical-center-modal"
           onCancel={() => this.setState({ visible: false })}
         >
+          {<div>Message Modal</div>}
           {/* <img src={avatar} alt='' width='100%' /> */}
         </Modal>
       </div>
@@ -145,6 +147,7 @@ export default styled(HeaderBar)`
   }
   .item {
     padding: 0 20px;
+    cursor: pointer;
   }
   .menu {
     line-height: 2em;

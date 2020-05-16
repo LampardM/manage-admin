@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 09:40:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-16 14:38:01
+ * @LastEditTime: 2020-05-16 14:48:10
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -76,6 +76,11 @@ const CreateDepartForm = () => {
       .catch(err => {
         console.log(err)
       })
+  }
+
+  // 取消创建
+  const cancelCreate = () => {
+    form.resetFields()
   }
 
   return (
@@ -171,7 +176,7 @@ const CreateDepartForm = () => {
           <Form.Item {...tailLayout} shouldUpdate>
             {() => (
               <Space>
-                <Button>取消</Button>
+                <Button onClick={cancelCreate}>取消</Button>
                 <Button
                   type="primary"
                   onClick={creatrDepartHandler}
