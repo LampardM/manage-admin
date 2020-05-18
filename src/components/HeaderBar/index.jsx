@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 01:31:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-18 20:48:17
+ * @LastEditTime: 2020-05-18 22:02:28
  */
 /** officail */
 import React from 'react'
@@ -52,7 +52,7 @@ class HeaderBar extends React.Component {
 
   logout = () => {
     this.props.userInfoStore.toggleLogin(false)
-    this.props.history.push(this.props.location.pathname)
+    this.props.history.push('/login')
   }
 
   notLogin = () => {
@@ -82,20 +82,24 @@ class HeaderBar extends React.Component {
     )
   }
 
+  userInfoHandler = item => {
+    if (item.key === 'logout') {
+      this.logout()
+    }
+  }
+
   menu = () => {
     return (
-      <Menu className="menu">
+      <Menu className="menu" onClick={this.userInfoHandler}>
         <Menu.ItemGroup title="用户中心" className="menu-group">
-          <Menu.Item>你好 - {isAuthenticated()}</Menu.Item>
-          <Menu.Item>个人信息</Menu.Item>
-          <Menu.Item>
-            <span onClick={this.logout}>退出登录</span>
-          </Menu.Item>
+          <Menu.Item key={isAuthenticated()}>你好 - {isAuthenticated()}</Menu.Item>
+          <Menu.Item key="userInfo">个人信息</Menu.Item>
+          <Menu.Item key="logout">退出登录 </Menu.Item>
         </Menu.ItemGroup>
-        <Menu.ItemGroup title="设置中心" className="menu-group">
+        {/* <Menu.ItemGroup title="设置中心" className="menu-group">
           <Menu.Item>个人设置</Menu.Item>
           <Menu.Item>系统设置</Menu.Item>
-        </Menu.ItemGroup>
+        </Menu.ItemGroup> */}
       </Menu>
     )
   }
