@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 01:31:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-16 15:02:29
+ * @LastEditTime: 2020-05-18 20:48:17
  */
 /** officail */
 import React from 'react'
@@ -17,11 +17,12 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, NotificationOutlined } from '@ant
 
 /** custom */
 import { isAuthenticated } from '@/utils/session'
+import { getUserMessages } from '@/api/user'
 
 //withRouter一定要写在前面，不然路由变化不会反映到props中去
 @withRouter
-@inject('userInfoStore')
 @observer
+@inject('userInfoStore')
 class HeaderBar extends React.Component {
   state = {
     // icon: 'arrows-alt',
@@ -30,9 +31,20 @@ class HeaderBar extends React.Component {
     // avatar: require('./img/04.jpg'),
   }
 
-  componentDidMount() {}
+  componentWillMount() {
+    let _params = {
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: this.props.userInfoStore.token,
+      version: this.props.userInfoStore.version
+    }
+    getUserMessages(_params)
+      .then(_result => {
+        console.log(_result, 'messages')
+      })
+      .catch(err => console.log(err))
+  }
 
-  componentWillUnmount() {}
+  componentDidMount() {}
 
   toggle = () => {
     this.props.onToggle()
