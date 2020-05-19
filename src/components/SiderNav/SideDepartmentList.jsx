@@ -17,7 +17,7 @@ const SideDepartmentList = () => {
   return (
     <>
       {userInfoStore.organizes.map((organization, idx) => (
-        <orgItem key={idx}>{organization}</orgItem>
+        <orgItem key={idx}>{organization.name}</orgItem>
       ))}
     </>
   )
