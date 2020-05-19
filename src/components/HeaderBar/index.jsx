@@ -19,6 +19,13 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, NotificationOutlined } from '@ant
 import { isAuthenticated } from '@/utils/session'
 import { getUserMessages } from '@/api/user'
 
+/**
+ * @desc 轮询间隔时间
+ * @default 60s
+ * @type {number}
+ */
+const POLLING_DELAY = 1000 * 60 * 1
+
 //withRouter一定要写在前面，不然路由变化不会反映到props中去
 @withRouter
 @observer
@@ -26,25 +33,39 @@ import { getUserMessages } from '@/api/user'
 class HeaderBar extends React.Component {
   state = {
     // icon: 'arrows-alt',
-    count: 100,
+    count: 0,
     visible: false
     // avatar: require('./img/04.jpg'),
   }
 
+  polling = null //轮询timer
+
   componentWillMount() {
-    let _params = {
+    this.pollingMessage()
+    this.polling = setInterval(this.pollingMessage, POLLING_DELAY)
+  }
+
+  pollingMessage = () => {
+    console.log('polling to pull message...')
+    getUserMessages({
       timestamp: JSON.stringify(new Date().getTime()),
       token: this.props.userInfoStore.token,
       version: this.props.userInfoStore.version
-    }
-    getUserMessages(_params)
+    })
       .then(_result => {
         console.log(_result, 'messages')
+        this.setState({
+          count: ((_result || {}).data || []).length
+        })
       })
       .catch(err => console.log(err))
   }
 
   componentDidMount() {}
+
+  componentWillUnmount() {
+    this.polling && clearInterval(this.polling)
+  }
 
   toggle = () => {
     this.props.onToggle()
@@ -123,13 +144,17 @@ class HeaderBar extends React.Component {
               className="item"
               onClick={() => this.setState({ count: 0, visible: true })}
             >
-              <Badge
-                count={userInfoStore.isLogin ? count : 0}
-                overflowCount={99}
-                style={{ marginRight: -17 }}
-              >
+              {userInfoStore.isLogin && count ? (
+                <Badge
+                  count={userInfoStore.isLogin ? count : 0}
+                  overflowCount={99}
+                  style={{ marginRight: -17 }}
+                >
+                  <NotificationOutlined />
+                </Badge>
+              ) : (
                 <NotificationOutlined />
-              </Badge>
+              )}
             </Col>
             <Col align="center" justify="center" className="item">
               {userInfoStore.isLogin ? this.login() : this.notLogin()}
