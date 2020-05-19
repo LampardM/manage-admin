@@ -73,7 +73,12 @@ const AddEditCharacterForm = () => {
         <Form.Item name="desc" label="备注" style={{ width: '450px' }}>
           <TextArea placeholder="备注" autoSize={{ minRows: 3, maxRows: 5 }} />
         </Form.Item>
-        <Form.Item name="permission" label="权限" style={{ width: '450px' }} required>
+        <Form.Item
+          name="permission"
+          label="权限"
+          style={{ width: '450px', marginBottom: 0 }}
+          required
+        >
           {/* <Checkbox
             checked={permission}
             onChange={changePermission}
@@ -117,7 +122,7 @@ const AddEditCharacterForm = () => {
           required
           labelAlign="left"
           label="可授权角色权限"
-          style={{ width: '450px' }}
+          style={{ width: '450px', marginBottom: 0 }}
           labelCol={{ span: 7, offset: 0 }}
         >
           {/*  <Checkbox
