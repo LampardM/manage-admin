@@ -6,13 +6,21 @@
  * @LastEditors jieq
  * @LastEditTime 2020-04-26 00:25:32
  */
-import { toJS, action, observable } from 'mobx'
+import { action, observable } from 'mobx'
 
 class OrganizationCheckStore {
-  initFilters = {}
+  initFilters = {
+    contact: '',
+    maxSubmitTime: '',
+    minSubmitTime: '',
+    orgName: '',
+    orgTypeCode: undefined,
+    phone: '',
+    submitterName: ''
+  }
 
   @observable
-  filters = {}
+  filters = this.initFilters
 
   @action setFilters(value) {
     this.filters = value

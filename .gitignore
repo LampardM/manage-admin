@@ -24,9 +24,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # delivery
-/src/pages
-!/src/pages/404
-!/src/pages/Create
-!/src/pages/Home
-!/src/pages/Index
-!/src/pages/Login
+#/src/pages
+#!/src/pages/404
+#!/src/pages/Create
+#!/src/pages/Home
+#!/src/pages/Index
+#!/src/pages/Login

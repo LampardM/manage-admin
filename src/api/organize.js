@@ -24,3 +24,12 @@ export function getOrganizationType(data) {
     data
   })
 }
+
+// 获取待审批团队列表
+export function approving(data) {
+  return request({
+    url: '/Organize/Approving',
+    method: 'post',
+    data
+  })
+}

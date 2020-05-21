@@ -7,24 +7,59 @@
  * @LastEditTime 2020-04-26 00:04:38
  */
 /** official */
-import React /* , { useState } */ from 'react'
+// import moment from 'moment'
+import 'moment/locale/zh-cn'
 import { observer } from 'mobx-react'
+import React, { useState, useEffect } from 'react'
 
 /** vendor */
 import { Form, Row, Col, Input, Button, Select, DatePicker } from 'antd'
 
 /** custom */
-// import { Ext } from '../../../utils'
+import { Ext } from '../../../utils'
+import { getOrganizationType } from '@/api'
 import { useStore } from '@/hooks/useStore'
+
+// contact: '',
+// maxSubmitTime: '',
+// minSubmitTime: '',
+// orgName: '',
+// orgTypeCode: '',
+// phone: '',
+// submitterName: ''
 
 export default observer(() => {
   const [form] = Form.useForm()
-  const { OrganizationCheckStore } = useStore()
+  const { userInfoStore, OrganizationCheckStore } = useStore()
+  const [organizeTypes, setOrganizeTypes] = useState([])
 
   const onFinish = values => {
     console.log('Received values of form: ', values)
-    // debugger
+
+    values.minSubmitTime =
+      Ext.isArray(values.date) && values.date[0]
+        ? `${values.date[0].format('YYYY-MM-DD')} 00:00:00`
+        : ''
+    values.maxSubmitTime =
+      Ext.isArray(values.date) && values.date[1]
+        ? `${values.date[1].format('YYYY-MM-DD')} 23:59:59`
+        : ''
+
     OrganizationCheckStore.setFilters(values)
+  }
+
+  useEffect(() => {
+    getOrganizeTypes()
+  }, [])
+
+  const getOrganizeTypes = () => {
+    getOrganizationType({
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime())
+    }).then(res => {
+      setOrganizeTypes(res.data)
+    })
   }
 
   return (
@@ -38,26 +73,31 @@ export default observer(() => {
       <Row gutter={5}>
         <Col style={{ width: 250 }}>
           <Form.Item name="date">
+            {/*format={'YYYY-MM-DD HH:mm:ss'}*/}
             <DatePicker.RangePicker />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 130 }}>
-          <Form.Item name="teamName">
+          <Form.Item name="orgName">
             <Input placeholder="请输入团队名称" />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 170 }}>
-          <Form.Item name="teamType">
+          <Form.Item name="orgTypeCode">
             <Select allowClear style={{ width: '100%' }} placeholder="请选择团队类型">
-              <Select.Option value={'Lucy'}>Lucy</Select.Option>
+              {organizeTypes.map(it => (
+                <Select.Option value={it.code} label={it.name} key={it.code}>
+                  {it.name}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
         </Col>
 
         <Col style={{ width: 150 }}>
-          <Form.Item name="name">
+          <Form.Item name="contact">
             <Input placeholder="请输入联系人姓名" />
           </Form.Item>
         </Col>
