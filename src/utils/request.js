@@ -38,7 +38,7 @@ service.interceptors.response.use(
     const res = response.data
     if (res.success !== 1) {
       message.error(res.errorMsg)
-      return Promise.reject(new Error(res.errorMsg || 'Error'))
+      return Promise.reject(/*new Error(*/ res.errorMsg || 'Error' /*)*/)
     } else {
       return res
     }
