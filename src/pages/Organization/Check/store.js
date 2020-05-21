@@ -9,25 +9,25 @@
 import { action, observable } from 'mobx'
 
 class OrganizationCheckStore {
-  initFilters = {
+  initfilters = {
     contact: '',
-    maxSubmitTime: '',
-    minSubmitTime: '',
-    orgName: '',
-    orgTypeCode: undefined,
+    maxsubmittime: '',
+    minsubmittime: '',
+    orgname: '',
+    orgtypecode: undefined,
     phone: '',
-    submitterName: ''
+    submittername: ''
   }
 
   @observable
-  filters = this.initFilters
+  filters = this.initfilters
 
-  @action setFilters(value) {
+  @action setfilters(value) {
     this.filters = value
   }
 
-  @action clearFilters() {
-    this.filters = this.initFilters
+  @action clearfilters() {
+    this.filters = this.initfilters
   }
 }
 
