@@ -94,24 +94,24 @@ const menus = [
       }
     ]
   },
-  {
-    title: '终端管理',
-    key: '/terminal',
-    subs: [
-      {
-        title: '协议设置',
-        key: '/terminal/agreement'
-      },
-      {
-        title: '在线设备',
-        key: '/terminal/online'
-      },
-      {
-        title: '全部设备',
-        key: '/terminal/devices'
-      }
-    ]
-  },
+  // {
+  //   title: '终端管理',
+  //   key: '/terminal',
+  //   subs: [
+  //     {
+  //       title: '协议设置',
+  //       key: '/terminal/agreement'
+  //     },
+  //     {
+  //       title: '在线设备',
+  //       key: '/terminal/online'
+  //     },
+  //     {
+  //       title: '全部设备',
+  //       key: '/terminal/devices'
+  //     }
+  //   ]
+  // },
   {
     title: '创建团队',
     key: '/create'
