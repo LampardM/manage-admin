@@ -3,32 +3,29 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-16 14:21:56
+ * @LastEditTime: 2020-05-24 17:56:00
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { useStore } from '@/hooks/useStore'
+import { Menu } from 'antd'
 import { useSessionStorage } from 'react-use'
 
 const SideDepartmentList = () => {
-  const { userInfoStore } = useStore()
   const [userOrganizes] = useSessionStorage('user-organizes')
 
   return (
-    <>
-      {userInfoStore.organizes.map((organization, idx) => (
-        <orgItem key={idx}>{organization.name}</orgItem>
+    <Menu
+      mode="inline"
+      theme="dark"
+      defaultSelectedKeys={userOrganizes.map(org => {
+        if (org.selected) return org.code
+      })}
+    >
+      {userOrganizes.map((organization, idx) => (
+        <Menu.Item key={idx}>{organization.name}</Menu.Item>
       ))}
-    </>
+    </Menu>
   )
 }
-
-const orgItem = styled.div`
-  font-size: 22px;
-  padding-left: 24px;
-  color: #fff;
-  height: 40px;
-  line-height: 40px;
-`
 
 export default SideDepartmentList

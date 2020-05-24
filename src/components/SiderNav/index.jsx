@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-13 22:43:48
+ * @LastEditTime: 2020-05-24 17:51:38
  */
 import React from 'react'
 import Menu from '../Menu/index'
@@ -11,6 +11,7 @@ import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
 import styled from 'styled-components'
 import SideDepartmentList from './SideDepartmentList'
+import { useSessionStorage } from 'react-use'
 
 /** Mock */
 import navMenus from '@/router.map'
@@ -20,6 +21,7 @@ import navMenus from '@/router.map'
 class SiderNav extends React.Component {
   render() {
     const { className, userInfoStore } = this.props
+
     return (
       <div className={className}>
         <div className="nav-container">
