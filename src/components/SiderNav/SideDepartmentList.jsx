@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-24 17:56:00
+ * @LastEditTime: 2020-05-24 18:08:59
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -17,13 +17,19 @@ const SideDepartmentList = () => {
     <Menu
       mode="inline"
       theme="dark"
-      defaultSelectedKeys={userOrganizes.map(org => {
-        if (org.selected) return org.code
-      })}
+      defaultSelectedKeys={
+        userOrganizes && userOrganizes.length
+          ? userOrganizes.map(org => {
+              if (org.selected) return org.code
+            })
+          : []
+      }
     >
-      {userOrganizes.map((organization, idx) => (
-        <Menu.Item key={idx}>{organization.name}</Menu.Item>
-      ))}
+      {userOrganizes &&
+        userOrganizes.length &&
+        userOrganizes.map((organization, idx) => (
+          <Menu.Item key={idx}>{organization.name}</Menu.Item>
+        ))}
     </Menu>
   )
 }
