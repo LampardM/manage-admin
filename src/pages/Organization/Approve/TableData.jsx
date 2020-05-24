@@ -20,6 +20,9 @@ import { Row, Col, Button, Table, Menu } from 'antd'
 /** custom */
 import { Ext } from '../../../utils'
 import { useStore } from '@/hooks/useStore'
+import { getApprovaled } from '@/api'
+
+const PAGE_SIZE = 10
 
 //表头
 const columns = [
@@ -63,46 +66,37 @@ const columns = [
 
 const TableData = observer(({ className, filters }) => {
   const history = useHistory()
-  const [data, setData] = useState([])
   const { OrganizationApproveStore } = useStore()
-  const [pagination, setPagination] = useState({})
+  const { userInfoStore } = useStore('userInfoStore')
+
+  const [data, setData] = useState([])
   const [selectedKeys, setSelectedKeys] = useState([])
   const [isTableLoading, setIsTableLoading] = useState(true)
+  const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
 
   useEffect(() => {
-    fetch(toJS(OrganizationApproveStore.filters))
+    fetch()
   }, [OrganizationApproveStore.filters])
 
-  const fetch = async (params = {}) => {
-    console.log('fetch', params)
-    setTimeout(() => {
-      const data = {
-        pages: {},
-        results: [
-          {
-            id: 1,
-            teamNo: 'team-no-1',
-            teamName: 'team-name-1',
-            teamType: 'team-type-1',
-            name: 'name-1',
-            phone: 'phone-1',
-            status: 'enable'
-          },
-          {
-            id: 2,
-            teamNo: 'team-no-2',
-            teamName: 'team-name-2',
-            teamType: 'team-type-2',
-            name: 'name-2',
-            phone: 'phone-2',
-            status: 'disable'
-          }
-        ]
+  const fetch = async () => {
+    const param = toJS(OrganizationApproveStore.filters)
+    console.log('fetch', param)
+
+    getApprovaled({
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime()),
+      param: {
+        param,
+        pageSize: pagination.pageSize,
+        pageIndex: pagination.current - 1
       }
-      setData(dataformat(data.results))
-      setPagination(data.pages)
-      setIsTableLoading(false)
-    }, 1000)
+    })
+      .then(({ data }) => {
+        setData(dataformat(data.rows))
+        setPagination(data.pages)
+      })
+      .finally(() => setIsTableLoading(false))
   }
 
   const dataformat = dataFormRESTful => {

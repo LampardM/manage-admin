@@ -24,7 +24,13 @@ export default observer(() => {
     console.log('Received values of form: ', values)
     OrganizationApproveStore.setFilters(values)
   }
-
+  // phone: '',
+  // contact: '',
+  // orgName: '',
+  // orgTypeCode: '',
+  // maxSubmitTime: '',
+  // minSubmitTime: '',
+  // submitterName: '',
   return (
     <Form
       form={form}

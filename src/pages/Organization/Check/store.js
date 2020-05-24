@@ -22,11 +22,11 @@ class OrganizationCheckStore {
   @observable
   filters = this.initfilters
 
-  @action setfilters(value) {
+  @action setFilters(value) {
     this.filters = value
   }
 
-  @action clearfilters() {
+  @action clearFilters() {
     this.filters = this.initfilters
   }
 }

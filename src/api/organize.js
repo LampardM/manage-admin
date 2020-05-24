@@ -26,9 +26,27 @@ export function getOrganizationType(data) {
 }
 
 // 获取待审批团队列表
-export function approving(data) {
+export function queryApprovingList(data) {
   return request({
     url: '/Organize/Approving',
+    method: 'post',
+    data
+  })
+}
+
+// 获取待审批团队列表
+export function getApproval(data) {
+  return request({
+    url: '/Organize/Approval',
+    method: 'post',
+    data
+  })
+}
+
+// 获取已通过团队列表
+export function getApprovaled(data) {
+  return request({
+    url: '/Organize/Appved',
     method: 'post',
     data
   })

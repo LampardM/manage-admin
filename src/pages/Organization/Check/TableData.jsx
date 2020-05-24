@@ -12,12 +12,13 @@ import { observer } from 'mobx-react'
 import React, { useState, useEffect } from 'react'
 
 /** vendor */
-import { Row, Col, Button, Table } from 'antd'
+import { Row, Col, Button, Table, Modal } from 'antd'
 
 /** custom */
 import { Ext } from '../../../utils'
 import { useStore } from '@/hooks/useStore'
-import { approving } from '@/api'
+import { getApproval, queryApprovingList } from '@/api'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 const PAGE_SIZE = 10
 
@@ -58,43 +59,46 @@ const columns = [
   }
 ]
 
-const TableData = ({ filters }) => {
+let orgCodes = []
+
+const TableData = () => {
   const { OrganizationCheckStore } = useStore()
   const { userInfoStore } = useStore('userInfoStore')
 
   const [data, setData] = useState([])
   const [selectedKeys, setSelectedKeys] = useState([])
+  const [rejectReason, setRejectReason] = useState('')
   const [isTableLoading, setIsTableLoading] = useState(true)
+  const [isVisibleRejectModal, setIsVisibleRejectModal] = useState(false)
   const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
 
   useEffect(() => {
+    fetch()
+  }, [pagination.current, pagination.pageSize, OrganizationCheckStore.filters])
+
+  const fetch = () => {
+    setIsTableLoading(true)
+
     const param = toJS(OrganizationCheckStore.filters)
 
     if (!Ext.isHasValue(param.orgTypeCode)) {
       param.orgTypeCode = ''
     }
 
-    fetch(param)
-  }, [pagination.current, pagination.pageSize, OrganizationCheckStore.filters])
-
-  const fetch = (param = {}) => {
-    setIsTableLoading(true)
-    console.log('fetch', param)
-
-    approving({
-      timestamp: JSON.stringify(new Date().getTime()),
+    queryApprovingList({
       token: userInfoStore.token,
       version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime()),
       param: {
         param,
-        pageIndex: pagination.current,
-        pageSize: pagination.pageSize
+        pageSize: pagination.pageSize,
+        pageIndex: pagination.current - 1
       }
     })
       .then(({ data }) => {
         const { rows, pageIndex, pageSize, total } = data
         setData(dataformat(rows))
-        setPagination({ current: pageIndex, pageSize, total })
+        setPagination({ current: pageIndex + 1, pageSize, total })
       })
       .finally(() => {
         setIsTableLoading(false)
@@ -103,6 +107,7 @@ const TableData = ({ filters }) => {
 
   const dataformat = dataFormRESTful => {
     return dataFormRESTful.map(it => ({
+      id: it.orgCode,
       phone: it.phone,
       name: it.contact,
       teamName: it.orgName,
@@ -111,12 +116,50 @@ const TableData = ({ filters }) => {
     }))
   }
 
+  const submit = isReject => {
+    Modal.confirm({
+      title: `确认${!isReject ? '通过' : '驳回'}？`,
+      icon: <ExclamationCircleOutlined />,
+      content: `是否确认${!isReject ? '通过' : '驳回'}所选团队创建申请`,
+      onOk() {
+        console.log('OK')
+        if (isReject) {
+          setIsVisibleRejectModal(true)
+        } else {
+          doApproval(isReject)
+        }
+      }
+    })
+  }
+
+  const doApproval = (isReject = false) => {
+    console.log(orgCodes)
+
+    if (orgCodes.length) {
+      getApproval({
+        token: userInfoStore.token,
+        version: userInfoStore.version,
+        timestamp: JSON.stringify(new Date().getTime()),
+        param: {
+          orgCodes,
+          reject: isReject,
+          memo: rejectReason //驳回时添加的说明
+        }
+      }).then(() => {
+        setRejectReason('')
+        fetch()
+      })
+    }
+  }
+
   const approve = () => {
-    console.log('通过', selectedKeys)
+    orgCodes = selectedKeys
+    submit(false)
   }
 
   const reject = () => {
-    console.log('驳回', selectedKeys)
+    orgCodes = selectedKeys
+    submit(true)
   }
 
   const onChange = (pagination /*{current, pageSize}*/) => {
@@ -125,7 +168,7 @@ const TableData = ({ filters }) => {
 
   const optArea = () => (
     <>
-      <Button type="primary" onClick={approve}>
+      <Button type="primary" onClick={approve} disabled={!selectedKeys.length}>
         通过
       </Button>
       <Button
@@ -133,6 +176,7 @@ const TableData = ({ filters }) => {
           margin: '0 4px'
         }}
         onClick={reject}
+        disabled={!selectedKeys.length}
       >
         驳回
       </Button>
@@ -151,25 +195,34 @@ const TableData = ({ filters }) => {
           title: '操作',
           dataIndex: 'action',
           width: 100,
-          render: () => (
+          render: (text, item) => (
             <>
               <a
                 style={{
                   marginRight: 10
                 }}
                 href="js:void()"
-                onClick={approve}
+                onClick={() => {
+                  orgCodes = [item.id]
+                  submit(false)
+                }}
               >
                 通过
               </a>
-              <a href="js:void()" onClick={reject}>
+              <a
+                href="js:void()"
+                onClick={() => {
+                  orgCodes = [item.id]
+                  submit(true)
+                }}
+              >
                 驳回
               </a>
             </>
           )
         })}
         rowKey={(row, idx /*, self*/) => {
-          return idx
+          return row.id
         }}
         dataSource={data}
         onChange={onChange}
@@ -186,16 +239,32 @@ const TableData = ({ filters }) => {
           // })
         }}
       />
+
+      <Modal
+        title="驳回"
+        visible={isVisibleRejectModal}
+        onOk={() => {
+          setIsVisibleRejectModal(false)
+          doApproval(true)
+        }}
+        onCancel={() => {
+          console.log(orgCodes)
+          setIsVisibleRejectModal(false)
+        }}
+      >
+        <Row>
+          <Col>驳回原因：</Col>
+          <Col>
+            <textarea
+              value={rejectReason}
+              onChange={({ currentTarget }) => {
+                setRejectReason(currentTarget.value)
+              }}
+            />
+          </Col>
+        </Row>
+      </Modal>
     </>
   )
 }
-// class TableData extends React.Component {
-//   componentDidMount() {
-//     this.props.fetch()
-//   }
-
-//   render() {
-//     return <Table />
-//   }
-// }
 export default observer(TableData)

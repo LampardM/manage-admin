@@ -10,10 +10,18 @@ import { action, observable } from 'mobx'
 
 class OrganizationApproveStore {
   @observable
-  initFilters = {}
+  initFilters = {
+    phone: '',
+    contact: '',
+    orgName: '',
+    orgTypeCode: '',
+    maxSubmitTime: '',
+    minSubmitTime: '',
+    submitterName: ''
+  }
 
   @observable
-  filters = {}
+  filters = this.initFilters
 
   @action setFilters(value) {
     this.filters = value
