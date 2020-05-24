@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-24 22:06:26
+ * @LastEditTime: 2020-05-24 22:18:54
  */
 import React, { useState, useEffect } from 'react'
 import { Menu } from 'antd'
@@ -27,7 +27,9 @@ const SideDepartmentList = () => {
       {userOrganizes &&
         userOrganizes.length &&
         userOrganizes.map((organization, idx) => (
-          <Menu.Item key={idx}>{organization.name}</Menu.Item>
+          <Menu.Item key={idx} style={{ fontSize: '18px', fontWeight: 'bold' }}>
+            {organization.name}
+          </Menu.Item>
         ))}
     </Menu>
   )
