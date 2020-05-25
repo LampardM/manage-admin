@@ -20,7 +20,7 @@ import { Row, Col, Button, Table, Menu } from 'antd'
 /** custom */
 import { Ext } from '../../../utils'
 import { useStore } from '@/hooks/useStore'
-import { getApprovaled } from '@/api'
+import { queryApprovaledList } from '@/api'
 
 const PAGE_SIZE = 10
 
@@ -82,7 +82,7 @@ const TableData = observer(({ className, filters }) => {
     const param = toJS(OrganizationApproveStore.filters)
     console.log('fetch', param)
 
-    getApprovaled({
+    queryApprovaledList({
       token: userInfoStore.token,
       version: userInfoStore.version,
       timestamp: JSON.stringify(new Date().getTime()),

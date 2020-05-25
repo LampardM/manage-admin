@@ -53,7 +53,7 @@ export function queryAuthorizeList(data) {
 }
 
 // 获取已通过团队列表
-export function getApprovaled(data) {
+export function queryApprovaledList(data) {
   return request({
     url: '/Organize/Appved',
     method: 'post',
@@ -61,17 +61,8 @@ export function getApprovaled(data) {
   })
 }
 
-// 获取待授权团队列表
-export function getAuthorizeList(data) {
-  return request({
-    url: '/Organize/Authorize',
-    method: 'post',
-    data
-  })
-}
-
 // 获取已驳回团队列表
-export function getRejectedList(data) {
+export function queryRejectedList(data) {
   return request({
     url: '/Organize/Rejected',
     method: 'post',

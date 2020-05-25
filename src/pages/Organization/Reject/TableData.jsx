@@ -19,6 +19,10 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 /** custom */
 import { useStore } from '@/hooks/useStore'
+import { queryRejectedList } from '@/api'
+import { Ext } from '@/utils'
+
+const PAGE_SIZE = 10
 
 //表头
 const columns = [
@@ -30,18 +34,21 @@ const columns = [
   },
   {
     title: '团队类型',
+    width: 100,
     dataIndex: 'teamType',
     ellipsis: true,
     textWrap: 'word-break'
   },
   {
     title: '联系人',
+    width: 100,
     dataIndex: 'name',
     ellipsis: true,
     textWrap: 'word-break'
   },
   {
     title: '手机号码',
+    width: 140,
     dataIndex: 'phone',
     ellipsis: true,
     textWrap: 'word-break'
@@ -54,58 +61,66 @@ const columns = [
   },
   {
     title: '审核人',
+    width: 100,
     dataIndex: 'handler',
     ellipsis: true,
     textWrap: 'word-break'
   }
 ]
 
-const TableData = ({ className, filters }) => {
+let orgCodes = []
+
+const TableData = observer(({ className, filters }) => {
   const history = useHistory()
+  const { userInfoStore, OrganizationRejectStore } = useStore()
+
   const [data, setData] = useState([])
-  const { OrganizationApproveStore } = useStore()
-  const [pagination, setPagination] = useState({})
   const [selectedKeys, setSelectedKeys] = useState([])
   const [isTableLoading, setIsTableLoading] = useState(true)
+  const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
 
   useEffect(() => {
-    fetch(toJS(OrganizationApproveStore.filters))
-  }, [OrganizationApproveStore.filters])
+    fetch()
+  }, [pagination.current, pagination.pageSize, OrganizationRejectStore.filters])
 
-  const fetch = async (params = {}) => {
-    console.log('fetch', params)
-    setTimeout(() => {
-      const data = {
-        pages: {},
-        results: [
-          {
-            id: 1,
-            teamName: 'team-name-1',
-            teamType: 'team-type-1',
-            name: 'name-1',
-            phone: 'phone-1',
-            handler: 'enable'
-          },
-          {
-            id: 2,
-            teamName: 'team-name-2',
-            teamType: 'team-type-2',
-            name: 'name-2',
-            phone: 'phone-2',
-            handler: 'disable'
-          }
-        ]
+  const fetch = async () => {
+    setIsTableLoading(true)
+
+    const param = toJS(OrganizationRejectStore.filters)
+
+    if (!Ext.isHasValue(param.orgTypeCode)) {
+      param.orgTypeCode = ''
+    }
+
+    queryRejectedList({
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime()),
+      param: {
+        param,
+        pageSize: pagination.pageSize,
+        pageIndex: pagination.current - 1
       }
-      setData(dataformat(data.results))
-      setPagination(data.pages)
-      setIsTableLoading(false)
-    }, 1000)
+    })
+      .then(({ data }) => {
+        const { rows, pageIndex, pageSize, total } = data
+        setData(dataformat(rows))
+        setPagination({ current: pageIndex + 1, pageSize, total })
+      })
+      .finally(() => {
+        setIsTableLoading(false)
+      })
   }
 
   const dataformat = dataFormRESTful => {
     return dataFormRESTful.map(it => ({
-      ...it,
-      isDisable: !!(it.status === 'disable')
+      id: it.orgCode,
+      name: it.contact,
+      phone: it.phone,
+      teamName: it.orgName,
+      teamType: it.orgType,
+      datetime: it.submitTime,
+      handler: it.submitterName
     }))
   }
 
@@ -123,11 +138,13 @@ const TableData = ({ className, filters }) => {
     })
   }
 
-  const handleTableChange = () => {}
+  const onChange = (pagination /*{current, pageSize}*/) => {
+    setPagination(pagination)
+  }
 
   const optArea = () => (
     <>
-      <Button type="primary" onClick={doDelete}>
+      <Button type="primary" onClick={doDelete} disabled={!selectedKeys.length}>
         删除
       </Button>
     </>
@@ -159,7 +176,7 @@ const TableData = ({ className, filters }) => {
         dataSource={data}
         pagination={pagination}
         loading={isTableLoading}
-        onChange={handleTableChange}
+        onChange={onChange}
         rowSelection={{
           onChange: (selectedKeys, selectedItems) => {
             console.log(`selectedRowKeys: ${selectedKeys}`, 'selectedRows: ', selectedItems)
@@ -169,9 +186,9 @@ const TableData = ({ className, filters }) => {
       />
     </div>
   )
-}
+})
 
-export default observer(styled(TableData)`
+export default styled(TableData)`
   .ant-menu-submenu-title {
     color: #1890ff;
     margin: 0 !important;
@@ -206,4 +223,4 @@ export default observer(styled(TableData)`
     line-height: inherit !important;
     display: inline-block !important;
   }
-`)
+`
