@@ -28,6 +28,10 @@ export default observer(() => {
     getOrganizeTypes()
   }, [])
 
+  useEffect(() => {
+    form.resetFields()
+  }, [OrganizationAuthStore.filters])
+
   const getOrganizeTypes = () => {
     getOrganizationType({
       token: userInfoStore.token,
@@ -114,7 +118,7 @@ export default observer(() => {
             }}
             onClick={() => {
               OrganizationAuthStore.clearFilters()
-              setTimeout(form.resetFields, 0)
+              // setTimeout(form.resetFields, 0)
             }}
           >
             重置
