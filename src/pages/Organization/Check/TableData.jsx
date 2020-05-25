@@ -12,7 +12,7 @@ import { observer } from 'mobx-react'
 import React, { useState, useEffect } from 'react'
 
 /** vendor */
-import { Row, Col, Button, Table, Modal } from 'antd'
+import { Row, Col, Button, Table, Modal, message, Input } from 'antd'
 
 /** custom */
 import { Ext } from '../../../utils'
@@ -21,6 +21,8 @@ import { getApproval, queryApprovingList } from '@/api'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 const PAGE_SIZE = 10
+
+const { TextArea } = Input
 
 //表头
 const columns = [
@@ -144,10 +146,15 @@ const TableData = () => {
           reject: isReject,
           memo: rejectReason //驳回时添加的说明
         }
-      }).then(() => {
-        setRejectReason('')
-        fetch()
       })
+        .then(() => {
+          message.success('审批成功！')
+          setRejectReason('')
+          fetch()
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 
@@ -253,9 +260,11 @@ const TableData = () => {
       >
         <Row>
           <Col>驳回原因：</Col>
-          <Col>
-            <textarea
+          <Col style={{ width: '75%' }}>
+            <TextArea
+              placeholder="请输入驳回原因"
               value={rejectReason}
+              autoSize={{ minRows: 4, maxRows: 6 }}
               onChange={({ currentTarget }) => {
                 setRejectReason(currentTarget.value)
               }}
