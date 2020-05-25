@@ -30,6 +30,7 @@ import { useStore } from '@/hooks/useStore'
 
 export default observer(() => {
   const [form] = Form.useForm()
+
   const { userInfoStore, OrganizationCheckStore } = useStore()
   const [organizeTypes, setOrganizeTypes] = useState([])
 
@@ -117,8 +118,8 @@ export default observer(() => {
               margin: '0 4px'
             }}
             onClick={() => {
-              form.resetFields()
               OrganizationCheckStore.clearFilters()
+              form.resetFields()
             }}
           >
             重置
