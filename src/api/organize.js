@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:08:44
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-13 22:53:48
+ * @LastEditTime: 2020-05-25 22:44:38
  */
 import request from '@/utils/request'
 
@@ -34,7 +34,7 @@ export function queryApprovingList(data) {
   })
 }
 
-// 获取待审批团队列表
+// 审批团队
 export function getApproval(data) {
   return request({
     url: '/Organize/Approval',
@@ -47,6 +47,34 @@ export function getApproval(data) {
 export function getApprovaled(data) {
   return request({
     url: '/Organize/Appved',
+    method: 'post',
+    data
+  })
+}
+
+// 获取待授权团队列表
+export function getAuthorizeList(data) {
+  return request({
+    url: '/Organize/Authorize',
+    method: 'post',
+    data
+  })
+}
+
+// 获取已驳回团队列表
+export function getRejectedList(data) {
+  return request({
+    url: '/Organize/Rejected',
+    method: 'post',
+    data
+  })
+}
+
+// 获取已加入的团队
+
+export function getJoinedOrganizeList(data) {
+  return request({
+    url: '/Organize/Joined',
     method: 'post',
     data
   })
