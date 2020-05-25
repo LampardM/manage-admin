@@ -67,7 +67,7 @@ const columns = [
   }
 ]
 
-const TableData = ({ className }) => {
+const TableData = observer(({ className }) => {
   const history = useHistory()
   const { userInfoStore, OrganizationAuthStore } = useStore()
 
@@ -154,10 +154,10 @@ const TableData = ({ className }) => {
       />
     </div>
   )
-}
+})
 
-export default observer(styled(TableData)`
+export default styled(TableData)`
   .action-item {
     padding: 0 !important;
   }
-`)
+`

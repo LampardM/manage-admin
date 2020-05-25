@@ -26,6 +26,14 @@ export default observer(() => {
 
   const [organizeTypes, setOrganizeTypes] = useState([])
 
+  useEffect(() => {
+    getOrganizeTypes()
+  }, [])
+
+  useEffect(() => {
+    form.resetFields()
+  }, [OrganizationCheckStore.filters])
+
   const onFinish = values => {
     console.log('Received values of form: ', values)
 
@@ -40,14 +48,6 @@ export default observer(() => {
 
     OrganizationCheckStore.setFilters(values)
   }
-
-  useEffect(() => {
-    getOrganizeTypes()
-  }, [])
-
-  useEffect(() => {
-    form.resetFields()
-  }, [OrganizationCheckStore.filters])
 
   const getOrganizeTypes = () => {
     getOrganizationType({
