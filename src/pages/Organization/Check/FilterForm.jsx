@@ -20,18 +20,10 @@ import { Ext } from '../../../utils'
 import { getOrganizationType } from '@/api'
 import { useStore } from '@/hooks/useStore'
 
-// contact: '',
-// maxSubmitTime: '',
-// minSubmitTime: '',
-// orgName: '',
-// orgTypeCode: '',
-// phone: '',
-// submitterName: ''
-
 export default observer(() => {
   const [form] = Form.useForm()
-
   const { userInfoStore, OrganizationCheckStore } = useStore()
+
   const [organizeTypes, setOrganizeTypes] = useState([])
 
   const onFinish = values => {
@@ -119,7 +111,7 @@ export default observer(() => {
             }}
             onClick={() => {
               OrganizationCheckStore.clearFilters()
-              form.resetFields()
+              setTimeout(form.resetFields, 0)
             }}
           >
             重置

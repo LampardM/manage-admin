@@ -14,7 +14,9 @@ export default WrappedComponent => {
       return this.urlSearchParams.get(key)
     }
 
-    // deprecated
+    /**
+     * @deprecated
+     */
     go(path, params) {
       this.props.history.push({
         pathname: path,

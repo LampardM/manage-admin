@@ -62,8 +62,7 @@ const columns = [
 let orgCodes = []
 
 const TableData = () => {
-  const { OrganizationCheckStore } = useStore()
-  const { userInfoStore } = useStore('userInfoStore')
+  const { userInfoStore, OrganizationCheckStore } = useStore()
 
   const [data, setData] = useState([])
   const [selectedKeys, setSelectedKeys] = useState([])

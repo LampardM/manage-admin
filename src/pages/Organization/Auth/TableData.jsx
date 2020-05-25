@@ -17,8 +17,11 @@ import React, { useState, useEffect } from 'react'
 import { Button, Table } from 'antd'
 
 /** custom */
-import request from '@/utils/request'
+import { Ext } from '@/utils'
+import { queryAuthorizeList } from '@/api'
 import { useStore } from '@/hooks/useStore'
+
+const PAGE_SIZE = 10
 
 //表头
 const columns = [
@@ -30,18 +33,21 @@ const columns = [
   },
   {
     title: '团队类型',
+    width: 100,
     dataIndex: 'teamType',
     ellipsis: true,
     textWrap: 'word-break'
   },
   {
     title: '联系人',
+    width: 100,
     dataIndex: 'name',
     ellipsis: true,
     textWrap: 'word-break'
   },
   {
     title: '手机号码',
+    width: 140,
     dataIndex: 'phone',
     ellipsis: true,
     textWrap: 'word-break'
@@ -54,52 +60,70 @@ const columns = [
   },
   {
     title: '审核人',
+    width: 100,
     dataIndex: 'actionPerson',
     ellipsis: true,
     textWrap: 'word-break'
   }
 ]
 
-const TableData = ({ className, filters, go }) => {
+const TableData = ({ className }) => {
   const history = useHistory()
+  const { userInfoStore, OrganizationAuthStore } = useStore()
+
   const [data, setData] = useState([])
-  const [pagination, setPagination] = useState({})
   const [isTableLoading, setIsTableLoading] = useState(true)
-  const { OrganizationAuthStore } = useStore()
+  const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
 
   useEffect(() => {
-    fetch(toJS(OrganizationAuthStore.filters))
-  }, [OrganizationAuthStore.filters])
+    fetch()
+  }, [pagination.current, pagination.pageSize, OrganizationAuthStore.filters])
 
-  const fetch = async (params = {}) => {
-    console.log('fetch', params)
-    setTimeout(() => {
-      const data = {
-        results: [
-          {
-            id: 1,
-            teamName: '示例',
-            phone: '13111335599'
-          }
-        ],
-        pages: {}
+  const fetch = async () => {
+    setIsTableLoading(true)
+
+    const param = toJS(OrganizationAuthStore.filters)
+
+    if (!Ext.isHasValue(param.orgTypeCode)) {
+      param.orgTypeCode = ''
+    }
+
+    queryAuthorizeList({
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime()),
+      param: {
+        param,
+        pageSize: pagination.pageSize,
+        pageIndex: pagination.current - 1
       }
-      setData(dataformat(data.results))
-      setPagination(data.pages)
-      setIsTableLoading(false)
-    }, 1000)
+    })
+      .then(({ data }) => {
+        const { rows, pageIndex, pageSize, total } = data
+        setData(dataformat(rows))
+        setPagination({ current: pageIndex + 1, pageSize, total })
+      })
+      .finally(() => {
+        setIsTableLoading(false)
+      })
   }
 
   const dataformat = dataFormRESTful => {
     return dataFormRESTful.map(it => ({
-      ...it
+      id: it.orgCode,
+      phone: it.phone,
+      name: it.contact,
+      teamName: it.orgName,
+      teamType: it.orgType,
+      dateTime: it.submitTime,
+      actionPerson: it.submitterName
     }))
   }
 
   const doAuthorization = item => {
     console.log('授权', item)
 
-    history.push(`/organization/auth/info?id=${3}`)
+    history.push(`/organization/auth/info?id=${item.id}`)
   }
 
   const handleTableChange = () => {}
@@ -114,7 +138,7 @@ const TableData = ({ className, filters, go }) => {
           width: 65,
           render: (_, item) => {
             return (
-              <Button type="link" className="action-item" onClick={doAuthorization}>
+              <Button type="link" className="action-item" onClick={() => doAuthorization(item)}>
                 授权
               </Button>
             )

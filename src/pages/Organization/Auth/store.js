@@ -9,12 +9,26 @@
 import { action, observable } from 'mobx'
 
 class OrganizationAuthStore {
-  //分页数据
+  initfilters = {
+    auth: true,
+    contact: '',
+    maxSubmitTime: '',
+    minSubmitTime: '',
+    orgName: '',
+    orgTypeCode: undefined,
+    phone: '',
+    submitterName: ''
+  }
+
   @observable
-  filters = {}
+  filters = this.initfilters
 
   @action setFilters(value) {
     this.filters = value
+  }
+
+  @action clearFilters() {
+    this.filters = this.initfilters
   }
 }
 
