@@ -43,6 +43,15 @@ export function getApproval(data) {
   })
 }
 
+// 获取待授权团队列表
+export function queryAuthorizeList(data) {
+  return request({
+    url: '/Organize/Authorize',
+    method: 'post',
+    data
+  })
+}
+
 // 获取已通过团队列表
 export function getApprovaled(data) {
   return request({

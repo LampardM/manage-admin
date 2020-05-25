@@ -11,12 +11,12 @@ import { action, observable } from 'mobx'
 class OrganizationCheckStore {
   initfilters = {
     contact: '',
-    maxsubmittime: '',
-    minsubmittime: '',
-    orgname: '',
-    orgtypecode: undefined,
+    maxSubmitTime: '',
+    minSubmitTime: '',
+    orgName: '',
+    orgTypeCode: undefined,
     phone: '',
-    submittername: ''
+    submitterName: ''
   }
 
   @observable
