@@ -73,12 +73,6 @@ export default observer(() => {
         </Col>
 
         <Col style={{ width: 150 }}>
-          <Form.Item name="orderNo">
-            <Input placeholder="请输入单号" value={OrganizationRejectStore.orderNo} />
-          </Form.Item>
-        </Col>
-
-        <Col style={{ width: 150 }}>
           <Form.Item name="orgName">
             <Input placeholder="请输入团队名称" value={OrganizationRejectStore.teamName} />
           </Form.Item>
