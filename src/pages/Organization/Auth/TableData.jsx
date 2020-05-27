@@ -123,7 +123,7 @@ const TableData = observer(({ className }) => {
   const doAuthorization = item => {
     console.log('授权', item)
 
-    history.push(`/organization/auth/info?id=${item.id}`)
+    history.push(`/organization/auth/info/${item.id}`)
   }
 
   const handleTableChange = () => {}

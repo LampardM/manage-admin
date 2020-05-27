@@ -109,29 +109,29 @@ const MainContent = ({ location }) => {
       <Breadcrumb arr={breadcrumb} />
 
       <Switch>
-        <PrivateRoute exact path="/home" component={Home} />
-        <PrivateRoute exact path="/home/notice" component={NoticeDetail} />
-        <PrivateRoute exact path="/create" component={Create} />
+        <PrivateRoute path="/home" component={Home} exact />
+        <PrivateRoute path="/home/notice" component={NoticeDetail} exact />
+        <PrivateRoute path="/create" component={Create} exact />
 
-        <PrivateRoute exact path="/organization/auth" component={OrganizationAuth} />
-        <PrivateRoute exact path="/organization/check" component={OrganizationCheck} />
-        <PrivateRoute exact path="/organization/reject" component={OrganizationReject} />
-        <PrivateRoute exact path="/organization/approve" component={OrganizationApprove} />
-        <PrivateRoute exact path="/organization/auth/info" component={OrganizationAuthInfo} />
-        <PrivateRoute exact path="/organization/approve/edit" component={OrganizationApproveEdit} />
+        <PrivateRoute path="/organization/auth" component={OrganizationAuth} exact />
+        <PrivateRoute path="/organization/check" component={OrganizationCheck} exact />
+        <PrivateRoute path="/organization/reject" component={OrganizationReject} exact />
+        <PrivateRoute path="/organization/approve" component={OrganizationApprove} exact />
+        <PrivateRoute path="/organization/auth/info/:id" component={OrganizationAuthInfo} />
+        <PrivateRoute path="/organization/approve/edit" component={OrganizationApproveEdit} exact />
 
-        <PrivateRoute exact path="/team/member" component={TeamMember} />
-        <PrivateRoute exact path="/team/member/addmember" component={AddTeamMember} />
-        <PrivateRoute exact path="/team/member/editmember" component={EditTeamMember} />
-        <PrivateRoute exact path="/team/character" component={TeamCharacter} />
-        <PrivateRoute exact path="/team/character/add" component={AddCharacter} />
-        <PrivateRoute exact path="/team/architecture" component={TeamArchitecture} />
+        <PrivateRoute path="/team/member" component={TeamMember} exact />
+        <PrivateRoute path="/team/member/addmember" component={AddTeamMember} exact />
+        <PrivateRoute path="/team/member/editmember" component={EditTeamMember} exact />
+        <PrivateRoute path="/team/character" component={TeamCharacter} exact />
+        <PrivateRoute path="/team/character/add" component={AddCharacter} exact />
+        <PrivateRoute path="/team/architecture" component={TeamArchitecture} exact />
 
-        <PrivateRoute exact path="/terminal/online" component={TerminalOnline} />
-        <PrivateRoute exact path="/terminal/devices" component={TerminalDevices} />
-        <PrivateRoute exact path="/terminal/agreement" component={TerminalAgreement} />
+        <PrivateRoute path="/terminal/online" component={TerminalOnline} exact />
+        <PrivateRoute path="/terminal/devices" component={TerminalDevices} exact />
+        <PrivateRoute path="/terminal/agreement" component={TerminalAgreement} exact />
 
-        <PrivateRoute exact path="/setting" component={Settings} />
+        <PrivateRoute path="/setting" component={Settings} exact />
 
         <Redirect exact from="/" to="/home" />
 

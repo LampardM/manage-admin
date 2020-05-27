@@ -22,6 +22,14 @@
  * interface TableCheckBoxProps {
  *   columns?: Array<ColumnsItem>;
  *   nodeData?: Array<DataSourceItem>;
+ *
+ *   @description emit给调用方
+ *   @param {string} value 发生改变的checkbox的值
+ *   @param {boolean} isChecked 勾选还是取消勾选
+ *   @param {Array<string>} tailCollection 最后一列选中的勾选项的值的集合（即最下级子元素（最后一列）勾选项的值的集合）
+ *   @param {Array<string>} allCollection 所有选中的勾选项的值的集合
+ *   @param {Array<DataSourceItem, Array<DataSourceItem>>} nodeData 所有勾选项的值的集合
+ *   onChange?: (value: string, isChecked: boolean, tailCollection: Array<string>, allCollection: Array<string>, nodeData: Array<DataSourceItem, Array<DataSourceItem>>) => any,
  *   showAllChecked?: boolean;
  *   [restProps: string]?: any;
  * }
@@ -43,6 +51,7 @@ import { Ext } from '../../utils'
 const TableCheckBox /**: TableCheckBoxProps */ = ({
   columns = [],
   nodeData = [],
+  onChange = () => {},
   showAllChecked = false,
   ...restProps
 }) => {
@@ -383,6 +392,53 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     }
 
     setCloneNodeData(newCloneNodeData)
+
+    console.log('getTailCheckedCollection', getTailCheckedCollection(newCloneNodeData, []))
+    console.log('getAllCheckedCollection', getAllCheckedCollection(newCloneNodeData, []))
+    onChange(
+      value,
+      checked,
+      getTailCheckedCollection(newCloneNodeData, []),
+      getAllCheckedCollection(newCloneNodeData, []),
+      newCloneNodeData
+    )
+  }
+
+  /**
+   * @description 获取最后一列选中的勾选项的值的集合（即最下级子元素（最后一列）勾选项的值的集合）
+   * @param {Array<DataSourceItem>} nodeData 最新的cloneNodeData
+   * @param {Array<any>} result 接收结果的容器
+   * @returns {Array<string>}
+   */
+  const getTailCheckedCollection = (nodeData, result) => {
+    nodeData.forEach(it => {
+      if (it.subs && it.subs.length) {
+        result = getTailCheckedCollection(it.subs, result)
+      } else {
+        if (it.checked) {
+          result.push(it.key /* it.value */)
+        }
+      }
+    })
+    return result
+  }
+
+  /**
+   * @description 获取所有选中的勾选项的值的集合
+   * @param {Array<DataSourceItem>} nodeData 最新的cloneNodeData
+   * @param {Array<any>} result 接收结果的容器
+   * @returns {Array<string>}
+   */
+  const getAllCheckedCollection = (nodeData, result) => {
+    nodeData.forEach(it => {
+      if (it.checked) {
+        result.push(it.key /* it.value */)
+      }
+      if (it.subs) {
+        result = getAllCheckedCollection(it.subs, result)
+      }
+    })
+    return result
   }
 
   /**
@@ -420,14 +476,22 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     nodeData.forEach(it => {
       if (it.checked) {
         if (it.subs) {
-          it.subs = recursiveSetting(it.subs, true, it.checked)
+          if (it.subs.length) {
+            it.subs = recursiveSetting(it.subs, true, it.checked)
+          } else {
+            delete it.subs
+          }
         }
         if (it.parent) {
           parentNode = recursiveParentSetting(parentNode, nodeData, !!it.checked)
         }
       } else {
         if (it.subs) {
-          recursiveQueryCheckedFromInital({ parentNode: it, nodeData: it.subs })
+          if (it.subs.length) {
+            recursiveQueryCheckedFromInital({ parentNode: it, nodeData: it.subs })
+          } else {
+            delete it.subs
+          }
         }
       }
     })
@@ -501,6 +565,16 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
 
     const cloneNodeDataAfterSetAll = traverseSetChecked(target.checked, cloneNodeData)
     setCloneNodeData(cloneDeep(cloneNodeDataAfterSetAll))
+
+    console.log('getTailCheckedCollection', getTailCheckedCollection(cloneNodeDataAfterSetAll, []))
+    console.log('getAllCheckedCollection', getAllCheckedCollection(cloneNodeDataAfterSetAll, []))
+    onChange(
+      'ALL',
+      target.checked,
+      getTailCheckedCollection(cloneNodeDataAfterSetAll, []),
+      getAllCheckedCollection(cloneNodeDataAfterSetAll, []),
+      cloneNodeDataAfterSetAll
+    )
   }
 
   useEffect(() => {

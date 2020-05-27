@@ -79,3 +79,21 @@ export function getJoinedOrganizeList(data) {
     data
   })
 }
+
+// 获取可授权菜单
+export function getAuthorizableAppMenu(data) {
+  return request({
+    url: '/Organize/AppMenu4Empower',
+    method: 'post',
+    data
+  })
+}
+
+// 团队授权
+export function empower(data) {
+  return request({
+    url: '/Organize/Empower',
+    method: 'post',
+    data
+  })
+}
