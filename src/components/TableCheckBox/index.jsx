@@ -470,7 +470,9 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
 
   /**
    * @description 递归查找默认勾选的项
-   * @param {Array<DataSourceItem>} nodeData
+   * @param {object} opt
+   * @param {DataSourceItem} opt.parentNode
+   * @param {Array<DataSourceItem>} opt.nodeData
    */
   const recursiveQueryCheckedFromInital = ({ parentNode, nodeData }) => {
     nodeData.forEach(it => {
@@ -482,9 +484,6 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
             delete it.subs
           }
         }
-        if (it.parent) {
-          parentNode = recursiveParentSetting(parentNode, nodeData, !!it.checked)
-        }
       } else {
         if (it.subs) {
           if (it.subs.length) {
@@ -493,6 +492,9 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
             delete it.subs
           }
         }
+      }
+      if (it.parent) {
+        parentNode = recursiveParentSetting(parentNode, nodeData, !!it.checked)
       }
     })
   }
