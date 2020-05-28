@@ -14,8 +14,8 @@ import { useHistory } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 
 /** vendor */
-import { DownOutlined } from '@ant-design/icons'
-import { Row, Col, Button, Table, Menu } from 'antd'
+import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { Row, Col, Button, Table, Menu, Modal } from 'antd'
 
 /** custom */
 import { Ext } from '../../../utils'
@@ -28,7 +28,7 @@ const PAGE_SIZE = 10
 const columns = [
   {
     title: '团队编号',
-    dataIndex: 'teamNo',
+    dataIndex: 'id',
     ellipsis: true,
     textWrap: 'word-break'
   },
@@ -40,29 +40,35 @@ const columns = [
   },
   {
     title: '团队类型',
+    width: 100,
     dataIndex: 'teamType',
     ellipsis: true,
     textWrap: 'word-break'
   },
   {
     title: '联系人',
+    width: 100,
     dataIndex: 'name',
     ellipsis: true,
     textWrap: 'word-break'
   },
   {
     title: '手机号码',
+    width: 140,
     dataIndex: 'phone',
     ellipsis: true,
     textWrap: 'word-break'
   },
   {
     title: '状态',
+    width: 65,
     dataIndex: 'status',
     ellipsis: true,
     textWrap: 'word-break'
   }
 ]
+
+let orgCodes = []
 
 const TableData = observer(({ className, filters }) => {
   const history = useHistory()
@@ -79,8 +85,9 @@ const TableData = observer(({ className, filters }) => {
   }, [OrganizationApproveStore.filters])
 
   const fetch = async () => {
+    setIsTableLoading(true)
+
     const param = toJS(OrganizationApproveStore.filters)
-    console.log('fetch', param)
 
     queryApprovaledList({
       token: userInfoStore.token,
@@ -93,37 +100,56 @@ const TableData = observer(({ className, filters }) => {
       }
     })
       .then(({ data }) => {
-        setData(dataformat(data.rows))
-        setPagination(data.pages)
+        const { rows, pageIndex, pageSize, total } = data
+        setData(dataformat(rows))
+        setPagination({ current: pageIndex + 1, pageSize, total })
       })
       .finally(() => setIsTableLoading(false))
   }
 
   const dataformat = dataFormRESTful => {
     return dataFormRESTful.map(it => ({
-      ...it,
+      id: it.orgCode,
+      phone: it.phone,
+      name: it.contact,
+      teamName: it.orgName,
+      teamType: it.orgType,
+      status: it.status === 'disable' ? '禁用' : '启用',
       isDisable: !!(it.status === 'disable')
     }))
   }
 
-  const doEnable = item => {
-    console.log('启用', selectedKeys, item)
+  const submit = isDisable => {
+    Modal.confirm({
+      title: `确认${!isDisable ? '启用' : '禁用'}？`,
+      icon: <ExclamationCircleOutlined />,
+      content: `是否确认${!isDisable ? '启用' : '禁用'}所选团队`,
+      onOk() {
+        console.log('OK')
+      }
+    })
   }
 
-  const doDisable = item => {
-    console.log('禁用', selectedKeys, item)
+  const doEnable = () => {
+    orgCodes = selectedKeys
+    submit(false)
+  }
+
+  const doDisable = () => {
+    orgCodes = selectedKeys
+    submit(true)
   }
 
   const handleTableChange = () => {}
 
   const handleClick = item => {
     console.log('编辑', item)
-    history.push(`/organization/approve/edit?id=${item.id}`)
+    history.push(`/organization/approve/edit/${item.id}`)
   }
 
   const optArea = () => (
     <>
-      <Button type="primary" onClick={doEnable}>
+      <Button type="primary" onClick={doEnable} disabled={!selectedKeys.length}>
         启用
       </Button>
       <Button
@@ -131,6 +157,7 @@ const TableData = observer(({ className, filters }) => {
           margin: '0 4px'
         }}
         onClick={doDisable}
+        disabled={!selectedKeys.length}
       >
         禁用
       </Button>
@@ -148,15 +175,27 @@ const TableData = observer(({ className, filters }) => {
         columns={columns.concat({
           title: '操作',
           dataIndex: 'action',
-          width: 130,
+          width: 125,
           render: (value, row, index) => (
             <>
               {row.isDisable ? (
-                <a href="js:void()" onClick={() => doEnable(row)}>
+                <a
+                  href="js:void()"
+                  onClick={() => {
+                    orgCodes = [row.id]
+                    submit(false)
+                  }}
+                >
                   启用
                 </a>
               ) : (
-                <a href="js:void()" onClick={() => doDisable(row)}>
+                <a
+                  href="js:void()"
+                  onClick={() => {
+                    orgCodes = [row.id]
+                    submit(true)
+                  }}
+                >
                   禁用
                 </a>
               )}
@@ -180,7 +219,7 @@ const TableData = observer(({ className, filters }) => {
             </>
           )
         })}
-        rowKey={(row, idx, self) => {
+        rowKey={(row /*, idx, self*/) => {
           return row.id
         }}
         dataSource={data}

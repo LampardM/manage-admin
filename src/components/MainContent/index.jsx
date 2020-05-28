@@ -118,7 +118,7 @@ const MainContent = ({ location }) => {
         <PrivateRoute path="/organization/reject" component={OrganizationReject} exact />
         <PrivateRoute path="/organization/approve" component={OrganizationApprove} exact />
         <PrivateRoute path="/organization/auth/info/:id" component={OrganizationAuthInfo} />
-        <PrivateRoute path="/organization/approve/edit" component={OrganizationApproveEdit} exact />
+        <PrivateRoute path="/organization/approve/edit/:id" component={OrganizationApproveEdit} />
 
         <PrivateRoute path="/team/member" component={TeamMember} exact />
         <PrivateRoute path="/team/member/addmember" component={AddTeamMember} exact />

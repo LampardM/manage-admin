@@ -15,6 +15,7 @@ import { Form, Row, Col, Input, Button, Select } from 'antd'
 
 /** custom */
 import { useStore } from '@/hooks/useStore'
+import { Ext } from '@/utils'
 
 export default observer(() => {
   const [form] = Form.useForm()
@@ -22,15 +23,21 @@ export default observer(() => {
 
   const onFinish = values => {
     console.log('Received values of form: ', values)
+
+    values.orgTypeCode = ''
+    values.submitterName = ''
+    values.minSubmitTime = ''
+    values.maxSubmitTime = ''
+
     OrganizationApproveStore.setFilters(values)
   }
-  // phone: '',
-  // contact: '',
-  // orgName: '',
-  // orgTypeCode: '',
-  // maxSubmitTime: '',
-  // minSubmitTime: '',
-  // submitterName: '',
+  // contact
+  // orgCode
+  // orgName
+  // orgType
+  // phone
+  // submitTime
+  // submitterName
   return (
     <Form
       form={form}
@@ -40,20 +47,20 @@ export default observer(() => {
       initialValues={OrganizationApproveStore.filters}
     >
       <Row gutter={5}>
-        <Col style={{ width: 160 }}>
-          <Form.Item name="teamNo">
-            <Input placeholder="请输入团队号" />
-          </Form.Item>
-        </Col>
+        {/*<Col style={{ width: 160 }}>*/}
+        {/*  <Form.Item name="orgCode">*/}
+        {/*    <Input placeholder="请输入团队号" />*/}
+        {/*  </Form.Item>*/}
+        {/*</Col>*/}
 
         <Col style={{ width: 160 }}>
-          <Form.Item name="teamName">
+          <Form.Item name="orgName">
             <Input placeholder="请输入团队名称" />
           </Form.Item>
         </Col>
 
         <Col style={{ width: 150 }}>
-          <Form.Item name="name">
+          <Form.Item name="contact">
             <Input placeholder="请输入联系人姓名" />
           </Form.Item>
         </Col>
