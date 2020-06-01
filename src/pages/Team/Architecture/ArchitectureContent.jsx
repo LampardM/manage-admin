@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-01 21:21:15
+ * @LastEditTime: 2020-06-01 21:56:06
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table } from 'antd'
@@ -180,7 +180,7 @@ const ArchitectureContent = () => {
     }
     for (var i = 0; i < data.length; i++) {
       let item = data[i]
-      if (item.key == key) {
+      if (item.key === key) {
         result = data
         return result
       } else if (item.children && item.children.length > 0) {
