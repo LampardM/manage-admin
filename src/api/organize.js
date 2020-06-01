@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:08:44
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-25 22:44:38
+ * @LastEditTime: 2020-06-01 21:10:43
  */
 import request from '@/utils/request'
 
@@ -71,7 +71,6 @@ export function queryRejectedList(data) {
 }
 
 // 获取已加入的团队
-
 export function getJoinedOrganizeList(data) {
   return request({
     url: '/Organize/Joined',

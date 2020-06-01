@@ -3,13 +3,15 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-06 21:44:56
+ * @LastEditTime: 2020-06-01 21:21:15
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ArchitectureModal from './ArchitectureModal'
 import { observer } from 'mobx-react'
+import { useStore } from '@/hooks/useStore'
+import { getCanuseMenu } from '@/api'
 import styled from 'styled-components'
 
 const { confirm, warning } = Modal
@@ -81,6 +83,7 @@ const data = [
 ]
 
 const ArchitectureContent = () => {
+  const { userInfoStore } = useStore()
   const [recursionResult, setRecursionResult] = useState([])
   const [modalShow, setModalShow] = useState(false)
   const [modalType, setModalType] = useState('create')
@@ -102,6 +105,18 @@ const ArchitectureContent = () => {
   }
 
   useEffect(() => {
+    let _params = {
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+
+    getCanuseMenu(_params)
+      .then(result => {
+        console.log(result, 'result_menu')
+      })
+      .catch(err => console.log(err))
+
     setRecursionResult(data)
   })
 
@@ -156,11 +171,6 @@ const ArchitectureContent = () => {
   const modalHandleCancel = () => {
     setModalShow(false)
   }
-
-  // const onExpandedRowsChange = expandedRows => {
-  //   console.log(expandedRows, 'expandedRows')
-  //   setExpandedRowKeys(expandedRows)
-  // }
 
   // * 递归查同级节点
   const findSameLevelNode = (data, key) => {
@@ -224,7 +234,6 @@ const ArchitectureContent = () => {
         <Table
           showHeader={false}
           dataSource={recursionResult}
-          // onExpandedRowsChange={onExpandedRowsChange}
           onExpand={onExpand}
           rowExpandable={rowExpandable}
           expandedRowKeys={expandedRowKeys}
