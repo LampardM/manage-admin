@@ -3,66 +3,62 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-19 17:10:42
+ * @LastEditTime: 2020-06-06 15:15:59
  */
 import React, { useState, useEffect } from 'react'
-import { Modal, Form, Input, Cascader } from 'antd'
+import { Modal, Form, Input, TreeSelect } from 'antd'
 import { observer } from 'mobx-react'
+
+const treeData = [
+  {
+    title: 'Node1',
+    value: '0-0',
+    children: [
+      {
+        title: 'Child Node1',
+        value: '0-0-1'
+      },
+      {
+        title: 'Child Node2',
+        value: '0-0-2'
+      }
+    ]
+  },
+  {
+    title: 'Node2',
+    value: '0-1'
+  }
+]
 
 const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }) => {
   const [form] = Form.useForm()
   const [disabled, setDisabled] = useState(true)
-
-  const options = [
-    {
-      code: 'zhejiang',
-      name: 'Zhejiang',
-      items: [
-        {
-          code: 'hangzhou',
-          name: 'Hangzhou',
-          items: [
-            {
-              code: 'xihu',
-              name: 'West Lake'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      code: 'jiangsu',
-      name: 'Jiangsu',
-      items: [
-        {
-          code: 'nanjing',
-          name: 'Nanjing',
-          items: [
-            {
-              code: 'zhonghuamen',
-              name: 'Zhong Hua Men'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  const [depart, setDepart] = useState('')
 
   useEffect(() => {
     console.log(modalType, 'modalType')
     console.log(subInfo, 'subInfo')
-  })
+    let _mockValue = treeData[0].value
+
+    setTimeout(() => {
+      setDepart(_mockValue)
+    }, 1000)
+  }, [])
 
   const setSubmitIsDisabled = () => {
     setDisabled(
       !form.isFieldTouched('department') ||
-        !form.isFieldTouched('updepartment') ||
+        !form.getFieldValue('updepartment') ||
         form.getFieldsError().filter(({ errors }) => errors.length).length
     )
   }
 
   const onFieldsChange = () => {
     setSubmitIsDisabled()
+  }
+
+  const onChange = value => {
+    setDepart(value)
   }
 
   return (
@@ -88,7 +84,14 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
           })
       }}
     >
-      <Form form={form} name="formModal" onFieldsChange={onFieldsChange}>
+      <Form
+        form={form}
+        name="formModal"
+        onFieldsChange={onFieldsChange}
+        initialValues={{
+          updepartment: depart
+        }}
+      >
         <Form.Item
           name="department"
           label="部门名称"
@@ -120,11 +123,14 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
             }
           ]}
         >
-          <Cascader
-            fieldNames={{ label: 'name', value: 'code', children: 'items' }}
-            changeOnSelect
-            options={options}
-            placeholder="选择上级部门"
+          <TreeSelect
+            style={{ width: '100%' }}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            treeData={treeData}
+            placeholder="Please select"
+            value={depart}
+            treeDefaultExpandAll
+            onChange={onChange}
           />
         </Form.Item>
       </Form>

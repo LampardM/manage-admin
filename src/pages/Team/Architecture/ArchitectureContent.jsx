@@ -3,15 +3,15 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-01 21:56:06
+ * @LastEditTime: 2020-06-06 15:21:32
  */
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Cascader, Table } from 'antd'
+import { Button, Modal, Form, Input, Cascader, Table, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ArchitectureModal from './ArchitectureModal'
 import { observer } from 'mobx-react'
 import { useStore } from '@/hooks/useStore'
-import { getCanuseMenu } from '@/api'
+import { createDepartment } from '@/api/department'
 import styled from 'styled-components'
 
 const { confirm, warning } = Modal
@@ -111,12 +111,6 @@ const ArchitectureContent = () => {
       version: userInfoStore.version
     }
 
-    getCanuseMenu(_params)
-      .then(result => {
-        console.log(result, 'result_menu')
-      })
-      .catch(err => console.log(err))
-
     setRecursionResult(data)
   })
 
@@ -164,7 +158,25 @@ const ArchitectureContent = () => {
     setModalShow(true)
   }
 
-  const modalHandleOk = () => {
+  const modalHandleOk = values => {
+    let _params = {
+      param: {
+        nodeName: values.department,
+        parentCode: 'Test123456',
+        rootNode: true
+      },
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+    createDepartment(_params)
+      .then(_result => {
+        console.log(_result)
+        message.success('创建部门成功')
+      })
+      .catch(err => {
+        console.log(err)
+      })
     setModalShow(false)
   }
 
