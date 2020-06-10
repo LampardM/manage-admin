@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-06 15:21:32
+ * @LastEditTime: 2020-06-10 23:08:15
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table, message } from 'antd'
@@ -161,9 +161,8 @@ const ArchitectureContent = () => {
   const modalHandleOk = values => {
     let _params = {
       param: {
-        nodeName: values.department,
-        parentCode: 'Test123456',
-        rootNode: true
+        departmantName: values.department,
+        parentCode: 'yjiZwfhaqj' // * 暂时写死
       },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,

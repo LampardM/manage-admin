@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-06-01 21:11:50
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-06 14:22:12
+ * @LastEditTime: 2020-06-10 23:00:23
  */
 import request from '@/utils/request'
 
@@ -19,7 +19,7 @@ export function getCanuseMenu(data) {
 // 创建部门
 export function createDepartment(data) {
   return request({
-    url: '/Organize/CreateDepartmnet',
+    url: '/Organize/CreateDepartment',
     method: 'post',
     data
   })
