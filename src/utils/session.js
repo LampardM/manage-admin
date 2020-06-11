@@ -3,10 +3,11 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:04:13
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-24 17:44:53
+ * @LastEditTime: 2020-06-11 22:04:26
  */
 const LOGIN_COOKIE_NAME = 'sessionId'
 const ORGANIZES_COOKIE_NAME = 'organizes'
+const USER_DEPARTMENT = 'depart'
 
 export function isAuthenticated() {
   return _getCookie(LOGIN_COOKIE_NAME)
@@ -19,6 +20,7 @@ export function authenticateSuccess(token) {
 export function logout() {
   _setCookie(LOGIN_COOKIE_NAME, '', 0)
   _setCookie(ORGANIZES_COOKIE_NAME, [], 0)
+  _setCookie(USER_DEPARTMENT, '', 0)
 }
 
 export function setCurOriganize(organizes) {
@@ -27,6 +29,14 @@ export function setCurOriganize(organizes) {
 
 export function getCurOriganize() {
   return _getCookie(ORGANIZES_COOKIE_NAME)
+}
+
+export function setCurDepart(depart) {
+  return _setCookie(USER_DEPARTMENT, depart)
+}
+
+export function getCurDepart() {
+  return _getCookie(USER_DEPARTMENT)
 }
 
 function _getCookie(name) {

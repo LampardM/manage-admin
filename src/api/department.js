@@ -3,9 +3,18 @@
  * @Author: longzhang6
  * @Date: 2020-06-01 21:11:50
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-10 23:00:23
+ * @LastEditTime: 2020-06-11 21:44:03
  */
 import request from '@/utils/request'
+
+// 切换所在团队
+export function switchDepartment(data) {
+  return request({
+    url: '/User/SwitchOrganize',
+    method: 'post',
+    data
+  })
+}
 
 // 获取可用菜单
 export function getCanuseMenu(data) {

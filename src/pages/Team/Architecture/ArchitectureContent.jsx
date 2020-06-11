@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-10 23:08:15
+ * @LastEditTime: 2020-06-11 22:14:44
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table, message } from 'antd'
@@ -12,6 +12,8 @@ import ArchitectureModal from './ArchitectureModal'
 import { observer } from 'mobx-react'
 import { useStore } from '@/hooks/useStore'
 import { createDepartment } from '@/api/department'
+import { getCurDepart } from '@/utils/session'
+
 import styled from 'styled-components'
 
 const { confirm, warning } = Modal
@@ -162,7 +164,7 @@ const ArchitectureContent = () => {
     let _params = {
       param: {
         departmantName: values.department,
-        parentCode: 'yjiZwfhaqj' // * 暂时写死
+        parentCode: getCurDepart()
       },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
