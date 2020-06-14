@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-16 14:26:15
+ * @LastEditTime: 2020-06-14 17:18:14
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -14,6 +14,7 @@ import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
 import { useSessionStorage } from 'react-use'
+import { setCurDepart } from '@/utils/session'
 
 import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
 
@@ -57,6 +58,12 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
+          let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
+            return org.selected
+          })
+          if (_initSelectedKeyIdx !== -1) {
+            setCurDepart([_result.data.organizes[_initSelectedKeyIdx].code])
+          }
           message.success('登录成功！')
           setTimeout(() => {
             history.push('/home')
@@ -128,6 +135,12 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
+          let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
+            return org.selected
+          })
+          if (_initSelectedKeyIdx !== -1) {
+            setCurDepart([_result.data.organizes[_initSelectedKeyIdx].code])
+          }
           message.success('登录成功！')
           setTimeout(() => {
             history.push('/home')

@@ -3,11 +3,15 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-06 15:15:59
+ * @LastEditTime: 2020-06-14 16:58:14
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
+import { getCurDepartment } from '@/api/department'
+import { useStore } from '@/hooks/useStore'
+import { useSessionStorage } from 'react-use'
 import { observer } from 'mobx-react'
+import { getCurDepart } from '@/utils/session'
 
 const treeData = [
   {
@@ -32,12 +36,27 @@ const treeData = [
 
 const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }) => {
   const [form] = Form.useForm()
+  const { userInfoStore } = useStore()
   const [disabled, setDisabled] = useState(true)
   const [depart, setDepart] = useState('')
+  const [userOrganizes] = useSessionStorage('user-organizes')
+
+  console.log('userOrganizes', userOrganizes)
+  console.log('getCurDepart', getCurDepart())
 
   useEffect(() => {
-    console.log(modalType, 'modalType')
-    console.log(subInfo, 'subInfo')
+    let _params = {
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+
+    getCurDepartment(_params)
+      .then(_result => {
+        console.log(_result)
+      })
+      .catch(err => console.log(err))
+
     let _mockValue = treeData[0].value
 
     setTimeout(() => {
