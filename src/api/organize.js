@@ -96,3 +96,21 @@ export function empower(data) {
     data
   })
 }
+
+// 删除已驳回的团队申请
+export function deleteReject(data) {
+  return request({
+    url: '/Organize/DeleteReject',
+    method: 'post',
+    data
+  })
+}
+
+// 更新团队可用状态
+export function updateEnabled(data) {
+  return request({
+    url: '/Organize/UpdateEnabled',
+    method: 'post',
+    data
+  })
+}
