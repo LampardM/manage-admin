@@ -15,12 +15,12 @@ import React, { useState, useEffect } from 'react'
 
 /** vendor */
 import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
-import { Row, Col, Button, Table, Menu, Modal } from 'antd'
+import { Row, Col, Button, Table, Menu, Modal, message } from 'antd'
 
 /** custom */
 import { Ext } from '../../../utils'
 import { useStore } from '@/hooks/useStore'
-import { queryApprovaledList } from '@/api'
+import { queryApprovaledList, updateEnabled } from '@/api'
 
 const PAGE_SIZE = 10
 
@@ -114,8 +114,8 @@ const TableData = observer(({ className, filters }) => {
       name: it.contact,
       teamName: it.orgName,
       teamType: it.orgType,
-      status: it.status === 'disable' ? '禁用' : '启用',
-      isDisable: !!(it.status === 'disable')
+      status: !it.enabled ? '禁用' : '启用',
+      isDisable: !it.enabled
     }))
   }
 
@@ -125,7 +125,17 @@ const TableData = observer(({ className, filters }) => {
       icon: <ExclamationCircleOutlined />,
       content: `是否确认${!isDisable ? '启用' : '禁用'}所选团队`,
       onOk() {
-        console.log('OK')
+        updateEnabled({
+          token: userInfoStore.token,
+          version: userInfoStore.version,
+          timestamp: JSON.stringify(new Date().getTime()),
+          param: {
+            enabled: !isDisable,
+            orgCodes: orgCodes
+          }
+        }).then(res => {
+          message.success('操作成功')
+        })
       }
     })
   }
