@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 15:57:26
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-15 19:16:00
+ * @LastEditTime: 2020-06-14 17:47:48
  */
 /** global */
 import userInfoStore from './userInfoStore'
@@ -14,6 +14,7 @@ import OrganizationAuthStore from '../pages/Organization/Auth/store'
 import OrganizationCheckStore from '../pages/Organization/Check/store'
 import OrganizationRejectStore from '../pages/Organization/Reject/store'
 import OrganizationApproveStore from '../pages/Organization/Approve/store'
+import DepartMentStore from '../pages/Team/Architecture/store'
 
 const store = {
   userInfoStore,
@@ -21,7 +22,8 @@ const store = {
   OrganizationAuthStore,
   OrganizationCheckStore,
   OrganizationRejectStore,
-  OrganizationApproveStore
+  OrganizationApproveStore,
+  DepartMentStore
 }
 
 export { store }

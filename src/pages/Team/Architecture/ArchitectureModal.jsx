@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-14 16:58:14
+ * @LastEditTime: 2020-06-14 18:54:45
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -13,38 +13,24 @@ import { useSessionStorage } from 'react-use'
 import { observer } from 'mobx-react'
 import { getCurDepart } from '@/utils/session'
 
-const treeData = [
-  {
-    title: 'Node1',
-    value: '0-0',
-    children: [
-      {
-        title: 'Child Node1',
-        value: '0-0-1'
-      },
-      {
-        title: 'Child Node2',
-        value: '0-0-2'
-      }
-    ]
-  },
-  {
-    title: 'Node2',
-    value: '0-1'
-  }
-]
-
 const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }) => {
-  const [form] = Form.useForm()
   const { userInfoStore } = useStore()
+  const [form] = Form.useForm()
   const [disabled, setDisabled] = useState(true)
   const [depart, setDepart] = useState('')
+  const [departList, setDepartList] = useState([])
   const [userOrganizes] = useSessionStorage('user-organizes')
 
-  console.log('userOrganizes', userOrganizes)
-  console.log('getCurDepart', getCurDepart())
+  useEffect(() => {
+    getCurDepartmentList()
+  }, [])
 
   useEffect(() => {
+    departList[0] && setDepart(departList[0].value)
+  }, [departList])
+
+  // 获取当前组织架构列表
+  const getCurDepartmentList = () => {
     let _params = {
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
@@ -53,16 +39,32 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
 
     getCurDepartment(_params)
       .then(_result => {
-        console.log(_result)
+        setDepartList(unshiftCurDepart(_result))
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        setDepartList(unshiftCurDepart([]))
+      })
+  }
 
-    let _mockValue = treeData[0].value
+  // 将当前团队补到首层
+  const unshiftCurDepart = data => {
+    let _curRoot, _curRootResult
+    _curRoot = userOrganizes.filter(organization => {
+      return organization.code === getCurDepart()
+    })
 
-    setTimeout(() => {
-      setDepart(_mockValue)
-    }, 1000)
-  }, [])
+    _curRootResult = _curRoot.map(organization => {
+      return {
+        value: organization.code,
+        title: organization.name,
+        parentCode: '',
+        children: data
+      }
+    })
+
+    return _curRootResult
+  }
 
   const setSubmitIsDisabled = () => {
     setDisabled(
@@ -145,7 +147,7 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
           <TreeSelect
             style={{ width: '100%' }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            treeData={treeData}
+            treeData={departList}
             placeholder="Please select"
             value={depart}
             treeDefaultExpandAll
