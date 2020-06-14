@@ -14,12 +14,12 @@ import { useHistory } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 
 /** vendor */
-import { Row, Col, Button, Table, Modal } from 'antd'
+import { Row, Col, Button, Table, Modal, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 /** custom */
 import { useStore } from '@/hooks/useStore'
-import { queryRejectedList } from '@/api'
+import { queryRejectedList, deleteReject } from '@/api'
 import { Ext } from '@/utils'
 
 const PAGE_SIZE = 10
@@ -81,7 +81,7 @@ const TableData = observer(({ className, filters }) => {
 
   useEffect(() => {
     fetch()
-  }, [pagination.current, pagination.pageSize, OrganizationRejectStore.filters])
+  }, [pagination.pageSize, OrganizationRejectStore.filters])
 
   const fetch = async () => {
     setIsTableLoading(true)
@@ -131,6 +131,17 @@ const TableData = observer(({ className, filters }) => {
       content: '是否确认删除所选成员',
       onOk() {
         console.log('删除', selectedKeys, item)
+        deleteReject({
+          token: userInfoStore.token,
+          version: userInfoStore.version,
+          timestamp: JSON.stringify(new Date().getTime()),
+          param: selectedKeys
+        }).then(res => {
+          if (+res.success === 1) {
+            message.success(`删除成功`)
+            fetch()
+          }
+        })
       },
       onCancel() {
         console.log('Cancel')
