@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-11 22:14:44
+ * @LastEditTime: 2020-06-14 16:57:46
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table, message } from 'antd'
@@ -11,8 +11,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ArchitectureModal from './ArchitectureModal'
 import { observer } from 'mobx-react'
 import { useStore } from '@/hooks/useStore'
-import { createDepartment } from '@/api/department'
-import { getCurDepart } from '@/utils/session'
+import { createDepartment, getCurDepartment } from '@/api/department'
 
 import styled from 'styled-components'
 
@@ -113,8 +112,14 @@ const ArchitectureContent = () => {
       version: userInfoStore.version
     }
 
+    getCurDepartment(_params)
+      .then(_result => {
+        console.log(_result)
+      })
+      .catch(err => console.log(err))
+
     setRecursionResult(data)
-  })
+  }, [])
 
   // 添加子部门
   const addChildDepartment = (store, data, nodeModel) => {
@@ -163,8 +168,8 @@ const ArchitectureContent = () => {
   const modalHandleOk = values => {
     let _params = {
       param: {
-        departmantName: values.department,
-        parentCode: getCurDepart()
+        departmentName: values.department,
+        parentCode: '' // 创建顶级部门传空字符串
       },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,

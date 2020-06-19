@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-06-01 21:11:50
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-11 21:44:03
+ * @LastEditTime: 2020-06-14 16:18:53
  */
 import request from '@/utils/request'
 
@@ -20,6 +20,15 @@ export function switchDepartment(data) {
 export function getCanuseMenu(data) {
   return request({
     url: '/Organize/LoadMenu',
+    method: 'post',
+    data
+  })
+}
+
+// 获取团队组织架构列表
+export function getCurDepartment(data) {
+  return request({
+    url: '/Organize/DepartmentTree',
     method: 'post',
     data
   })
