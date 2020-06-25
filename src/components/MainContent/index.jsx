@@ -32,9 +32,10 @@ const OrganizationApproveEdit = LoadableComponent(() => import('@/pages/Organiza
 //团队管理
 const TeamMember = LoadableComponent(() => import('@/pages/Team/Member')) // 成员管理
 const AddTeamMember = LoadableComponent(() => import('@/pages/Team/Member/AddMember')) // 添加成员
-const EditTeamMember = LoadableComponent(() => import('@/pages/Team/Member/EditMember')) // 添加成员
+const EditTeamMember = LoadableComponent(() => import('@/pages/Team/Member/EditMember')) // 编辑成员
 const TeamCharacter = LoadableComponent(() => import('@/pages/Team/Character')) // 角色管理
-const AddCharacter = LoadableComponent(() => import('@/pages/Team/Character/AddCharacter')) // 角色管理
+const AddCharacter = LoadableComponent(() => import('@/pages/Team/Character/AddCharacter')) // 添加角色
+const EditCharacter = LoadableComponent(() => import('@/pages/Team/Character/AddEditCharacterForm')) // 编辑角色
 
 const TeamArchitecture = LoadableComponent(() => import('@/pages/Team/Architecture')) // 组织架构
 
@@ -125,6 +126,7 @@ const MainContent = ({ location }) => {
         <PrivateRoute path="/team/member/editmember" component={EditTeamMember} exact />
         <PrivateRoute path="/team/character" component={TeamCharacter} exact />
         <PrivateRoute path="/team/character/add" component={AddCharacter} exact />
+        <PrivateRoute path="/team/character/edit/:id" component={AddCharacter} />
         <PrivateRoute path="/team/architecture" component={TeamArchitecture} exact />
 
         <PrivateRoute path="/terminal/online" component={TerminalOnline} exact />

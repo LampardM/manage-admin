@@ -66,3 +66,12 @@ export function getUserMessages(data) {
     data
   })
 }
+
+// 所有角色
+export function getRoleList(data) {
+  return request({
+    url: '/User/RoleList',
+    method: 'post',
+    data
+  })
+}

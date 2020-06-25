@@ -10,7 +10,10 @@
 import { action, observable } from 'mobx'
 
 class TeamCharacterStore {
-  initFilters = {}
+  initFilters = {
+    name: '',
+    status: 'ALL'
+  }
 
   @observable
   filters = {}

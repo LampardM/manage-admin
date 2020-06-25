@@ -45,8 +45,8 @@ export default observer(() => {
         <Col style={{ width: 200 }}>
           <Form.Item name="status">
             <Select allowClear style={{ width: '100%' }} placeholder="请选择状态">
-              <Select.Option value="enable">启用</Select.Option>
-              <Select.Option value="disable">禁用</Select.Option>
+              <Select.Option value="ENABLED">启用</Select.Option>
+              <Select.Option value="DISABLED">禁用</Select.Option>
             </Select>
           </Form.Item>
         </Col>

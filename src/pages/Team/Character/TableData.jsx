@@ -20,6 +20,9 @@ import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 /** custom */
 import request from '@/utils/request'
 import { useStore } from '@/hooks/useStore'
+import { getRoleList } from '@/api'
+
+const PAGE_SIZE = 10
 
 //表头
 const columns = [
@@ -45,39 +48,52 @@ const columns = [
   }
 ]
 
-const TableData = observer(({ className, filters, go }) => {
+const TableData = observer(({ className, filters }) => {
+  const { userInfoStore } = useStore()
   const history = useHistory()
   const [data, setData] = useState([])
-  const [pagination, setPagination] = useState({})
   const [selectedKeys, setSelectedKeys] = useState([])
   const [isTableLoading, setIsTableLoading] = useState(true)
+  const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
 
   const { TeamCharacterStore } = useStore()
 
   useEffect(() => {
-    fetch(toJS(TeamCharacterStore.filters))
+    fetch()
   }, [TeamCharacterStore.filters])
 
-  const fetch = async (params = {}) => {
+  const fetch = async () => {
     setIsTableLoading(true)
-    console.log('fetch', params)
-    setTimeout(() => {
-      setData([
-        {
-          id: 1,
-          name: '管理员',
-          status: 'enable',
-          displayStatus: '启用',
-          comment: '这是一条备注这是一条备注这是一条备注这是一条备注这是一条备注这是一条备注'
+
+    const param = toJS(TeamCharacterStore.filters)
+
+    getRoleList({
+      param: {
+        pageSize: pagination.pageSize,
+        pageIndex: pagination.current - 1,
+        param: {
+          roleName: param.name,
+          state: param.status || 'ALL'
         }
-      ])
-      setIsTableLoading(false)
-    }, 1000)
+      },
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime())
+    })
+      .then(({ data: { rows, pageIndex, pageSize, total } }) => {
+        setData(dataformat(rows))
+        setPagination({ current: pageIndex + 1, pageSize, total })
+      })
+      .finally(() => setIsTableLoading(false))
   }
 
   const dataformat = dataFormRESTful => {
     return dataFormRESTful.map(it => ({
-      ...it
+      id: it.roleCode,
+      name: it.roleName,
+      comment: it.memo,
+      displayStatus: it.state
+      // isDisable: it.
     }))
   }
 
@@ -130,7 +146,7 @@ const TableData = observer(({ className, filters, go }) => {
   }
 
   const doEdit = item => {
-    history.push(`/team/character/edit?id=${3}`)
+    history.push(`/team/character/edit/${item.id}`)
   }
 
   const optArea = () => (
