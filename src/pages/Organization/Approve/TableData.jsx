@@ -135,6 +135,7 @@ const TableData = observer(({ className, filters }) => {
           }
         }).then(res => {
           message.success('操作成功')
+          fetch()
         })
       }
     })
