@@ -124,18 +124,18 @@ const TableData = observer(({ className, filters }) => {
     }))
   }
 
-  const doDelete = item => {
+  const doDelete = () => {
     Modal.confirm({
       title: '确认删除?',
       icon: <ExclamationCircleOutlined />,
       content: '是否确认删除所选成员',
       onOk() {
-        console.log('删除', selectedKeys, item)
+        console.log('删除', orgCodes)
         deleteReject({
           token: userInfoStore.token,
           version: userInfoStore.version,
           timestamp: JSON.stringify(new Date().getTime()),
-          param: selectedKeys
+          param: orgCodes
         }).then(res => {
           if (+res.success === 1) {
             message.success(`删除成功`)
@@ -155,7 +155,14 @@ const TableData = observer(({ className, filters }) => {
 
   const optArea = () => (
     <>
-      <Button type="primary" onClick={doDelete} disabled={!selectedKeys.length}>
+      <Button
+        type="primary"
+        onClick={() => {
+          orgCodes = selectedKeys
+          doDelete()
+        }}
+        disabled={!selectedKeys.length}
+      >
         删除
       </Button>
     </>
@@ -175,7 +182,13 @@ const TableData = observer(({ className, filters }) => {
           width: 70,
           render: (value, row, index) => (
             <>
-              <a href="js:void()" onClick={() => doDelete(row)}>
+              <a
+                href="js:void()"
+                onClick={() => {
+                  orgCodes = [row.id]
+                  doDelete(row)
+                }}
+              >
                 删除
               </a>
             </>
