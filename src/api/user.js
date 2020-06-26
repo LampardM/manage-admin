@@ -75,3 +75,21 @@ export function getRoleList(data) {
     data
   })
 }
+
+// 所有角色
+export function enabledRoles(data) {
+  return request({
+    url: '/User/enabledRoles',
+    method: 'post',
+    data
+  })
+}
+
+// 所有角色
+export function disabledRoles(data) {
+  return request({
+    url: '/User/disabledRoles',
+    method: 'post',
+    data
+  })
+}

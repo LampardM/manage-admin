@@ -15,16 +15,15 @@ import { useHistory } from 'react-router-dom'
 import React, { useState, useEffect } from 'react'
 
 /** vendor */
-import { Row, Col, Menu, Button, Table, Modal } from 'antd'
+import { Row, Col, Menu, Button, Table, Modal, message } from 'antd'
 import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 /** custom */
 import request from '@/utils/request'
 import { useStore } from '@/hooks/useStore'
-import { getRoleList } from '@/api'
+import { getRoleList, enabledRoles, disabledRoles } from '@/api'
 
+let orgCodes = []
 const PAGE_SIZE = 10
-
-//表头
 const columns = [
   {
     width: 100,
@@ -69,7 +68,7 @@ const TableData = observer(({ className, filters }) => {
 
     getRoleList({
       param: {
-        pageSize: pagination.pageSize,
+        pageSize: PAGE_SIZE, //pagination.pageSize,
         pageIndex: pagination.current - 1,
         param: {
           roleName: param.name,
@@ -103,13 +102,21 @@ const TableData = observer(({ className, filters }) => {
     history.push(`/team/character/add`)
   }
 
-  const doEnable = item => {
+  const doEnable = () => {
     Modal.confirm({
       title: '确认启用?',
       icon: <ExclamationCircleOutlined />,
       content: '是否确认启用所选角色',
       onOk() {
-        console.log('启用', selectedKeys, item)
+        enabledRoles({
+          param: orgCodes,
+          token: userInfoStore.token,
+          version: userInfoStore.version,
+          timestamp: JSON.stringify(new Date().getTime())
+        }).then(() => {
+          message.success('操作成功')
+          fetch()
+        })
       },
       onCancel() {
         console.log('Cancel')
@@ -117,13 +124,21 @@ const TableData = observer(({ className, filters }) => {
     })
   }
 
-  const doDisable = item => {
+  const doDisable = () => {
     Modal.confirm({
       title: '确认禁用?',
       icon: <ExclamationCircleOutlined />,
       content: '是否确认禁用所选角色',
       onOk() {
-        console.log('禁用', selectedKeys, item)
+        disabledRoles({
+          param: orgCodes,
+          token: userInfoStore.token,
+          version: userInfoStore.version,
+          timestamp: JSON.stringify(new Date().getTime())
+        }).then(() => {
+          message.success('操作成功')
+          fetch()
+        })
       },
       onCancel() {
         console.log('Cancel')
@@ -131,14 +146,12 @@ const TableData = observer(({ className, filters }) => {
     })
   }
 
-  const doDelete = item => {
+  const doDelete = () => {
     Modal.confirm({
       title: '确认删除?',
       icon: <ExclamationCircleOutlined />,
       content: '是否确认删除所选角色',
-      onOk() {
-        console.log('删除', selectedKeys, item)
-      },
+      onOk() {},
       onCancel() {
         console.log('Cancel')
       }
@@ -158,7 +171,10 @@ const TableData = observer(({ className, filters }) => {
         style={{
           margin: '0 4px'
         }}
-        onClick={doEnable}
+        onClick={() => {
+          orgCodes = selectedKeys
+          doEnable()
+        }}
         disabled={!selectedKeys.length}
       >
         启用
@@ -167,7 +183,10 @@ const TableData = observer(({ className, filters }) => {
         style={{
           margin: '0 4px'
         }}
-        onClick={doDisable}
+        onClick={() => {
+          orgCodes = selectedKeys
+          doDisable()
+        }}
         disabled={!selectedKeys.length}
       >
         禁用
@@ -176,7 +195,10 @@ const TableData = observer(({ className, filters }) => {
         style={{
           margin: '0 4px'
         }}
-        onClick={doDelete}
+        onClick={() => {
+          orgCodes = selectedKeys
+          doDelete()
+        }}
         disabled={!selectedKeys.length}
       >
         删除
@@ -199,11 +221,23 @@ const TableData = observer(({ className, filters }) => {
           render: (value, row, index) => (
             <>
               {row.isDisable ? (
-                <a href="js:void()" onClick={() => doEnable(row)}>
+                <a
+                  href="js:void()"
+                  onClick={() => {
+                    orgCodes = [row.id]
+                    doEnable(row)
+                  }}
+                >
                   启用
                 </a>
               ) : (
-                <a href="js:void()" onClick={() => doDisable(row)}>
+                <a
+                  href="js:void()"
+                  onClick={() => {
+                    orgCodes = [row.id]
+                    doDisable(row)
+                  }}
+                >
                   禁用
                 </a>
               )}
@@ -222,7 +256,13 @@ const TableData = observer(({ className, filters }) => {
                   <Menu.Item key="detail" disabled>
                     详情
                   </Menu.Item>
-                  <Menu.Item key="delete" onClick={() => doDelete(row)}>
+                  <Menu.Item
+                    key="delete"
+                    onClick={() => {
+                      orgCodes = [row.id]
+                      doDelete(row)
+                    }}
+                  >
                     删除
                   </Menu.Item>
                 </Menu.SubMenu>
@@ -230,7 +270,7 @@ const TableData = observer(({ className, filters }) => {
             </>
           )
         })}
-        rowKey={(row, idx, self) => {
+        rowKey={(row /*, idx, self*/) => {
           return row.id
         }}
         dataSource={data}
