@@ -8,7 +8,7 @@
  */
 
 /** official */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { observer } from 'mobx-react'
 
 /** vendor */
@@ -20,6 +20,10 @@ import { useStore } from '@/hooks/useStore'
 export default observer(() => {
   const [form] = Form.useForm()
   const { TeamCharacterStore } = useStore()
+
+  useEffect(() => {
+    form.resetFields()
+  }, [TeamCharacterStore.filters])
 
   const onFinish = values => {
     console.log('Received values of form: ', values)

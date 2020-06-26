@@ -10,13 +10,14 @@
 import { action, observable } from 'mobx'
 
 class TeamCharacterStore {
+  @observable
   initFilters = {
     name: '',
-    status: 'ALL'
+    status: undefined
   }
 
   @observable
-  filters = {}
+  filters = this.initFilters
 
   @action setFilters(value) {
     this.filters = value
