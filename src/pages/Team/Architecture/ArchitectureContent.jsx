@@ -3,21 +3,21 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 18:29:32
+ * @LastEditTime: 2020-06-27 22:42:22
  */
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Table, message } from 'antd'
+import { Button, Modal, Table, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import ArchitectureModal from './ArchitectureModal'
 import { observer } from 'mobx-react'
 import { useStore } from '@/hooks/useStore'
+import { getCurDepart } from '@/utils/session'
 import {
   createDepartment,
   getCurDepartment,
   deleteDepartment,
   updateDepartment
 } from '@/api/department'
-
+import ArchitectureModal from './ArchitectureModal'
 import styled from 'styled-components'
 
 const { confirm, warning } = Modal
@@ -28,7 +28,8 @@ const ArchitectureContent = () => {
   const [recursionResult, setRecursionResult] = useState([])
   const [modalShow, setModalShow] = useState(false)
   const [modalType, setModalType] = useState('create')
-  const [subInfo, setSubInfo] = useState({})
+  const [subInfo, setSubInfo] = useState('')
+  const [curDepart, setCurDepart] = useState({})
   const [expandedRowKeys, setExpandedRowKeys] = useState([])
 
   const recursionExpandKeys = (arr, result) => {
@@ -81,14 +82,33 @@ const ArchitectureContent = () => {
     getCurDepartmentList()
   }, [])
 
+  const findParentDepartment = (targetArr, target, parent = getCurDepart()) => {
+    let _targetCode
+    for (let i = 0; i < targetArr.length; i++) {
+      if (targetArr[i].departmentCode === target) {
+        _targetCode = parent
+      } else {
+        if (targetArr[i].children && targetArr[i].children.length > 0) {
+          return findParentDepartment(targetArr[i].children, target, targetArr[i].departmentCode)
+        }
+      }
+
+      return _targetCode
+    }
+  }
+
   // 添加子部门
-  const addChildDepartment = parentInfo => {
-    setSubInfo(parentInfo)
+  const addChildDepartment = curInfo => {
+    setSubInfo(curInfo.departmentCode)
+    setModalType('create')
     setModalShow(true)
   }
 
   // 编辑部门
-  const editCurDepartment = () => {
+  const editCurDepartment = curInfo => {
+    let _subInfo = findParentDepartment(recursionResult, curInfo.departmentCode)
+    setSubInfo(_subInfo)
+    setCurDepart(curInfo)
     setModalType('edit')
     setModalShow(true)
   }
@@ -129,29 +149,49 @@ const ArchitectureContent = () => {
 
   // 添加部门
   const addDepartment = () => {
-    setSubInfo({})
+    setSubInfo('')
     setModalShow(true)
   }
 
-  const modalHandleOk = (values, subInfo) => {
+  const modalHandleOk = (values, subInfo, curInfo) => {
     let _params = {
       param: {
         departmentName: values.department,
-        parentCode: subInfo.departmentCode ? subInfo.departmentCode : ''
+        parentCode: subInfo !== getCurDepart() ? subInfo : ''
       },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
       version: userInfoStore.version
     }
-    createDepartment(_params)
-      .then(_result => {
-        console.log(_result)
-        getCurDepartmentList()
-        message.success('创建部门成功')
+    if (modalType === 'create') {
+      createDepartment(_params)
+        .then(_result => {
+          console.log(_result)
+          getCurDepartmentList()
+          message.success('创建部门成功')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    } else {
+      _params = Object.assign({}, _params, {
+        param: {
+          departmentCode: curInfo.departmentCode,
+          departmentName: values.department,
+          parentCode: subInfo !== getCurDepart() ? subInfo : ''
+        }
       })
-      .catch(err => {
-        console.log(err)
-      })
+      updateDepartment(_params)
+        .then(_result => {
+          console.log(_result)
+          getCurDepartmentList()
+          message.success('更新部门成功')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+
     setModalShow(false)
   }
 
@@ -183,7 +223,7 @@ const ArchitectureContent = () => {
   const onExpand = (expanded, record) => {
     let cloneExpandedRowKeys = [...expandedRowKeys]
     const sameLevelNode = findSameLevelNode(recursionResult, record.departmentCode)
-    const siblingNodeKey = sameLevelNode.reduce((acc, cur, curIdx) => {
+    const siblingNodeKey = sameLevelNode.reduce((acc, cur) => {
       if (cur.departmentCode !== record.departmentCode) {
         acc.push(cur.departmentCode)
       }
@@ -213,6 +253,7 @@ const ArchitectureContent = () => {
         modalShow={modalShow}
         modalType={modalType}
         subInfo={subInfo}
+        curInfo={curDepart}
         onCancel={modalHandleCancel}
         onCreate={modalHandleOk}
       />
@@ -240,7 +281,9 @@ const ArchitectureContent = () => {
                 <a style={{ marginRight: 16 }} onClick={() => addChildDepartment(record)}>
                   添加子部门 {record.lastName}
                 </a>
-                <a style={{ marginRight: 16 }}>编辑 {record.lastName}</a>
+                <a style={{ marginRight: 16 }} onClick={() => editCurDepartment(record)}>
+                  编辑 {record.lastName}
+                </a>
                 <a onClick={() => deleteCurDepartment(record)}>删除</a>
               </span>
             )}

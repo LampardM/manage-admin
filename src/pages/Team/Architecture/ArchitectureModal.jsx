@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 18:20:22
+ * @LastEditTime: 2020-06-27 22:43:10
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -13,28 +13,37 @@ import { useSessionStorage } from 'react-use'
 import { observer } from 'mobx-react'
 import { getCurDepart } from '@/utils/session'
 
-const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }) => {
+const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, onCancel }) => {
   const { userInfoStore } = useStore()
   const [form] = Form.useForm()
   const [disabled, setDisabled] = useState(true)
   const [depart, setDepart] = useState('')
+  const [departInfo, setDepartInfo] = useState({})
   const [departList, setDepartList] = useState([])
   const [userOrganizes] = useSessionStorage('user-organizes')
 
   useEffect(() => {
-    getCurDepartmentList()
+    modalShow && getCurDepartmentList()
     form.resetFields() // 修正getContainer的影响
   }, [modalShow])
 
   useEffect(() => {
-    if (subInfo && subInfo.departmentCode) {
-      setDepart(subInfo.departmentCode)
-      form.setFieldsValue({ updepartment: subInfo.departmentCode })
+    if (subInfo) {
+      setDepart(subInfo)
+      form.setFieldsValue({ updepartment: subInfo })
     } else {
       departList[0] &&
         departList[0].value &&
         form.setFieldsValue({ updepartment: departList[0].value }) &&
         setDepart(departList[0].value)
+    }
+
+    if (modalType === 'edit') {
+      setDepartInfo(curInfo)
+      form.setFieldsValue({ department: curInfo.departmentName })
+    } else {
+      setDepartInfo({})
+      form.setFieldsValue({ department: '' })
     }
   }, [departList, subInfo])
 
@@ -127,7 +136,7 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
           .validateFields()
           .then(values => {
             form.resetFields()
-            onCreate(values, subInfo)
+            onCreate(values, subInfo, curInfo)
           })
           .catch(info => {
             console.log('Validate Failed:', info)
@@ -139,7 +148,8 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
         name="formModal"
         onFieldsChange={onFieldsChange}
         initialValues={{
-          updepartment: depart
+          updepartment: depart,
+          department: departInfo.departmentName
         }}
       >
         <Form.Item
