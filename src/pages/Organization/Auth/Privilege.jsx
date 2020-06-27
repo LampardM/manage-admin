@@ -60,56 +60,6 @@ const Privilege = ({ className }) => {
         setTableData(data)
       })
       .finally(() => setIsTableLoading(false))
-
-    // setTimeout(() => {
-    //   setTableData([
-    //     {
-    //       key: 'managementFunction',
-    //       value: '管理功能',
-    //       subs: [
-    //         {
-    //           key: 'teamManagement',
-    //           value: '团队管理',
-    //           checked: true,
-    //           subs: [
-    //             {
-    //               key: 'organizationalStructure',
-    //               value: '组织架构'
-    //             },
-    //             {
-    //               key: 'memberManagement',
-    //               value: '成员管理'
-    //             },
-    //             {
-    //               key: 'characterManagement',
-    //               value: '角色管理'
-    //             }
-    //           ]
-    //         },
-    //         {
-    //           key: 'IOTDeviceManagement',
-    //           value: 'IOT设备管理',
-    //           subs: [
-    //             {
-    //               key: 'agreementSetting',
-    //               value: '协议设置'
-    //             },
-    //             {
-    //               key: 'onlineDevices',
-    //               value: '在线设备'
-    //             },
-    //             {
-    //               key: 'allDevices',
-    //               value: '全部设备',
-    //               checked: true
-    //             }
-    //           ]
-    //         }
-    //       ]
-    //     }
-    //   ])
-    //   setIsTableLoading(false)
-    // }, 1000)
   }
 
   const onChange = (value, isChecked, tailCollection, allCollection, nodeData) => {

@@ -8,7 +8,7 @@
  */
 
 /** official */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { observer } from 'mobx-react'
 
 /** vendor */
@@ -20,6 +20,10 @@ import { useStore } from '@/hooks/useStore'
 export default observer(() => {
   const [form] = Form.useForm()
   const { TeamCharacterStore } = useStore()
+
+  useEffect(() => {
+    form.resetFields()
+  }, [TeamCharacterStore.filters])
 
   const onFinish = values => {
     console.log('Received values of form: ', values)
@@ -44,8 +48,8 @@ export default observer(() => {
         <Col style={{ width: 200 }}>
           <Form.Item name="status">
             <Select allowClear style={{ width: '100%' }} placeholder="请选择状态">
-              <Select.Option value="enable">启用</Select.Option>
-              <Select.Option value="disable">禁用</Select.Option>
+              <Select.Option value="ENABLED">启用</Select.Option>
+              <Select.Option value="DISABLED">禁用</Select.Option>
             </Select>
           </Form.Item>
         </Col>
