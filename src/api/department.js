@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-06-01 21:11:50
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-14 16:18:53
+ * @LastEditTime: 2020-06-27 16:15:00
  */
 import request from '@/utils/request'
 
@@ -38,6 +38,24 @@ export function getCurDepartment(data) {
 export function createDepartment(data) {
   return request({
     url: '/Organize/CreateDepartment',
+    method: 'post',
+    data
+  })
+}
+
+// 编辑部门
+export function updateDepartment(data) {
+  return request({
+    url: '/Organize/UpdateDepartment',
+    method: 'post',
+    data
+  })
+}
+
+// 删除部门
+export function deleteDepartment(data) {
+  return request({
+    url: '/Organize/DeleteDepartment',
     method: 'post',
     data
   })

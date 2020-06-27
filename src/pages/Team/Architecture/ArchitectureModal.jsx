@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 15:00:34
+ * @LastEditTime: 2020-06-27 18:20:22
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -23,11 +23,20 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
 
   useEffect(() => {
     getCurDepartmentList()
-  }, [])
+    form.resetFields() // 修正getContainer的影响
+  }, [modalShow])
 
   useEffect(() => {
-    departList[0] && setDepart(departList[0].value)
-  }, [departList])
+    if (subInfo && subInfo.departmentCode) {
+      setDepart(subInfo.departmentCode)
+      form.setFieldsValue({ updepartment: subInfo.departmentCode })
+    } else {
+      departList[0] &&
+        departList[0].value &&
+        form.setFieldsValue({ updepartment: departList[0].value }) &&
+        setDepart(departList[0].value)
+    }
+  }, [departList, subInfo])
 
   const changeFetchDataProp = arr => {
     arr.forEach(_item => {
@@ -104,6 +113,7 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
   return (
     <Modal
       visible={modalShow}
+      getContainer={false}
       title={modalType === 'create' ? '添加部门' : '编辑部门'}
       okButtonProps={{
         disabled: disabled
@@ -117,7 +127,7 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
           .validateFields()
           .then(values => {
             form.resetFields()
-            onCreate(values)
+            onCreate(values, subInfo)
           })
           .catch(info => {
             console.log('Validate Failed:', info)

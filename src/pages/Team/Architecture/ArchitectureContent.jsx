@@ -3,85 +3,25 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 14:29:18
+ * @LastEditTime: 2020-06-27 18:29:32
  */
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Form, Input, Cascader, Table, message } from 'antd'
+import { Button, Modal, Form, Input, Table, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import ArchitectureModal from './ArchitectureModal'
 import { observer } from 'mobx-react'
 import { useStore } from '@/hooks/useStore'
-import { createDepartment, getCurDepartment } from '@/api/department'
+import {
+  createDepartment,
+  getCurDepartment,
+  deleteDepartment,
+  updateDepartment
+} from '@/api/department'
 
 import styled from 'styled-components'
 
 const { confirm, warning } = Modal
-const { Column, ColumnGroup } = Table
-
-const data = [
-  {
-    key: 1,
-    name: '1',
-    age: 60,
-    address: 'New York No. 1 Lake Park',
-    children: [
-      {
-        key: 11,
-        name: '1.1',
-        age: 42,
-        address: 'New York No. 2 Lake Park'
-      },
-      {
-        key: 12,
-        name: '1.2',
-        age: 30,
-        address: 'New York No. 3 Lake Park',
-        children: [
-          {
-            key: 121,
-            name: '2.1',
-            age: 16,
-            address: 'New York No. 3 Lake Park'
-          }
-        ]
-      },
-      {
-        key: 13,
-        name: '1.3',
-        age: 72,
-        address: 'London No. 1 Lake Park',
-        children: [
-          {
-            key: 131,
-            name: '2.2',
-            age: 42,
-            address: 'London No. 2 Lake Park',
-            children: [
-              {
-                key: 1311,
-                name: '3.1',
-                age: 25,
-                address: 'London No. 3 Lake Park'
-              },
-              {
-                key: 1312,
-                name: '3.2',
-                age: 18,
-                address: 'London No. 4 Lake Park'
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    key: 2,
-    name: '2',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park'
-  }
-]
+const { Column } = Table
 
 const ArchitectureContent = () => {
   const { userInfoStore } = useStore()
@@ -105,7 +45,17 @@ const ArchitectureContent = () => {
     return result
   }
 
-  useEffect(() => {
+  const deleteUselessChildren = arr => {
+    arr.forEach(_item => {
+      if (_item.children && _item.children.length === 0) {
+        delete _item.children
+      } else {
+        deleteUselessChildren(_item.children)
+      }
+    })
+  }
+
+  const getCurDepartmentList = () => {
     let _params = {
       param: {
         baseDepartmentCode: '',
@@ -121,16 +71,19 @@ const ArchitectureContent = () => {
     getCurDepartment(_params)
       .then(_result => {
         console.log(_result)
+        deleteUselessChildren(_result.data)
         setRecursionResult(_result.data)
       })
       .catch(err => console.log(err))
+  }
+
+  useEffect(() => {
+    getCurDepartmentList()
   }, [])
 
   // 添加子部门
-  const addChildDepartment = (store, data, nodeModel) => {
-    console.log('data', data)
-    console.log('nodeModel', nodeModel)
-    setSubInfo(data)
+  const addChildDepartment = parentInfo => {
+    setSubInfo(parentInfo)
     setModalShow(true)
   }
 
@@ -143,20 +96,30 @@ const ArchitectureContent = () => {
   // 删除部门
   const deleteCurDepartment = record => {
     console.log('deleteCurDepartment', record)
-    // TODO 查询信息
-
-    // warning({
-    //   title: 'This is a warning message',
-    //   content: 'some messages...some messages...'
-    // })
+    let _params = {
+      param: record.departmentCode,
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
 
     confirm({
-      title: 'Do you Want to delete these items?',
+      title: '确认删除？',
       icon: <ExclamationCircleOutlined />,
-      okType: 'danger',
-      content: 'Some descriptions',
+      content: '是否确认删除所选部门',
       onOk() {
         console.log('OK')
+        deleteDepartment(_params)
+          .then(_result => {
+            message.success('删除部门成功')
+            getCurDepartmentList()
+          })
+          .catch(err => {
+            warning({
+              title: '无法删除',
+              content: err
+            })
+          })
       },
       onCancel() {
         console.log('Cancel')
@@ -170,11 +133,11 @@ const ArchitectureContent = () => {
     setModalShow(true)
   }
 
-  const modalHandleOk = values => {
+  const modalHandleOk = (values, subInfo) => {
     let _params = {
       param: {
         departmentName: values.department,
-        parentCode: '' // 创建顶级部门传空字符串
+        parentCode: subInfo.departmentCode ? subInfo.departmentCode : ''
       },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
@@ -183,6 +146,7 @@ const ArchitectureContent = () => {
     createDepartment(_params)
       .then(_result => {
         console.log(_result)
+        getCurDepartmentList()
         message.success('创建部门成功')
       })
       .catch(err => {
@@ -273,8 +237,11 @@ const ArchitectureContent = () => {
             align="right"
             render={(text, record) => (
               <span>
-                <a style={{ marginRight: 16 }}>Invite {record.lastName}</a>
-                <a onClick={() => deleteCurDepartment(record)}>Delete</a>
+                <a style={{ marginRight: 16 }} onClick={() => addChildDepartment(record)}>
+                  添加子部门 {record.lastName}
+                </a>
+                <a style={{ marginRight: 16 }}>编辑 {record.lastName}</a>
+                <a onClick={() => deleteCurDepartment(record)}>删除</a>
               </span>
             )}
           />
