@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 01:31:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-18 22:02:28
+ * @LastEditTime: 2020-06-27 14:11:44
  */
 /** officail */
 import React from 'react'
@@ -24,7 +24,7 @@ import { getUserMessages } from '@/api/user'
  * @default 60s
  * @type {number}
  */
-const POLLING_DELAY = 1000 * 60 * 1
+const POLLING_DELAY = 1000 * 60 * 10
 
 //withRouter一定要写在前面，不然路由变化不会反映到props中去
 @withRouter

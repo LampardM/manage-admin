@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-14 17:18:14
+ * @LastEditTime: 2020-06-27 13:39:53
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -15,7 +15,7 @@ import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
 import { useSessionStorage } from 'react-use'
 import { setCurDepart } from '@/utils/session'
-
+import { switchDepartment } from '@/api/department'
 import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
 
 const LoginForm = props => {
@@ -63,6 +63,20 @@ const LoginForm = props => {
           })
           if (_initSelectedKeyIdx !== -1) {
             setCurDepart([_result.data.organizes[_initSelectedKeyIdx].code])
+            let _params = {
+              param: _result.data.organizes[_initSelectedKeyIdx].code,
+              timestamp: JSON.stringify(new Date().getTime()),
+              token: _result.data.token,
+              version: userInfoStore.version
+            }
+            // 登录切换当前团队
+            switchDepartment(_params)
+              .then(_result => {
+                console.log(_result)
+              })
+              .catch(err => {
+                console.log(err)
+              })
           }
           message.success('登录成功！')
           setTimeout(() => {
@@ -140,6 +154,20 @@ const LoginForm = props => {
           })
           if (_initSelectedKeyIdx !== -1) {
             setCurDepart([_result.data.organizes[_initSelectedKeyIdx].code])
+            // 登录切换当前团队
+            let _params = {
+              param: _result.data.organizes[_initSelectedKeyIdx].code,
+              timestamp: JSON.stringify(new Date().getTime()),
+              token: _result.data.token,
+              version: userInfoStore.version
+            }
+            switchDepartment(_params)
+              .then(_result => {
+                console.log(_result)
+              })
+              .catch(err => {
+                console.log(err)
+              })
           }
           message.success('登录成功！')
           setTimeout(() => {

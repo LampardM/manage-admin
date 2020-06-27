@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-14 18:54:45
+ * @LastEditTime: 2020-06-27 15:00:34
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -29,9 +29,26 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
     departList[0] && setDepart(departList[0].value)
   }, [departList])
 
+  const changeFetchDataProp = arr => {
+    arr.forEach(_item => {
+      _item.value = _item.departmentCode
+      _item.title = _item.departmentName
+
+      if (_item.children && _item.children.length > 0) {
+        changeFetchDataProp(_item.children)
+      }
+    })
+  }
+
   // 获取当前组织架构列表
   const getCurDepartmentList = () => {
     let _params = {
+      param: {
+        baseDepartmentCode: '',
+        buildChild: false,
+        excludeCode: [],
+        totalNodeLevel: 6
+      },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
       version: userInfoStore.version
@@ -39,7 +56,8 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
 
     getCurDepartment(_params)
       .then(_result => {
-        setDepartList(unshiftCurDepart(_result))
+        changeFetchDataProp(_result.data)
+        setDepartList(unshiftCurDepart(_result.data))
       })
       .catch(err => {
         console.log(err)
@@ -56,9 +74,10 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, onCreate, onCancel }
 
     _curRootResult = _curRoot.map(organization => {
       return {
+        departmentCode: organization.code,
+        departmentName: organization.name,
         value: organization.code,
         title: organization.name,
-        parentCode: '',
         children: data
       }
     })

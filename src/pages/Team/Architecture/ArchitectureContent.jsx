@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-14 16:57:46
+ * @LastEditTime: 2020-06-27 14:29:18
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Form, Input, Cascader, Table, message } from 'antd'
@@ -107,6 +107,12 @@ const ArchitectureContent = () => {
 
   useEffect(() => {
     let _params = {
+      param: {
+        baseDepartmentCode: '',
+        buildChild: false,
+        excludeCode: [],
+        totalNodeLevel: 6
+      },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
       version: userInfoStore.version
@@ -115,10 +121,9 @@ const ArchitectureContent = () => {
     getCurDepartment(_params)
       .then(_result => {
         console.log(_result)
+        setRecursionResult(_result.data)
       })
       .catch(err => console.log(err))
-
-    setRecursionResult(data)
   }, [])
 
   // 添加子部门
@@ -191,18 +196,18 @@ const ArchitectureContent = () => {
   }
 
   // * 递归查同级节点
-  const findSameLevelNode = (data, key) => {
+  const findSameLevelNode = (data, departmentCode) => {
     let result
     if (!data) {
       return
     }
     for (var i = 0; i < data.length; i++) {
       let item = data[i]
-      if (item.key === key) {
+      if (item.departmentCode === departmentCode) {
         result = data
         return result
       } else if (item.children && item.children.length > 0) {
-        result = findSameLevelNode(item.children, key)
+        result = findSameLevelNode(item.children, departmentCode)
         if (result) {
           return result
         }
@@ -213,19 +218,23 @@ const ArchitectureContent = () => {
 
   const onExpand = (expanded, record) => {
     let cloneExpandedRowKeys = [...expandedRowKeys]
-    const sameLevelNode = findSameLevelNode(recursionResult, record.key)
+    const sameLevelNode = findSameLevelNode(recursionResult, record.departmentCode)
     const siblingNodeKey = sameLevelNode.reduce((acc, cur, curIdx) => {
-      if (cur.key !== record.key) {
-        acc.push(cur.key)
+      if (cur.departmentCode !== record.departmentCode) {
+        acc.push(cur.departmentCode)
       }
       return acc
     }, [])
 
     if (expanded) {
-      cloneExpandedRowKeys = cloneExpandedRowKeys.filter(key => !siblingNodeKey.includes(key))
-      cloneExpandedRowKeys.push(record.key)
+      cloneExpandedRowKeys = cloneExpandedRowKeys.filter(
+        departmentCode => !siblingNodeKey.includes(departmentCode)
+      )
+      cloneExpandedRowKeys.push(record.departmentCode)
     } else {
-      const curIdx = cloneExpandedRowKeys.findIndex(key => key === record.key)
+      const curIdx = cloneExpandedRowKeys.findIndex(
+        departmentCode => departmentCode === record.departmentCode
+      )
       cloneExpandedRowKeys.splice(curIdx, 1)
     }
 
@@ -250,15 +259,14 @@ const ArchitectureContent = () => {
       </ArchitectureTitle>
       <ArchitectureMain>
         <Table
+          rowKey="departmentCode"
           showHeader={false}
           dataSource={recursionResult}
           onExpand={onExpand}
           rowExpandable={rowExpandable}
           expandedRowKeys={expandedRowKeys}
         >
-          <Column title="Name" dataIndex="name" key="name" />
-          <Column title="Age" dataIndex="age" key="age" />
-          <Column title="Address" dataIndex="address" key="address" />
+          <Column title="departmentName" dataIndex="departmentName" key="departmentName" />
           <Column
             title="Action"
             key="action"
