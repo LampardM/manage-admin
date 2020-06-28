@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 22:42:22
+ * @LastEditTime: 2020-06-28 21:37:16
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -31,6 +31,7 @@ const ArchitectureContent = () => {
   const [subInfo, setSubInfo] = useState('')
   const [curDepart, setCurDepart] = useState({})
   const [expandedRowKeys, setExpandedRowKeys] = useState([])
+  const [isTableLoading, setIsTableLoading] = useState(false)
 
   const recursionExpandKeys = (arr, result) => {
     arr.forEach(element => {
@@ -57,6 +58,7 @@ const ArchitectureContent = () => {
   }
 
   const getCurDepartmentList = () => {
+    setIsTableLoading(true)
     let _params = {
       param: {
         baseDepartmentCode: '',
@@ -71,6 +73,7 @@ const ArchitectureContent = () => {
 
     getCurDepartment(_params)
       .then(_result => {
+        setIsTableLoading(false)
         console.log(_result)
         deleteUselessChildren(_result.data)
         setRecursionResult(_result.data)
@@ -269,6 +272,7 @@ const ArchitectureContent = () => {
           dataSource={recursionResult}
           onExpand={onExpand}
           rowExpandable={rowExpandable}
+          loading={isTableLoading}
           expandedRowKeys={expandedRowKeys}
         >
           <Column title="departmentName" dataIndex="departmentName" key="departmentName" />
