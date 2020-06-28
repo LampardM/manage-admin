@@ -26,7 +26,7 @@ let orgCodes = []
 const PAGE_SIZE = 10
 const columns = [
   {
-    width: 100,
+    width: 120,
     title: '角色',
     dataIndex: 'name',
     ellipsis: true,
@@ -91,15 +91,15 @@ const TableData = observer(({ className, filters }) => {
       id: it.roleCode,
       name: it.roleName,
       comment: it.memo,
-      displayStatus: it.state
-      // isDisable: it.
+      displayStatus: it.displayState,
+      isDisable: it.state !== 1
     }))
   }
 
   const handleTableChange = () => {}
 
   const addCharacter = () => {
-    history.push(`/team/character/add`)
+    history.push(`/team/character/addOrEdit`)
   }
 
   const doEnable = () => {
@@ -159,7 +159,7 @@ const TableData = observer(({ className, filters }) => {
   }
 
   const doEdit = item => {
-    history.push(`/team/character/edit/${item.id}`)
+    history.push(`/team/character/addOrEdit/${item.id}`)
   }
 
   const optArea = () => (

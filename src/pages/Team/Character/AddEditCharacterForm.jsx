@@ -5,17 +5,27 @@
  * @LastEditors: longzhang6
  * @LastEditTime: 2020-05-06 23:38:42
  */
-import React, { useState, useEffect } from 'react'
+/** official **/
 import styled from 'styled-components'
-import { Button, Form, Input, Space, Checkbox } from 'antd'
+import { useStore } from '@/hooks/useStore'
+import React, { useState, useEffect } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+
+/** vedor **/
+import { Button, Form, Input, Space, Checkbox, Modal } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+
+/** custom **/
 import TableCheckBox from '@/components/TableCheckBox'
-import { Permissions, AuthorisedPermissions } from './MockPermission'
+import { getRolePowerConfig } from '@/api'
 
 const { TextArea } = Input
 
 const AddEditCharacterForm = () => {
+  const { id } = useParams()
   const [form] = Form.useForm()
-  const [, forceUpdate] = useState()
+  const history = useHistory()
+  const { userInfoStore } = useStore()
   const [tableData, setTableData] = useState([])
   const [permissionsTableData, setPermissionsTableData] = useState([])
   const [authorisedPermissionsTableData, setAuthorisedPermissionsTableData] = useState([])
@@ -26,24 +36,46 @@ const AddEditCharacterForm = () => {
   )
 
   useEffect(() => {
-    fetchPermissions()
-    fetchAuthorisedPermissions()
+    fetchAuthorisedAndPermissions()
   }, [])
 
-  const fetchPermissions = () => {
-    setTimeout(() => {
-      setPermissionsTableData(Permissions)
-      setIsPermissionsTableLoading(false)
-    }, 1000)
+  const fetchAuthorisedAndPermissions = () => {
+    getRolePowerConfig({
+      param: id || '',
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime())
+    })
+      .then(({ data: { powerData, empowerData } }) => {
+        const permissions = dataformatPermissions(powerData)
+        const authorisedPermissions = dataformatAuthorisedPermissions(empowerData)
+
+        console.log(permissions, authorisedPermissions)
+
+        setPermissionsTableData(permissions)
+        setAuthorisedPermissionsTableData(authorisedPermissions)
+      })
+      .finally(() => {
+        setIsPermissionsTableLoading(false)
+        setIsAuthorisedPermissionsTableLoading(false)
+      })
   }
 
-  const fetchAuthorisedPermissions = () => {
-    setTimeout(() => {
-      console.log(AuthorisedPermissions)
-      setAuthorisedPermissionsTableData(AuthorisedPermissions)
-      setIsAuthorisedPermissionsTableLoading(false)
-    }, 1000)
-  }
+  const dataformatPermissions = dataFormRESTful =>
+    dataFormRESTful.map(it => ({
+      key: it.code,
+      value: it.name,
+      checked: it.checkState === 'CHECKED',
+      subs: it.children.length ? dataformatPermissions(it.children) : undefined
+    }))
+
+  const dataformatAuthorisedPermissions = dataFormRESTful =>
+    dataFormRESTful.map(it => ({
+      key: it.code,
+      value: it.name,
+      checked: it.checkState === 'CHECKED',
+      subs: it.children.length ? dataformatAuthorisedPermissions(it.children) : undefined
+    }))
 
   return (
     <FormContent>
@@ -71,12 +103,21 @@ const AddEditCharacterForm = () => {
           <Input placeholder="请输入角色名" />
         </Form.Item>
         <Form.Item name="desc" label="备注" style={{ width: '450px' }}>
-          <TextArea placeholder="备注" autoSize={{ minRows: 3, maxRows: 5 }} />
+          <TextArea
+            placeholder="备注"
+            autoSize={{
+              minRows: 3,
+              maxRows: 5
+            }}
+          />
         </Form.Item>
         <Form.Item
           name="permission"
           label="权限"
-          style={{ width: '450px', marginBottom: 0 }}
+          style={{
+            width: '450px',
+            marginBottom: 0
+          }}
           required
         >
           {/* <Checkbox
@@ -122,7 +163,10 @@ const AddEditCharacterForm = () => {
           required
           labelAlign="left"
           label="可授权角色权限"
-          style={{ width: '450px', marginBottom: 0 }}
+          style={{
+            width: '450px',
+            marginBottom: 0
+          }}
           labelCol={{ span: 7, offset: 0 }}
         >
           {/*  <Checkbox
@@ -164,7 +208,21 @@ const AddEditCharacterForm = () => {
           {() => (
             <SubmitCon>
               <Space>
-                <Button>取消</Button>
+                <Button
+                  onClick={() => {
+                    Modal.confirm({
+                      title: `确认离开？`,
+                      icon: <ExclamationCircleOutlined />,
+                      content: `是否确认放弃已编辑内容`,
+                      onOk() {
+                        console.log('OK')
+                        history.goBack()
+                      }
+                    })
+                  }}
+                >
+                  取消
+                </Button>
                 <Button
                   type="primary"
                   disabled={

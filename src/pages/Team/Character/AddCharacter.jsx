@@ -17,7 +17,9 @@ class AddCharacter extends React.Component {
     return (
       <div className={className} style={{ padding: '0 16 16', marginTop: -16 }}>
         <div className="addcharacter-container">
-          <div className="addcharacter-title">添加角色</div>
+          <div className="addcharacter-title">
+            {this.props.match.params.id ? '编辑' : '添加'}角色
+          </div>
           <div className="addcharacter-con">
             <AddEditCharacterForm></AddEditCharacterForm>
           </div>

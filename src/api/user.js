@@ -76,7 +76,7 @@ export function getRoleList(data) {
   })
 }
 
-// 所有角色
+// 启用角色
 export function enabledRoles(data) {
   return request({
     url: '/User/enabledRoles',
@@ -85,10 +85,19 @@ export function enabledRoles(data) {
   })
 }
 
-// 所有角色
+// 禁用角色
 export function disabledRoles(data) {
   return request({
     url: '/User/disabledRoles',
+    method: 'post',
+    data
+  })
+}
+
+// 获取角色权限配置表
+export function getRolePowerConfig(data) {
+  return request({
+    url: '/User/RolePowerConfig',
     method: 'post',
     data
   })
