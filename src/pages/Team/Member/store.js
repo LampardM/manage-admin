@@ -3,20 +3,17 @@
  * @Author: longzhang6
  * @Date: 2020-06-27 14:02:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 14:03:45
+ * @LastEditTime: 2020-06-28 21:28:16
  */
 import { action, observable } from 'mobx'
 
 class MemberStore {
   @observable
   initFilters = {
-    phone: '',
     contact: '',
-    orgName: '',
-    orgTypeCode: '',
-    maxSubmitTime: '',
-    minSubmitTime: '',
-    submitterName: ''
+    phone: '',
+    character: '',
+    department: ''
   }
 
   @observable

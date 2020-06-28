@@ -3,11 +3,12 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:04:10
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 15:46:43
+ * @LastEditTime: 2020-06-28 21:16:28
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Row, Col, Form, Button, Input, Space } from 'antd'
+import { Ext } from '@/utils'
 import useInterval from '@/hooks/useInterval'
 
 const VerifyCurAccountPhone = props => {
@@ -44,7 +45,7 @@ const VerifyCurAccountPhone = props => {
     <CurVerifyPhone>
       <Row style={{ marginBottom: '16px' }}>
         <Col>手机号码:</Col>
-        <Col>18356032765</Col>
+        <Col>{Ext.parseMobile('18356032765')}</Col>
       </Row>
       <Form form={form}>
         <Row>

@@ -3,13 +3,15 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-06 21:45:55
+ * @LastEditTime: 2020-06-28 21:27:04
  */
 import { observer } from 'mobx-react'
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 import { Table, Dropdown, Menu, Space } from 'antd'
+import { useStore } from '@/hooks/useStore'
 import { DownOutlined } from '@ant-design/icons'
+import { invitationRecord } from '@/api/member'
 
 //表头
 const columns = [
@@ -92,6 +94,7 @@ const invitedAction = record => {
 
 const MemberTable = props => {
   const { curselect } = props
+  const { userInfoStore } = useStore()
   const [data, setData] = useState([
     {
       key: '1',
@@ -115,7 +118,39 @@ const MemberTable = props => {
 
   useEffect(() => {
     console.log(curselect, 'curselect')
-    // TODO 更新列表
+    setIsTableLoading(true)
+    let _params = {
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+    if (curselect === 'invited') {
+      invitationRecord(_params)
+        .then(_result => {
+          console.log(_result)
+          setIsTableLoading(false)
+          setData(_result.data)
+        })
+        .catch(err => console.log(err))
+    } else {
+      setIsTableLoading(false)
+      setData([
+        {
+          key: '1',
+          memname: '胡彦斌',
+          phone: 18356032765,
+          character: 32,
+          department: '西湖区湖底公园1号'
+        },
+        {
+          key: '2',
+          memname: '胡彦祖',
+          phone: 18356032765,
+          character: 32,
+          department: '西湖区湖底公园1号'
+        }
+      ])
+    }
   }, [curselect])
 
   return (

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-06 23:24:44
+ * @LastEditTime: 2020-06-28 21:11:32
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col } from 'antd'
@@ -192,14 +192,38 @@ const AddEditMemberForm = () => {
         <Form.Item name="desc" label="备注">
           <TextArea placeholder="备注" autoSize={{ minRows: 3, maxRows: 5 }} />
         </Form.Item>
-        <Form.Item {...tailLayout}>
-          <HandleContainer>
-            <Space>
-              <Button>取消</Button>
-              <Button type="primary">确定</Button>
-              <Button type="primary">确定并继续添加</Button>
-            </Space>
-          </HandleContainer>
+        <Form.Item {...tailLayout} shouldUpdate>
+          {() => (
+            <HandleContainer>
+              <Space>
+                <Button>取消</Button>
+                <Button
+                  type="primary"
+                  disabled={
+                    !form.isFieldTouched('name') ||
+                    !form.isFieldTouched('phone') ||
+                    !form.isFieldTouched('character') ||
+                    !form.isFieldTouched('registerphone') ||
+                    form.getFieldsError().filter(({ errors }) => errors.length).length
+                  }
+                >
+                  确定
+                </Button>
+                <Button
+                  type="primary"
+                  disabled={
+                    !form.isFieldTouched('name') ||
+                    !form.isFieldTouched('phone') ||
+                    !form.isFieldTouched('character') ||
+                    !form.isFieldTouched('registerphone') ||
+                    form.getFieldsError().filter(({ errors }) => errors.length).length
+                  }
+                >
+                  确定并继续添加
+                </Button>
+              </Space>
+            </HandleContainer>
+          )}
         </Form.Item>
       </Form>
     </FormContent>
