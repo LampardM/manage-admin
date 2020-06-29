@@ -107,10 +107,6 @@ const Privilege = ({ className }) => {
         pagination={false}
         showAllChecked={true}
         loading={isTableLoading}
-        rowKey={(row, idx, self) => {
-          // console.log('rowKey', row)
-          return idx
-        }}
         onChange={onChange}
         columns={[
           {

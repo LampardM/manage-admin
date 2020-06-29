@@ -5,13 +5,13 @@
  * @Date 2020-04-21 21:05:16
  * @LastEditors jieq
  * @LastEditTime 2020-05-10 02:17:53
- * 
+ *
  * ```
  * interface ColumnsItem {
  *   title: string; //表头项显示内容
  *   dataIndex: string; //表头项索引key
  * }
- * 
+ *
  * interface DataSourceItem {
  *   key: string; //checkbox的value
  *   value: string; //checkbox显示内容
@@ -34,7 +34,7 @@
  *   [restProps: string]?: any;
  * }
  * ```
- * 
+ *
  */
 
 /** official */
@@ -609,7 +609,14 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
           全选
         </Checkbox>
       ) : null}
-      <Table columns={formatColumns} dataSource={dataSource} {...restProps} />
+      <Table
+        {...restProps}
+        columns={formatColumns}
+        dataSource={dataSource}
+        rowKey={row => {
+          return row[columns[columns.length - 1].dataIndex].join('-')
+        }}
+      />
     </>
   )
 }
