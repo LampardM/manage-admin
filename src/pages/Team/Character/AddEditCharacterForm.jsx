@@ -156,7 +156,7 @@ const AddEditCharacterForm = () => {
       timestamp: JSON.stringify(new Date().getTime())
     }).then(({ success }) => {
       if (+success === 1) {
-        message.success('创建角色成功！', 3, () => {
+        message.success('编辑角色成功！', 3, () => {
           history.push(`/team/character`)
         })
       }
@@ -244,6 +244,9 @@ const AddEditCharacterForm = () => {
             showAllChecked={true}
             nodeData={permissionsTableData}
             loading={isPermissionsTableLoading}
+            initStructure={tailCollection => {
+              setPermission(tailCollection)
+            }}
             onChange={(value, isChecked, tailCollection) => {
               setTouched(true)
               setPermission(tailCollection)
@@ -283,6 +286,9 @@ const AddEditCharacterForm = () => {
             showAllChecked={true}
             nodeData={authorisedPermissionsTableData}
             loading={isAuthorisedPermissionsTableLoading}
+            initStructure={tailCollection => {
+              setAuthorisedPermission(tailCollection)
+            }}
             onChange={(value, isChecked, tailCollection) => {
               setTouched(true)
               setAuthorisedPermission(tailCollection)

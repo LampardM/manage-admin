@@ -29,6 +29,7 @@
  *   @param {Array<string>} tailCollection 最后一列选中的勾选项的值的集合（即最下级子元素（最后一列）勾选项的值的集合）
  *   @param {Array<string>} allCollection 所有选中的勾选项的值的集合
  *   @param {Array<DataSourceItem, Array<DataSourceItem>>} nodeData 所有勾选项的值的集合
+ *   initStructure?: (tailCollection: Array<string>, allCollection: Array<string>, nodeData: Array<DataSourceItem, Array<DataSourceItem>>) => any,
  *   onChange?: (value: string, isChecked: boolean, tailCollection: Array<string>, allCollection: Array<string>, nodeData: Array<DataSourceItem, Array<DataSourceItem>>) => any,
  *   showAllChecked?: boolean;
  *   [restProps: string]?: any;
@@ -51,6 +52,7 @@ import { Ext } from '../../utils'
 const TableCheckBox /**: TableCheckBoxProps */ = ({
   columns = [],
   nodeData = [],
+  initStructure = () => {},
   onChange = () => {},
   showAllChecked = false,
   ...restProps
@@ -588,6 +590,11 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
     })
     recursiveQueryCheckedFromInital({ parentNode: null, nodeData: cloneNodeDataAftertraverse })
     setCloneNodeData(cloneNodeData)
+    initStructure(
+      getTailCheckedCollection(cloneNodeData, []),
+      getAllCheckedCollection(cloneNodeData, []),
+      cloneNodeData
+    )
   }, [nodeData])
 
   useEffect(() => {
