@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-30 23:58:09
+ * @LastEditTime: 2020-07-01 00:02:33
  */
 import React, { useState, useEffect } from 'react'
 import { Menu, Dropdown } from 'antd'
@@ -87,7 +87,7 @@ const SideDepartmentList = () => {
   )
 
   return (
-    <Dropdown overlay={menu} trigger={['click']} onClick={e => e.preventDefault()}>
+    <Dropdown overlay={menu} trigger={['hover']} onClick={e => e.preventDefault()}>
       <DepartmentCur>
         <Curpart>{getCurDepartName()}</Curpart>
         <DownOutlined />
