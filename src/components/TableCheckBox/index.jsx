@@ -141,7 +141,7 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @param {Array<DataSourceItem>} formatData 目标数组
    * @param {number} nodeIdx 索引
    * @param {Array<DataSourceItem>} nodeData 源素组
-   * @param {Array<number>} cutOffRow 源分组数组
+   * @param {Array<number>} cutOffRow 源分组数组recursiveQuery
    * @returns {Array<DataSourceItem>} formatData
    */
   const packageRecursive = (formatData, nodeIdx, nodeData, cutOffRow) => {
@@ -201,7 +201,9 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
       DataSourceItemArray = DataSourceItemOrArray.subs
     }
     if (layerIdx === 0) {
-      return DataSourceItemArray[arrIdx] && DataSourceItemArray[arrIdx].subs
+      return DataSourceItemArray[arrIdx] &&
+        DataSourceItemArray[arrIdx].subs &&
+        DataSourceItemArray[arrIdx].subs.length
         ? DataSourceItemArray[arrIdx]
         : DataSourceItemArray
     } else {
@@ -263,7 +265,9 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @return {number}
    */
   const nodeToRow = (nodeData, rowlen, cutOffRow) => {
-    const cutOff = nodeData.every(nd => !nd.subs || nd.subs.every(it => !it.subs))
+    const cutOff = nodeData.every(
+      nd => !nd.subs || !nd.subs.length || nd.subs.every(it => !it.subs || !it.subs.length)
+    )
 
     if (rowlen === undefined) {
       // 第一次进来
@@ -277,7 +281,7 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
       cutOffRow.push(rowlen)
     } else {
       for (let i = 0; i < nodeData.length; i++) {
-        if (nodeData[i].subs) {
+        if (nodeData[i].subs && nodeData[i].subs.length) {
           const res = nodeToRow(nodeData[i].subs, rowlen, cutOffRow)
           rowlen = res[0]
           cutOffRow = res[1]
