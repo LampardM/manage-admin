@@ -9,6 +9,7 @@ import React from 'react'
 import styled from 'styled-components'
 import AddEditCharacterForm from './AddEditCharacterForm'
 import { withRouter } from 'react-router-dom'
+
 @withRouter
 class AddCharacter extends React.Component {
   render() {
@@ -17,7 +18,7 @@ class AddCharacter extends React.Component {
     return (
       <div className={className} style={{ padding: '0 16 16', marginTop: -16 }}>
         <div className="addcharacter-container">
-          <div className="addcharacter-title">添加角色</div>
+          <div className="addcharacter-title">编辑角色</div>
           <div className="addcharacter-con">
             <AddEditCharacterForm />
           </div>

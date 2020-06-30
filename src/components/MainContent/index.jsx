@@ -11,7 +11,7 @@ import Breadcrumb from '../Breadcrumb'
 import PrivateRoute from '../PrivateRoute'
 import navMenus from '../../router.map'
 import { Ext, LoadableComponent } from '@/utils'
-import { withRouter, Switch, Redirect } from 'react-router-dom'
+import { withRouter, Switch, Redirect, useParams } from 'react-router-dom'
 
 //首页
 const Home = LoadableComponent(() => import('@/pages/Home'))
@@ -35,6 +35,7 @@ const AddTeamMember = LoadableComponent(() => import('@/pages/Team/Member/AddMem
 const EditTeamMember = LoadableComponent(() => import('@/pages/Team/Member/EditMember')) // 编辑成员
 const TeamCharacter = LoadableComponent(() => import('@/pages/Team/Character')) // 角色管理
 const AddCharacter = LoadableComponent(() => import('@/pages/Team/Character/AddCharacter')) // 添加角色
+const EditCharacter = LoadableComponent(() => import('@/pages/Team/Character/EditCharacter')) // 添加角色
 
 const TeamArchitecture = LoadableComponent(() => import('@/pages/Team/Architecture')) // 组织架构
 
@@ -124,8 +125,8 @@ const MainContent = ({ location }) => {
         <PrivateRoute path="/team/member/addmember" component={AddTeamMember} exact />
         <PrivateRoute path="/team/member/editmember" component={EditTeamMember} exact />
         <PrivateRoute path="/team/character" component={TeamCharacter} exact />
-        <PrivateRoute path="/team/character/addOrEdit" component={AddCharacter} exact />
-        <PrivateRoute path="/team/character/addOrEdit/:id/" component={AddCharacter} />
+        <PrivateRoute path="/team/character/add" component={AddCharacter} exact />
+        <PrivateRoute path="/team/character/edit/:id/" component={EditCharacter} />
         <PrivateRoute path="/team/architecture" component={TeamArchitecture} exact />
 
         <PrivateRoute path="/terminal/online" component={TerminalOnline} exact />

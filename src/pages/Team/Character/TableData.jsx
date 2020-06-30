@@ -20,7 +20,7 @@ import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 /** custom */
 import request from '@/utils/request'
 import { useStore } from '@/hooks/useStore'
-import { getRoleList, enabledRoles, disabledRoles } from '@/api'
+import { getRoleList, enabledRoles, disabledRoles, deleteRoles } from '@/api'
 
 let orgCodes = []
 const PAGE_SIZE = 10
@@ -99,7 +99,7 @@ const TableData = observer(({ className, filters }) => {
   const handleTableChange = () => {}
 
   const addCharacter = () => {
-    history.push(`/team/character/addOrEdit`)
+    history.push(`/team/character/add`)
   }
 
   const doEnable = () => {
@@ -151,7 +151,17 @@ const TableData = observer(({ className, filters }) => {
       title: '确认删除?',
       icon: <ExclamationCircleOutlined />,
       content: '是否确认删除所选角色',
-      onOk() {},
+      onOk() {
+        deleteRoles({
+          param: orgCodes,
+          token: userInfoStore.token,
+          version: userInfoStore.version,
+          timestamp: JSON.stringify(new Date().getTime())
+        }).then(() => {
+          message.success('操作成功')
+          fetch()
+        })
+      },
       onCancel() {
         console.log('Cancel')
       }
@@ -159,7 +169,7 @@ const TableData = observer(({ className, filters }) => {
   }
 
   const doEdit = item => {
-    history.push(`/team/character/addOrEdit/${item.id}`)
+    history.push(`/team/character/edit/${item.id}`)
   }
 
   const optArea = () => (

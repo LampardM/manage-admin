@@ -12,32 +12,89 @@ import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 
 /** vedor **/
-import { Button, Form, Input, Space, Checkbox, Modal } from 'antd'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { Button, Form, Input, Space, Modal, Tooltip, message } from 'antd'
+import { ExclamationCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 
 /** custom **/
 import TableCheckBox from '@/components/TableCheckBox'
-import { getRolePowerConfig } from '@/api'
+import { createRole, roleDetail, updateRole, getRolePowerConfig } from '@/api'
 
 const { TextArea } = Input
+const columns = [
+  {
+    title: '一级菜单',
+    dataIndex: 'first'
+  },
+  {
+    title: '二级菜单',
+    dataIndex: 'second'
+  },
+  {
+    title: '权限',
+    dataIndex: 'privilege'
+  }
+]
 
 const AddEditCharacterForm = () => {
   const { id } = useParams()
   const [form] = Form.useForm()
   const history = useHistory()
   const { userInfoStore } = useStore()
-  const [tableData, setTableData] = useState([])
+  const [name, setName] = useState('')
+  const [desc, setDesc] = useState('')
+  const [touched, setTouched] = useState(false)
   const [permissionsTableData, setPermissionsTableData] = useState([])
   const [authorisedPermissionsTableData, setAuthorisedPermissionsTableData] = useState([])
-  const [permission, setPermission] = useState(false)
+  const [permission, setPermission] = useState([])
+  const [authorisedPermission, setAuthorisedPermission] = useState([])
   const [isPermissionsTableLoading, setIsPermissionsTableLoading] = useState(true)
   const [isAuthorisedPermissionsTableLoading, setIsAuthorisedPermissionsTableLoading] = useState(
     true
   )
 
   useEffect(() => {
-    fetchAuthorisedAndPermissions()
+    if (id) {
+      getRoleDetail()
+    } else {
+      fetchAuthorisedAndPermissions()
+    }
   }, [])
+
+  useEffect(() => {
+    form.resetFields(['name', 'desc'])
+  }, [name, desc])
+
+  const getRoleDetail = () => {
+    roleDetail({
+      param: id || '',
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime())
+    })
+      .then(
+        ({
+          data: {
+            roleName,
+            memo,
+            power: { powerData, empowerData }
+          }
+        }) => {
+          const permissions = dataformatPermissions(powerData)
+          const authorisedPermissions = dataformatAuthorisedPermissions(empowerData)
+
+          console.log(permissions, authorisedPermissions)
+
+          setName(roleName)
+          setDesc(memo)
+          setPermissionsTableData(permissions)
+          setAuthorisedPermissionsTableData(authorisedPermissions)
+        }
+      )
+      .finally(() => {
+        setIsPermissionsTableLoading(false)
+        setIsAuthorisedPermissionsTableLoading(false)
+      })
+  }
 
   const fetchAuthorisedAndPermissions = () => {
     getRolePowerConfig({
@@ -77,17 +134,73 @@ const AddEditCharacterForm = () => {
       subs: it.children.length ? dataformatAuthorisedPermissions(it.children) : undefined
     }))
 
+  const onFinish = values => {
+    if (id) {
+      doUpdateRole(values)
+    } else {
+      doCreateRole(values)
+    }
+  }
+
+  const doUpdateRole = values => {
+    updateRole({
+      param: {
+        empowerCodes: authorisedPermission,
+        memo: values.desc || '',
+        powerCodes: permission,
+        roleCode: id,
+        roleName: values.name
+      },
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime())
+    }).then(({ success }) => {
+      if (+success === 1) {
+        message.success('创建角色成功！', 3, () => {
+          history.push(`/team/character`)
+        })
+      }
+    })
+  }
+
+  const doCreateRole = values => {
+    createRole({
+      param: {
+        empowerCodes: authorisedPermission,
+        memo: values.desc || '',
+        powerCodes: permission,
+        roleCode: '',
+        roleName: values.name
+      },
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime())
+    }).then(({ success }) => {
+      if (+success === 1) {
+        message.success('创建角色成功！', 3, () => {
+          history.push(`/team/character`)
+        })
+      }
+    })
+  }
+
   return (
     <FormContent>
       <Form
         form={form}
+        onFinish={onFinish}
         labelCol={{
           span: 3
+        }}
+        initialValues={{
+          name,
+          desc
         }}
       >
         <Form.Item
           name="name"
           label="角色"
+          shouldUpdate
           style={{ width: '450px' }}
           rules={[
             {
@@ -102,7 +215,7 @@ const AddEditCharacterForm = () => {
         >
           <Input placeholder="请输入角色名" />
         </Form.Item>
-        <Form.Item name="desc" label="备注" style={{ width: '450px' }}>
+        <Form.Item name="desc" label="备注" shouldUpdate style={{ width: '450px' }}>
           <TextArea
             placeholder="备注"
             autoSize={{
@@ -112,95 +225,68 @@ const AddEditCharacterForm = () => {
           />
         </Form.Item>
         <Form.Item
-          name="permission"
           label="权限"
+          layout="vertical"
+          name="permission"
+          labelCol={{
+            span: 24
+          }}
           style={{
-            width: '450px',
-            marginBottom: 0
+            width: '100%'
           }}
           required
         >
-          {/* <Checkbox
-            checked={permission}
-            onChange={changePermission}
-            style={{
-              lineHeight: '32px'
-            }}
-          >
-            全部
-          </Checkbox> */}
-        </Form.Item>
-        <Form.Item style={{ width: '100%' }} required>
           <TableCheckBox
-            bordered
             className="table"
+            bordered
+            columns={columns}
             pagination={false}
             showAllChecked={true}
-            loading={isPermissionsTableLoading}
-            rowKey={(row, idx, self) => {
-              // console.log('rowKey', row)
-              return idx
-            }}
-            columns={[
-              {
-                title: '一级菜单',
-                dataIndex: 'first'
-              },
-              {
-                title: '二级菜单',
-                dataIndex: 'second'
-              },
-              {
-                title: '权限',
-                dataIndex: 'privilege'
-              }
-            ]}
             nodeData={permissionsTableData}
+            loading={isPermissionsTableLoading}
+            onChange={(value, isChecked, tailCollection) => {
+              setTouched(true)
+              setPermission(tailCollection)
+            }}
           />
         </Form.Item>
 
         <Form.Item
           required
-          labelAlign="left"
-          label="可授权角色权限"
-          style={{
-            width: '450px',
-            marginBottom: 0
+          label={
+            <>
+              <div>可授权角色权限</div>
+              <div style={{ margin: '0 6px 0 6px' }}>
+                <Tooltip
+                  color="rgba(89, 89, 89, 1)"
+                  title="用于关联该角色的用户在创建角色时可授权其创建的角色能授权所创建角色的范围"
+                >
+                  <QuestionCircleOutlined style={{ fontSize: '12px' }} />
+                </Tooltip>
+              </div>
+            </>
+          }
+          layout="vertical"
+          name="authorisedPermission"
+          labelCol={{
+            span: 24
           }}
-          labelCol={{ span: 7, offset: 0 }}
+          style={{
+            width: '100%'
+          }}
         >
-          {/*  <Checkbox
-            checked={authorisedPermission}
-            onChange={changeAuthorisedPermission}
-            style={{
-              lineHeight: '32px'
-            }}
-          >
-            全部
-          </Checkbox> */}
-        </Form.Item>
-        <Form.Item name="permission" style={{ width: '100%' }} required>
           <TableCheckBox
-            bordered
             className="table"
+            bordered
+            columns={columns}
             pagination={false}
             showAllChecked={true}
-            loading={isAuthorisedPermissionsTableLoading}
-            rowKey={(row, idx, self) => {
-              // console.log('rowKey', row)
-              return idx
-            }}
-            columns={[
-              {
-                title: '一级菜单',
-                dataIndex: 'first'
-              },
-              {
-                title: '二级菜单',
-                dataIndex: 'second'
-              }
-            ]}
             nodeData={authorisedPermissionsTableData}
+            loading={isAuthorisedPermissionsTableLoading}
+            onChange={(value, isChecked, tailCollection) => {
+              setTouched(true)
+              setAuthorisedPermission(tailCollection)
+            }}
           />
         </Form.Item>
 
@@ -225,10 +311,14 @@ const AddEditCharacterForm = () => {
                 </Button>
                 <Button
                   type="primary"
+                  htmlType="submit"
                   disabled={
-                    !form.isFieldTouched('name') ||
-                    !permission ||
-                    form.getFieldsError().filter(({ errors }) => errors.length).length
+                    (!id &&
+                      (!form.isFieldTouched('name') ||
+                        !permission.length ||
+                        !authorisedPermission.length ||
+                        form.getFieldsError().filter(({ errors }) => errors.length).length)) ||
+                    (id && !touched && !form.isFieldTouched('name') && !form.isFieldTouched('desc'))
                   }
                 >
                   确定
@@ -251,6 +341,6 @@ const SubmitCon = styled.div`
 
 export default styled(AddEditCharacterForm)`
   .table {
-    /* width: 100%; */
+    width: 100%;
   }
 `

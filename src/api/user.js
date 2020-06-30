@@ -102,3 +102,39 @@ export function getRolePowerConfig(data) {
     data
   })
 }
+
+// 创建新角色
+export function createRole(data) {
+  return request({
+    url: '/User/createRole',
+    method: 'post',
+    data
+  })
+}
+
+// 更新角色信息
+export function updateRole(data) {
+  return request({
+    url: '/User/updateRole',
+    method: 'post',
+    data
+  })
+}
+
+// 删除角色
+export function deleteRoles(data) {
+  return request({
+    url: '/User/deleteRoles',
+    method: 'post',
+    data
+  })
+}
+
+//角色详情
+export function roleDetail(data) {
+  return request({
+    url: '/User/RoleDetail',
+    method: 'post',
+    data
+  })
+}
