@@ -107,6 +107,9 @@ const Privilege = ({ className }) => {
         pagination={false}
         showAllChecked={true}
         loading={isTableLoading}
+        initStructure={tailCollection => {
+          setCheckedList(tailCollection)
+        }}
         onChange={onChange}
         columns={[
           {
