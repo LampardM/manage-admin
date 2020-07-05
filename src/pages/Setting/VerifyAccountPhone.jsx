@@ -3,22 +3,51 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:04:10
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-28 21:16:28
+ * @LastEditTime: 2020-07-05 14:04:15
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Row, Col, Form, Button, Input, Space } from 'antd'
+import { Row, Col, Form, Button, Input, Space, message } from 'antd'
+import { useStore } from '@/hooks/useStore'
+import { getDepartmentPhone, getTransPhoneCode } from '@/api/setting'
 import { Ext } from '@/utils'
 import useInterval from '@/hooks/useInterval'
 
 const VerifyCurAccountPhone = props => {
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
+  const { userInfoStore } = useStore()
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
+  const [curPhone, setCurPhone] = useState('')
+
+  const captchaCallback = res => {
+    console.log(res, 'res')
+    let _params = {
+      param: {
+        phone: curPhone,
+        rand: res.randstr,
+        ticket: res.ticket
+      },
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+    getTransPhoneCode(_params)
+      .then(_result => {
+        message.success('验证码发送成功！')
+        console.log(_result)
+        setIsSendVerify(true)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  const registerCaptcha = new window.TencentCaptcha(userInfoStore.appId, captchaCallback)
 
   const verifyCurPhone = () => {
-    setIsSendVerify(true)
+    registerCaptcha.show()
   }
 
   useInterval(
@@ -28,6 +57,10 @@ const VerifyCurAccountPhone = props => {
     1000,
     isSendVerify
   )
+
+  useEffect(() => {
+    getCurDepartPhone()
+  }, [])
 
   useEffect(() => {
     if (countDown === 0) {
@@ -41,11 +74,25 @@ const VerifyCurAccountPhone = props => {
     props.nextVerifyNewAccount()
   }
 
+  const getCurDepartPhone = () => {
+    let _params = {
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+
+    getDepartmentPhone(_params)
+      .then(_result => {
+        setCurPhone(_result.data)
+      })
+      .catch(err => console.log(err))
+  }
+
   return (
     <CurVerifyPhone>
       <Row style={{ marginBottom: '16px' }}>
         <Col>手机号码:</Col>
-        <Col>{Ext.parseMobile('18356032765')}</Col>
+        <Col>{Ext.parseMobile(curPhone)}</Col>
       </Row>
       <Form form={form}>
         <Row>

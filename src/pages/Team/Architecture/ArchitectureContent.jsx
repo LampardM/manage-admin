@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-28 21:37:16
+ * @LastEditTime: 2020-07-05 13:50:36
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -57,6 +57,15 @@ const ArchitectureContent = () => {
     })
   }
 
+  const countDepartLevel = (arr, level = 0) => {
+    arr.forEach(_item => {
+      _item.level = level
+      if (_item.children) {
+        countDepartLevel(_item.children, level + 1)
+      }
+    })
+  }
+
   const getCurDepartmentList = () => {
     setIsTableLoading(true)
     let _params = {
@@ -76,6 +85,8 @@ const ArchitectureContent = () => {
         setIsTableLoading(false)
         console.log(_result)
         deleteUselessChildren(_result.data)
+        var a = countDepartLevel(_result.data)
+        console.log(_result.data, 'data')
         setRecursionResult(_result.data)
       })
       .catch(err => console.log(err))
@@ -283,7 +294,8 @@ const ArchitectureContent = () => {
             render={(text, record) => (
               <span>
                 <a style={{ marginRight: 16 }} onClick={() => addChildDepartment(record)}>
-                  添加子部门 {record.lastName}
+                  添加子部门
+                  {record.lastName}
                 </a>
                 <a style={{ marginRight: 16 }} onClick={() => editCurDepartment(record)}>
                   编辑 {record.lastName}
