@@ -3,11 +3,11 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-01 00:02:33
+ * @LastEditTime: 2020-07-01 23:12:05
  */
 import React, { useState, useEffect } from 'react'
 import { Menu, Dropdown } from 'antd'
-import { DownOutlined } from '@ant-design/icons'
+import { DownOutlined, StopOutlined } from '@ant-design/icons'
 import { useSessionStorage } from 'react-use'
 import { useStore } from '@/hooks/useStore'
 import { switchDepartment } from '@/api/department'
@@ -66,6 +66,7 @@ const SideDepartmentList = () => {
         userOrganizes.map((organization, idx) => (
           <Menu.Item
             key={organization.code}
+            title={organization.name}
             style={{
               fontSize: '18px',
               fontWeight: 'bold',
@@ -89,7 +90,8 @@ const SideDepartmentList = () => {
   return (
     <Dropdown overlay={menu} trigger={['hover']} onClick={e => e.preventDefault()}>
       <DepartmentCur>
-        <Curpart>{getCurDepartName()}</Curpart>
+        <Curpart title={getCurDepartName()}>{getCurDepartName()}</Curpart>
+        {/* <StopOutlined /> */}
         <DownOutlined />
       </DepartmentCur>
     </Dropdown>
@@ -110,9 +112,9 @@ const DepartmentCur = styled.div`
 `
 
 const Curpart = styled.div`
-  width: 150px;
-  max-width: 150px;
-  min-width: 150px;
+  width: 110px;
+  max-width: 110px;
+  min-width: 110px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
