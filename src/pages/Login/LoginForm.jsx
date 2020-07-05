@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 13:39:53
+ * @LastEditTime: 2020-07-05 23:03:42
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -24,6 +24,7 @@ const LoginForm = props => {
   const [loginType, setLoginType] = useState('password')
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
+  const [disLogin, setDisLogin] = useState(false)
   const [userOrganizes, setUserOrganizes] = useSessionStorage('user-organizes', []) // 防止页面刷新左侧团队列表被重置
   const history = useHistory()
 
@@ -57,6 +58,8 @@ const LoginForm = props => {
       LoginByPassword(_loginByPassParam)
         .then(_result => {
           console.log(_result)
+          setDisLogin(false)
+
           setUserOrganizes(_result.data.organizes)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected
@@ -86,6 +89,7 @@ const LoginForm = props => {
         })
         .catch(err => {
           console.log(err)
+          setDisLogin(false)
         })
     } else {
       // 获取手机验证码
@@ -98,10 +102,12 @@ const LoginForm = props => {
       loginPhoneVerify(_params)
         .then(_result => {
           message.success('验证码发送成功！')
+          setDisLogin(false)
           console.log(_result)
         })
         .catch(err => {
           console.log(err, 'err')
+          setDisLogin(false)
         })
       setIsSendVerify(true)
     }
@@ -135,6 +141,7 @@ const LoginForm = props => {
   }, [loginType])
 
   const onFinish = () => {
+    setDisLogin(true)
     isLogining = true
     if (loginType === 'password') {
       verifyPhone()
@@ -149,6 +156,7 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
+          setDisLogin(false)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected
           })
@@ -177,6 +185,7 @@ const LoginForm = props => {
         })
         .catch(err => {
           console.log(err)
+          setDisLogin(false)
         })
     }
   }
@@ -310,14 +319,16 @@ const LoginForm = props => {
                   loginType === 'password'
                     ? !form.isFieldTouched('phone') ||
                       !form.isFieldTouched('password') ||
-                      form.getFieldsError().filter(({ errors }) => errors.length).length
+                      form.getFieldsError().filter(({ errors }) => errors.length).length ||
+                      disLogin
                     : !form.isFieldTouched('phone') ||
                       !form.isFieldTouched('Verification') ||
-                      form.getFieldsError().filter(({ errors }) => errors.length).length
+                      form.getFieldsError().filter(({ errors }) => errors.length).length ||
+                      disLogin
                 }
                 className="register-button"
               >
-                登录
+                登录{disLogin}
               </Button>
             )}
           </Form.Item>

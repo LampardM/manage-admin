@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-01 23:12:05
+ * @LastEditTime: 2020-07-05 22:54:46
  */
 import React, { useState, useEffect } from 'react'
 import { Menu, Dropdown } from 'antd'
@@ -44,8 +44,13 @@ const SideDepartmentList = () => {
   }
 
   const getCurDepartName = () => {
-    let _result = userOrganizes.find(depart => depart.code === getCurDepart())
-    return _result.name
+    let _result
+    if (userOrganizes) {
+      _result = userOrganizes.find(depart => depart.code === getCurDepart())
+      return _result.name
+    } else {
+      history.replace('/login')
+    }
   }
 
   const menu = (
