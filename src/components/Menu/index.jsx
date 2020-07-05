@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-13 22:33:51
+ * @LastEditTime: 2020-07-05 15:54:37
  */
 /** official */
 import React from 'react'
@@ -26,6 +26,12 @@ class _Menu extends React.Component {
   componentDidMount() {
     // 防止页面刷新侧边栏又初始化了
     let pathname = this.props.location.pathname
+
+    if (pathname.includes('/team/character/edit') && pathname !== '/team/character/edit') {
+      pathname = pathname.split('/')
+      pathname.pop()
+      pathname = pathname.join('/')
+    }
 
     if (blackList.includes(pathname)) {
       const tmp = pathname.split('/')
@@ -57,6 +63,12 @@ class _Menu extends React.Component {
   componentWillReceiveProps(nextProps) {
     // 当点击面包屑导航时，侧边栏要同步响应
     let pathname = nextProps.location.pathname
+
+    if (pathname.includes('/team/character/edit') && pathname !== '/team/character/edit') {
+      pathname = pathname.split('/')
+      pathname.pop()
+      pathname = pathname.join('/')
+    }
 
     if (blackList.includes(pathname)) {
       const tmp = pathname.split('/')

@@ -3,11 +3,14 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-28 21:11:32
+ * @LastEditTime: 2020-07-05 16:18:26
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col } from 'antd'
+import { useStore } from '@/hooks/useStore'
 import styled from 'styled-components'
+import { getRoleList } from '@/api/user'
+import { createDepartment, getCurDepartment } from '@/api/department'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 
 const { Option } = Select
@@ -15,12 +18,18 @@ const { TextArea } = Input
 
 const AddEditMemberForm = () => {
   const [form] = Form.useForm()
+  const { userInfoStore } = useStore()
 
   const tailLayout = {
     wrapperCol: {
       offset: 5
     }
   }
+
+  useEffect(() => {
+    getCurRoleList()
+    getCurDepartmentList()
+  }, [])
 
   const treeData = [
     {
@@ -46,6 +55,67 @@ const AddEditMemberForm = () => {
   const handleCharacterChange = () => {}
 
   const changeNotice = () => {}
+
+  const deleteUselessChildren = arr => {
+    arr.forEach(_item => {
+      if (_item.children && _item.children.length === 0) {
+        delete _item.children
+      } else {
+        deleteUselessChildren(_item.children)
+      }
+    })
+  }
+
+  const countDepartLevel = (arr, level = 0) => {
+    arr.forEach(_item => {
+      _item.level = level
+      if (_item.children) {
+        countDepartLevel(_item.children, level + 1)
+      }
+    })
+  }
+
+  const getCurDepartmentList = () => {
+    let _params = {
+      param: {
+        baseDepartmentCode: '',
+        buildChild: false,
+        excludeCode: [],
+        totalNodeLevel: 6
+      },
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+
+    getCurDepartment(_params)
+      .then(_result => {
+        console.log(_result)
+        deleteUselessChildren(_result.data)
+        var a = countDepartLevel(_result.data)
+        console.log(_result.data, 'data')
+      })
+      .catch(err => console.log(err))
+  }
+
+  const getCurRoleList = () => {
+    let _params = {
+      // pageSize: 0,
+      // pageIndex: 0,
+      param: {
+        roleName: '',
+        state: 'ENABLED'
+      },
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+    getRoleList(_params)
+      .then(_result => {
+        console.log(_result)
+      })
+      .catch(err => console.log(err))
+  }
 
   return (
     <FormContent>
