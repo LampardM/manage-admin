@@ -3,13 +3,13 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:04:10
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-05 14:04:15
+ * @LastEditTime: 2020-07-07 22:26:26
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Row, Col, Form, Button, Input, Space, message } from 'antd'
 import { useStore } from '@/hooks/useStore'
-import { getDepartmentPhone, getTransPhoneCode } from '@/api/setting'
+import { getDepartmentPhone, getTransPhoneCode, submitTransDepart } from '@/api/setting'
 import { Ext } from '@/utils'
 import useInterval from '@/hooks/useInterval'
 
@@ -71,7 +71,22 @@ const VerifyCurAccountPhone = props => {
   }, [countDown])
 
   const nextVerifyNewAccount = () => {
-    props.nextVerifyNewAccount()
+    let _params = {
+      param: {
+        phone: curPhone,
+        sms: form.getFieldValue('verify')
+      },
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+    submitTransDepart(_params)
+      .then(_result => {
+        props.nextVerifyNewAccount()
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   const getCurDepartPhone = () => {

@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-24 17:51:38
+ * @LastEditTime: 2020-07-07 22:14:06
  */
 import React from 'react'
 import Menu from '../Menu/index'
@@ -25,7 +25,7 @@ class SiderNav extends React.Component {
     return (
       <div className={className}>
         <div className="nav-container">
-          <div style={styles.logo}></div>
+          {/* <div style={styles.logo}></div> */}
           <SideDepartmentList />
           <Menu
             menus={

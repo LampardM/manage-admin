@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-05 16:18:26
+ * @LastEditTime: 2020-07-07 22:52:23
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col } from 'antd'
@@ -19,6 +19,8 @@ const { TextArea } = Input
 const AddEditMemberForm = () => {
   const [form] = Form.useForm()
   const { userInfoStore } = useStore()
+  const [characterList, setCharacterList] = useState([])
+  const [curCharacter, setCurCharacter] = useState([])
 
   const tailLayout = {
     wrapperCol: {
@@ -52,7 +54,9 @@ const AddEditMemberForm = () => {
     }
   ]
 
-  const handleCharacterChange = () => {}
+  const handleCharacterChange = value => {
+    setCurCharacter(value)
+  }
 
   const changeNotice = () => {}
 
@@ -93,18 +97,20 @@ const AddEditMemberForm = () => {
         console.log(_result)
         deleteUselessChildren(_result.data)
         var a = countDepartLevel(_result.data)
-        console.log(_result.data, 'data')
+        console.log(_result.data, 'department')
       })
       .catch(err => console.log(err))
   }
 
   const getCurRoleList = () => {
     let _params = {
-      // pageSize: 0,
-      // pageIndex: 0,
       param: {
-        roleName: '',
-        state: 'ENABLED'
+        pageSize: 100,
+        pageIndex: 0,
+        param: {
+          roleName: '',
+          state: 'ENABLED'
+        }
       },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
@@ -112,7 +118,7 @@ const AddEditMemberForm = () => {
     }
     getRoleList(_params)
       .then(_result => {
-        console.log(_result)
+        setCharacterList(_result.data.rows)
       })
       .catch(err => console.log(err))
   }
@@ -125,8 +131,7 @@ const AddEditMemberForm = () => {
           span: 5
         }}
         initialValues={{
-          prefix: '86',
-          character: ['china']
+          prefix: '86'
         }}
       >
         <Form.Item
@@ -174,26 +179,12 @@ const AddEditMemberForm = () => {
           <Select
             mode="multiple"
             style={{ width: '100%' }}
-            placeholder="select one country"
+            placeholder="请选择角色"
             onChange={handleCharacterChange}
-            optionLabelProp="label"
           >
-            <Option value="china" label="China">
-              <div className="demo-option-label-item">
-                <span role="img" aria-label="China">
-                  🇨🇳
-                </span>
-                China (中国)
-              </div>
-            </Option>
-            <Option value="usa" label="USA">
-              <div className="demo-option-label-item">
-                <span role="img" aria-label="USA">
-                  🇺🇸
-                </span>
-                USA (美国)
-              </div>
-            </Option>
+            {characterList.map(d => (
+              <Option key={d.roleCode}>{d.roleName}</Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-05 22:54:46
+ * @LastEditTime: 2020-07-07 22:53:00
  */
 import React, { useState, useEffect } from 'react'
 import { Menu, Dropdown } from 'antd'
@@ -77,10 +77,10 @@ const SideDepartmentList = () => {
               fontWeight: 'bold',
               paddingLeft: '16px',
               paddingBottom: '12px',
-              backgroundColor: '#001529',
-              width: '200px',
-              maxWidth: '200px',
-              minWidth: '200px',
+              backgroundColor: 'rgb(46, 85, 130)',
+              width: '260px',
+              maxWidth: '260px',
+              minWidth: '260px',
               overflow: 'hidden',
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis'

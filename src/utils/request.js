@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 15:07:54
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 18:29:17
+ * @LastEditTime: 2020-07-06 23:30:27
  */
 import axios from 'axios'
 import { message } from 'antd'
@@ -11,8 +11,11 @@ import { message } from 'antd'
 const noerrMsgWhitelist = ['/Organize/DeleteDepartment']
 
 const service = axios.create({
-  baseURL: process.env.NODE_ENV === 'development' ? process.env.REACT_APP_BASE_API : '',
-  withCredentials: true, // send cookies when cross-domain requests
+  baseURL:
+    process.env.NODE_ENV === 'development'
+      ? process.env.REACT_APP_BASE_API
+      : 'https://www.liehuo360.com:360',
+  // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
 // request interceptor
