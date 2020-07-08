@@ -3,13 +3,14 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-07 22:52:23
+ * @LastEditTime: 2020-07-08 22:23:14
  */
 import React, { useState, useEffect } from 'react'
-import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col } from 'antd'
+import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col, message } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import styled from 'styled-components'
 import { getRoleList } from '@/api/user'
+import { inviteMember } from '@/api/member'
 import { createDepartment, getCurDepartment } from '@/api/department'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 
@@ -21,6 +22,8 @@ const AddEditMemberForm = () => {
   const { userInfoStore } = useStore()
   const [characterList, setCharacterList] = useState([])
   const [curCharacter, setCurCharacter] = useState([])
+  const [department, setDepartment] = useState([])
+  const [notice, setNotice] = useState(false)
 
   const tailLayout = {
     wrapperCol: {
@@ -33,32 +36,9 @@ const AddEditMemberForm = () => {
     getCurDepartmentList()
   }, [])
 
-  const treeData = [
-    {
-      title: 'Node1',
-      value: '0-0',
-      children: [
-        {
-          title: 'Child Node1',
-          value: '0-0-1'
-        },
-        {
-          title: 'Child Node2',
-          value: '0-0-2'
-        }
-      ]
-    },
-    {
-      title: 'Node2',
-      value: '0-1'
-    }
-  ]
-
   const handleCharacterChange = value => {
     setCurCharacter(value)
   }
-
-  const changeNotice = () => {}
 
   const deleteUselessChildren = arr => {
     arr.forEach(_item => {
@@ -79,6 +59,17 @@ const AddEditMemberForm = () => {
     })
   }
 
+  const changeFetchDataProp = arr => {
+    arr.forEach(_item => {
+      _item.value = _item.departmentCode
+      _item.title = _item.departmentName
+
+      if (_item.children && _item.children.length > 0) {
+        changeFetchDataProp(_item.children)
+      }
+    })
+  }
+
   const getCurDepartmentList = () => {
     let _params = {
       param: {
@@ -94,9 +85,10 @@ const AddEditMemberForm = () => {
 
     getCurDepartment(_params)
       .then(_result => {
-        console.log(_result)
         deleteUselessChildren(_result.data)
-        var a = countDepartLevel(_result.data)
+        countDepartLevel(_result.data)
+        changeFetchDataProp(_result.data)
+        setDepartment(_result.data)
         console.log(_result.data, 'department')
       })
       .catch(err => console.log(err))
@@ -123,10 +115,40 @@ const AddEditMemberForm = () => {
       .catch(err => console.log(err))
   }
 
+  const selectCurdepartment = value => {}
+
+  const onChange = value => {
+    setNotice(value.target.checked)
+  }
+
+  const onFinish = () => {
+    let formValue = form.getFieldsValue(),
+      _params = {
+        param: {
+          departmentCode: formValue.department,
+          inviteType: notice ? 'BOTH' : 'SMS',
+          memberName: formValue.name,
+          memo: formValue.desc,
+          phone: formValue.phone,
+          registPhone: formValue.registerphone,
+          roleCode: formValue.character
+        },
+        timestamp: JSON.stringify(new Date().getTime()),
+        token: userInfoStore.token,
+        version: userInfoStore.version
+      }
+    inviteMember(_params)
+      .then(_result => {
+        message.success('添加成功！')
+      })
+      .catch(err => {})
+  }
+
   return (
     <FormContent>
       <Form
         form={form}
+        onFinish={onFinish}
         labelCol={{
           span: 5
         }}
@@ -200,7 +222,8 @@ const AddEditMemberForm = () => {
           <TreeSelect
             style={{ width: '100%' }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            treeData={treeData}
+            treeData={department}
+            onSelect={selectCurdepartment}
             allowClear
             placeholder="请选择所属部门"
             treeDefaultExpandAll
@@ -224,6 +247,7 @@ const AddEditMemberForm = () => {
             <Row>
               <Col>
                 <Checkbox
+                  onChange={onChange}
                   style={{
                     lineHeight: '32px'
                   }}
@@ -260,6 +284,7 @@ const AddEditMemberForm = () => {
                 <Button>取消</Button>
                 <Button
                   type="primary"
+                  htmlType="submit"
                   disabled={
                     !form.isFieldTouched('name') ||
                     !form.isFieldTouched('phone') ||
