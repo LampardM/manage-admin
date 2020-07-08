@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:04:10
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-07 22:26:26
+ * @LastEditTime: 2020-07-08 22:57:58
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -11,18 +11,20 @@ import { Row, Col, Form, Button, Input, Space, message } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import { getDepartmentPhone, getTransPhoneCode, submitTransDepart } from '@/api/setting'
 import { Ext } from '@/utils'
+import { observer } from 'mobx-react'
 import useInterval from '@/hooks/useInterval'
 
 const VerifyCurAccountPhone = props => {
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
-  const { userInfoStore } = useStore()
+  const { userInfoStore, SettingStore } = useStore()
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
   const [curPhone, setCurPhone] = useState('')
 
   const captchaCallback = res => {
     console.log(res, 'res')
+    if (!res.randstr || !res.ticket) return
     let _params = {
       param: {
         phone: curPhone,
@@ -82,6 +84,7 @@ const VerifyCurAccountPhone = props => {
     }
     submitTransDepart(_params)
       .then(_result => {
+        SettingStore.setTranscode(_result.data)
         props.nextVerifyNewAccount()
       })
       .catch(err => {
@@ -168,4 +171,4 @@ const CurVerifyPhone = styled.div`
   width: 450px;
 `
 
-export default VerifyCurAccountPhone
+export default observer(VerifyCurAccountPhone)

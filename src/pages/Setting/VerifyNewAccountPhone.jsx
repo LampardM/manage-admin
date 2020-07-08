@@ -3,30 +3,32 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:15:30
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-05 22:44:57
+ * @LastEditTime: 2020-07-08 23:19:33
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Row, Col, Form, Button, Input, Space, message } from 'antd'
 import { useStore } from '@/hooks/useStore'
-import { getReceivePhoneCode } from '@/api/setting'
+import { getReceivePhoneCode, lastSubmitTransDepart } from '@/api/setting'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
+import { observer } from 'mobx-react'
 import useInterval from '@/hooks/useInterval'
 
 const VerifyNewAccountPhone = () => {
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
-  const { userInfoStore } = useStore()
+  const { userInfoStore, SettingStore } = useStore()
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
 
   const captchaCallback = res => {
-    console.log(res, 'res')
+    if (!res.randstr || !res.ticket) return
     let _params = {
       param: {
         phone: form.getFieldValue('phone'),
         rand: res.randstr,
-        ticket: res.ticket
+        ticket: res.ticket,
+        transCode: SettingStore.transCode
       },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
@@ -65,10 +67,30 @@ const VerifyNewAccountPhone = () => {
     forceUpdate({})
   }, [countDown])
 
+  const onFinish = () => {
+    let formValue = form.getFieldsValue(),
+      _params = {
+        param: {
+          phone: formValue.phone,
+          sms: formValue.verify,
+          tranferCode: SettingStore.transCode
+        },
+        timestamp: JSON.stringify(new Date().getTime()),
+        token: userInfoStore.token,
+        version: userInfoStore.version
+      }
+    lastSubmitTransDepart(_params)
+      .then(() => {
+        message.success('转让成功！')
+      })
+      .catch(err => console.log(err))
+  }
+
   return (
     <CurVerifyPhone>
       <Form
         form={form}
+        onFinish={onFinish}
         initialValues={{
           prefix: '86'
         }}
@@ -134,6 +156,7 @@ const VerifyNewAccountPhone = () => {
             {() => (
               <Button
                 type="primary"
+                htmlType="submit"
                 disabled={
                   !form.isFieldTouched('verify') ||
                   form.getFieldsError().filter(({ errors }) => errors.length).length
@@ -155,4 +178,4 @@ const CurVerifyPhone = styled.div`
   width: 450px;
 `
 
-export default VerifyNewAccountPhone
+export default observer(VerifyNewAccountPhone)

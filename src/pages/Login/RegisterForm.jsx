@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-11 22:36:59
+ * @LastEditTime: 2020-07-08 23:01:54
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, message } from 'antd'
@@ -23,6 +23,7 @@ const RegisterForm = props => {
 
   const captchaCallback = res => {
     // * 滑动验证成功回调
+    if (!res.randstr || !res.ticket) return
     let registerFormValue = form.getFieldsValue()
     let _params = {
       phone: registerFormValue.phone,

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-05 23:03:42
+ * @LastEditTime: 2020-07-08 23:02:07
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -44,6 +44,7 @@ const LoginForm = props => {
 
   const captchaCallback = res => {
     // * 滑动验证成功回调
+    if (!res.randstr || !res.ticket) return
     let loginFormValue = form.getFieldsValue()
     // 密码登录
     if (isLogining) {

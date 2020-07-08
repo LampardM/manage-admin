@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-07-05 12:02:06
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-07 22:11:29
+ * @LastEditTime: 2020-07-08 23:15:38
  */
 import request from '@/utils/request'
 
@@ -38,6 +38,15 @@ export function getReceivePhoneCode(data) {
 export function submitTransDepart(data) {
   return request({
     url: '/Organize/PresentOrganizeTrans',
+    method: 'post',
+    data
+  })
+}
+
+// 确认提交
+export function lastSubmitTransDepart(data) {
+  return request({
+    url: '/Organize/PresentReceiveOrganize',
     method: 'post',
     data
   })
