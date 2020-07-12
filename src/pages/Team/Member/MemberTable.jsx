@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 15:42:02
+ * @LastEditTime: 2020-07-12 15:59:25
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -143,13 +143,16 @@ const MemberTable = props => {
   const joinedAction = record => {
     return (
       <Space>
-        <span style={{ color: '#1890ff' }}>编辑</span>
-        <Dropdown overlay={() => joinedMenu(record)}>
+        {/* <span style={{ color: '#1890ff', pointerEvents: 'none'}} disabled>
+          详情
+        </span> */}
+        <span style={{ color: '#1890ff', cursor: 'pointer' }}>删除</span>
+        {/* <Dropdown overlay={() => joinedMenu(record)}>
           <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
             更多
             <DownOutlined />
           </a>
-        </Dropdown>
+        </Dropdown> */}
       </Space>
     )
   }
@@ -157,7 +160,7 @@ const MemberTable = props => {
   const invitedAction = record => {
     return (
       <Space>
-        <span style={{ color: '#1890ff' }}>再邀请</span>
+        <span style={{ color: '#1890ff', cursor: 'pointer' }}>再发送</span>
         <Dropdown overlay={() => invitedMenu(record)}>
           <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
             更多
