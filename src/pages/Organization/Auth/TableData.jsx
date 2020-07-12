@@ -126,7 +126,9 @@ const TableData = observer(({ className }) => {
     history.push(`/organization/auth/info/${item.id}`)
   }
 
-  const handleTableChange = () => {}
+  const handleTableChange = pagination => {
+    setPagination(pagination)
+  }
 
   return (
     <div className={className}>

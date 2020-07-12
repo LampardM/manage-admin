@@ -82,7 +82,7 @@ const TableData = observer(({ className, filters }) => {
 
   useEffect(() => {
     fetch()
-  }, [OrganizationApproveStore.filters])
+  }, [OrganizationApproveStore.filters, pagination.current])
 
   const fetch = async () => {
     setIsTableLoading(true)
@@ -151,7 +151,9 @@ const TableData = observer(({ className, filters }) => {
     submit(true)
   }
 
-  const handleTableChange = () => {}
+  const handleTableChange = pagination => {
+    setPagination(pagination)
+  }
 
   const handleClick = item => {
     console.log('编辑', item)
