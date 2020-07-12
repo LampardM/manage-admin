@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 16:37:26
+ * @LastEditTime: 2020-07-12 17:05:04
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -88,11 +88,12 @@ const MemberTable = props => {
       invitationRecord(_params)
         .then(_result => {
           console.log(_result)
-          let _lastResult = _result.data.map(invite => {
+          let _lastResult = _result.data.rows.map(invite => {
             return Object.assign({}, { key: invite.invitationCode }, invite)
           })
-          // const { pageIndex, pageSize, total } = data
-          // setPagination({ current: pageIndex + 1, pageSize, total })
+
+          const { pageIndex, pageSize, total } = _result.data
+          setPagination({ current: pageIndex + 1, pageSize, total })
           setIsTableLoading(false)
           setData(_lastResult)
         })
