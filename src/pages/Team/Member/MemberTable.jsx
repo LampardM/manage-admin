@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 13:21:35
+ * @LastEditTime: 2020-07-12 14:50:17
  */
 import { observer } from 'mobx-react'
 import React, { useState, useEffect } from 'react'
@@ -12,7 +12,7 @@ import { Table, Dropdown, Menu, Space, Button, Row, Col } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import { DownOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { invitationRecord } from '@/api/member'
+import { invitationRecord, invitedRecord } from '@/api/member'
 
 //表头
 const columns = [
@@ -51,12 +51,11 @@ const joinMenuHandler = (record, item, key) => {}
 
 const MemberTable = props => {
   const { curselect } = props
-  const { userInfoStore } = useStore()
+  const { userInfoStore, MemberStore } = useStore()
   const [data, setData] = useState([])
   const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
   const [isTableLoading, setIsTableLoading] = useState(false)
   const [selectedKeys, setSelectedKeys] = useState([])
-  const { MemberStore } = useStore()
   const history = useHistory()
 
   const handleTableChange = () => {}
@@ -66,7 +65,14 @@ const MemberTable = props => {
   }
 
   useEffect(() => {
-    // todo 根据条件查询
+    fetch()
+  }, [curselect])
+
+  useEffect(() => {
+    fetch()
+  }, [pagination.current, pagination.pageSize, MemberStore.filters])
+
+  const fetch = () => {
     setIsTableLoading(true)
     let _params = {
       timestamp: JSON.stringify(new Date().getTime()),
@@ -87,6 +93,20 @@ const MemberTable = props => {
         })
         .catch(err => console.log(err))
     } else {
+      let _invitedParams = {
+        param: {
+          pageIndex: 0,
+          pageSize: 10,
+          param: {
+            memberName: '',
+            phone: ''
+          }
+        },
+        timestamp: '',
+        token: '',
+        version: ''
+      }
+      // invitedRecord(_invitedParams)
       setIsTableLoading(false)
       setData([
         {
@@ -105,7 +125,7 @@ const MemberTable = props => {
         }
       ])
     }
-  }, [curselect])
+  }
 
   const joinedMenu = record => {
     return (

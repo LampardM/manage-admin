@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-06-27 14:02:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-28 21:28:16
+ * @LastEditTime: 2020-07-12 14:49:40
  */
 import { action, observable } from 'mobx'
 
@@ -11,9 +11,7 @@ class MemberStore {
   @observable
   initFilters = {
     contact: '',
-    phone: '',
-    character: '',
-    department: ''
+    phone: ''
   }
 
   @observable

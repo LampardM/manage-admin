@@ -3,144 +3,140 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 18:42:40
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 13:39:44
+ * @LastEditTime: 2020-07-12 14:52:40
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useStore } from '@/hooks/useStore'
-import { getRoleList } from '@/api/user'
-import { getCurDepartment } from '@/api/department'
-import { Form, Row, Col, Input, Button, Select, TreeSelect } from 'antd'
-
-const { Option } = Select
+import { Form, Row, Col, Input, Button, Select } from 'antd'
 
 const FilterMember = () => {
   const [form] = Form.useForm()
-  const [curCharacter, setCurCharacter] = useState([])
-  const [characterList, setCharacterList] = useState([])
-  const [department, setDepartment] = useState([])
+  // const [curCharacter, setCurCharacter] = useState([])
+  // const [characterList, setCharacterList] = useState([])
+  // const [department, setDepartment] = useState([])
   const { MemberStore, userInfoStore } = useStore()
 
-  const options = [
-    {
-      code: 'zhejiang',
-      name: 'Zhejiang',
-      items: [
-        {
-          code: 'hangzhou',
-          name: 'Hangzhou',
-          items: [
-            {
-              code: 'xihu',
-              name: 'West Lake'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      code: 'jiangsu',
-      name: 'Jiangsu',
-      items: [
-        {
-          code: 'nanjing',
-          name: 'Nanjing',
-          items: [
-            {
-              code: 'zhonghuamen',
-              name: 'Zhong Hua Men'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  // const options = [
+  //   {
+  //     code: 'zhejiang',
+  //     name: 'Zhejiang',
+  //     items: [
+  //       {
+  //         code: 'hangzhou',
+  //         name: 'Hangzhou',
+  //         items: [
+  //           {
+  //             code: 'xihu',
+  //             name: 'West Lake'
+  //           }
+  //         ]
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     code: 'jiangsu',
+  //     name: 'Jiangsu',
+  //     items: [
+  //       {
+  //         code: 'nanjing',
+  //         name: 'Nanjing',
+  //         items: [
+  //           {
+  //             code: 'zhonghuamen',
+  //             name: 'Zhong Hua Men'
+  //           }
+  //         ]
+  //       }
+  //     ]
+  //   }
+  // ]
 
   useEffect(() => {
-    getCurRoleList()
-    getCurDepartmentList()
+    // getCurRoleList()
+    // getCurDepartmentList()
   }, [])
 
-  const getCurRoleList = () => {
-    let _params = {
-      param: {
-        pageSize: 100,
-        pageIndex: 0,
-        param: {
-          roleName: '',
-          state: 'ENABLED'
-        }
-      },
-      timestamp: JSON.stringify(new Date().getTime()),
-      token: userInfoStore.token,
-      version: userInfoStore.version
-    }
-    getRoleList(_params)
-      .then(_result => {
-        setCharacterList(_result.data.rows)
-      })
-      .catch(err => console.log(err))
-  }
+  // const getCurRoleList = () => {
+  //   let _params = {
+  //     param: {
+  //       pageSize: 100,
+  //       pageIndex: 0,
+  //       param: {
+  //         roleName: '',
+  //         state: 'ENABLED'
+  //       }
+  //     },
+  //     timestamp: JSON.stringify(new Date().getTime()),
+  //     token: userInfoStore.token,
+  //     version: userInfoStore.version
+  //   }
+  //   getRoleList(_params)
+  //     .then(_result => {
+  //       setCharacterList(_result.data.rows)
+  //     })
+  //     .catch(err => console.log(err))
+  // }
 
-  const deleteUselessChildren = arr => {
-    arr.forEach(_item => {
-      if (_item.children && _item.children.length === 0) {
-        delete _item.children
-      } else {
-        deleteUselessChildren(_item.children)
-      }
-    })
-  }
+  // const deleteUselessChildren = arr => {
+  //   arr.forEach(_item => {
+  //     if (_item.children && _item.children.length === 0) {
+  //       delete _item.children
+  //     } else {
+  //       deleteUselessChildren(_item.children)
+  //     }
+  //   })
+  // }
 
-  const countDepartLevel = (arr, level = 0) => {
-    arr.forEach(_item => {
-      _item.level = level
-      if (_item.children) {
-        countDepartLevel(_item.children, level + 1)
-      }
-    })
-  }
+  // const countDepartLevel = (arr, level = 0) => {
+  //   arr.forEach(_item => {
+  //     _item.level = level
+  //     if (_item.children) {
+  //       countDepartLevel(_item.children, level + 1)
+  //     }
+  //   })
+  // }
 
-  const changeFetchDataProp = arr => {
-    arr.forEach(_item => {
-      _item.value = _item.departmentCode
-      _item.title = _item.departmentName
+  // const changeFetchDataProp = arr => {
+  //   arr.forEach(_item => {
+  //     _item.value = _item.departmentCode
+  //     _item.title = _item.departmentName
 
-      if (_item.children && _item.children.length > 0) {
-        changeFetchDataProp(_item.children)
-      }
-    })
-  }
+  //     if (_item.children && _item.children.length > 0) {
+  //       changeFetchDataProp(_item.children)
+  //     }
+  //   })
+  // }
 
-  const getCurDepartmentList = () => {
-    let _params = {
-      param: {
-        baseDepartmentCode: '',
-        buildChild: false,
-        excludeCode: [],
-        totalNodeLevel: 6
-      },
-      timestamp: JSON.stringify(new Date().getTime()),
-      token: userInfoStore.token,
-      version: userInfoStore.version
-    }
+  // const getCurDepartmentList = () => {
+  //   let _params = {
+  //     param: {
+  //       baseDepartmentCode: '',
+  //       buildChild: false,
+  //       excludeCode: [],
+  //       totalNodeLevel: 6
+  //     },
+  //     timestamp: JSON.stringify(new Date().getTime()),
+  //     token: userInfoStore.token,
+  //     version: userInfoStore.version
+  //   }
 
-    getCurDepartment(_params)
-      .then(_result => {
-        deleteUselessChildren(_result.data)
-        countDepartLevel(_result.data)
-        changeFetchDataProp(_result.data)
-        setDepartment(_result.data)
-        console.log(_result.data, 'department')
-      })
-      .catch(err => console.log(err))
-  }
+  //   getCurDepartment(_params)
+  //     .then(_result => {
+  //       deleteUselessChildren(_result.data)
+  //       countDepartLevel(_result.data)
+  //       changeFetchDataProp(_result.data)
+  //       setDepartment(_result.data)
+  //       console.log(_result.data, 'department')
+  //     })
+  //     .catch(err => console.log(err))
+  // }
 
-  const selectCurdepartment = value => {}
+  // const selectCurdepartment = value => {}
 
-  const handleCharacterChange = value => {
-    setCurCharacter(value)
-  }
+  // const handleCharacterChange = value => {
+  //   setCurCharacter(value)
+  // }
 
   return (
     <FilterMemberCon>
@@ -158,7 +154,7 @@ const FilterMember = () => {
             </Form.Item>
           </Col>
 
-          <Col style={{ width: 130 }}>
+          {/* <Col style={{ width: 130 }}>
             <Form.Item name="characterName">
               <Select
                 mode="multiple"
@@ -185,7 +181,7 @@ const FilterMember = () => {
                 treeDefaultExpandAll
               />
             </Form.Item>
-          </Col>
+          </Col> */}
 
           <Col style={{ marginBottom: 24 }}>
             <Button type="primary" htmlType="submit">
