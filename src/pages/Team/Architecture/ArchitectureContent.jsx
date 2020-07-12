@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-05 13:50:36
+ * @LastEditTime: 2020-07-12 16:52:52
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -66,11 +66,11 @@ const ArchitectureContent = () => {
     })
   }
 
-  const getCurDepartmentList = () => {
+  const getCurDepartmentList = baseDepartmentCode => {
     setIsTableLoading(true)
     let _params = {
       param: {
-        baseDepartmentCode: '',
+        baseDepartmentCode: baseDepartmentCode ? baseDepartmentCode : '',
         buildChild: false,
         excludeCode: [],
         totalNodeLevel: 6
@@ -261,6 +261,10 @@ const ArchitectureContent = () => {
 
   const rowExpandable = record => {}
 
+  const getMoreChildren = record => {
+    getCurDepartmentList(record.departmentCode)
+  }
+
   return (
     <ArchitectureContainer>
       <ArchitectureModal
@@ -293,12 +297,16 @@ const ArchitectureContent = () => {
             align="right"
             render={(text, record) => (
               <span>
+                {record.level === 5 && record.totalChildren !== 0 && (
+                  <a style={{ marginRight: 16 }} onClick={() => getMoreChildren(record)}>
+                    下钻
+                  </a>
+                )}
                 <a style={{ marginRight: 16 }} onClick={() => addChildDepartment(record)}>
                   添加子部门
-                  {record.lastName}
                 </a>
                 <a style={{ marginRight: 16 }} onClick={() => editCurDepartment(record)}>
-                  编辑 {record.lastName}
+                  编辑
                 </a>
                 <a onClick={() => deleteCurDepartment(record)}>删除</a>
               </span>
