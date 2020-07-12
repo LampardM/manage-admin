@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-07 22:53:00
+ * @LastEditTime: 2020-07-12 16:26:53
  */
 import React, { useState, useEffect } from 'react'
 import { Menu, Dropdown } from 'antd'
@@ -56,6 +56,7 @@ const SideDepartmentList = () => {
   const menu = (
     <Menu
       theme="dark"
+      style={{ backgroundColor: 'rgb(46, 85, 130)', borderRadius: '5px' }}
       onClick={selectHandler}
       selectedKeys={selectedKeys}
       defaultSelectedKeys={

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 15:59:25
+ * @LastEditTime: 2020-07-12 16:37:26
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -72,6 +72,14 @@ const MemberTable = props => {
   const fetch = () => {
     setIsTableLoading(true)
     let _params = {
+      param: {
+        pageIndex: pagination.current - 1,
+        pageSize: pagination.pageSize,
+        param: {
+          memberName: toJS(MemberStore.filters).contact,
+          memberPhone: toJS(MemberStore.filters).phone
+        }
+      },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
       version: userInfoStore.version
