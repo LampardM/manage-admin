@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:15:30
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-08 23:19:33
+ * @LastEditTime: 2020-07-12 17:15:58
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -12,6 +12,7 @@ import { useStore } from '@/hooks/useStore'
 import { getReceivePhoneCode, lastSubmitTransDepart } from '@/api/setting'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
+import { useHistory } from 'react-router-dom'
 import useInterval from '@/hooks/useInterval'
 
 const VerifyNewAccountPhone = () => {
@@ -20,6 +21,7 @@ const VerifyNewAccountPhone = () => {
   const { userInfoStore, SettingStore } = useStore()
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
+  const history = useHistory()
 
   const captchaCallback = res => {
     if (!res.randstr || !res.ticket) return
@@ -81,7 +83,9 @@ const VerifyNewAccountPhone = () => {
       }
     lastSubmitTransDepart(_params)
       .then(() => {
+        userInfoStore.toggleLogin(false)
         message.success('转让成功！')
+        history.push('/login')
       })
       .catch(err => console.log(err))
   }
