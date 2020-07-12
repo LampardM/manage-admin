@@ -3,14 +3,24 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 18:42:40
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 12:54:04
+ * @LastEditTime: 2020-07-12 13:39:44
  */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Form, Row, Col, Input, Button, Select, Cascader } from 'antd'
+import { useStore } from '@/hooks/useStore'
+import { getRoleList } from '@/api/user'
+import { getCurDepartment } from '@/api/department'
+import { Form, Row, Col, Input, Button, Select, TreeSelect } from 'antd'
+
+const { Option } = Select
 
 const FilterMember = () => {
   const [form] = Form.useForm()
+  const [curCharacter, setCurCharacter] = useState([])
+  const [characterList, setCharacterList] = useState([])
+  const [department, setDepartment] = useState([])
+  const { MemberStore, userInfoStore } = useStore()
+
   const options = [
     {
       code: 'zhejiang',
@@ -46,6 +56,92 @@ const FilterMember = () => {
     }
   ]
 
+  useEffect(() => {
+    getCurRoleList()
+    getCurDepartmentList()
+  }, [])
+
+  const getCurRoleList = () => {
+    let _params = {
+      param: {
+        pageSize: 100,
+        pageIndex: 0,
+        param: {
+          roleName: '',
+          state: 'ENABLED'
+        }
+      },
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+    getRoleList(_params)
+      .then(_result => {
+        setCharacterList(_result.data.rows)
+      })
+      .catch(err => console.log(err))
+  }
+
+  const deleteUselessChildren = arr => {
+    arr.forEach(_item => {
+      if (_item.children && _item.children.length === 0) {
+        delete _item.children
+      } else {
+        deleteUselessChildren(_item.children)
+      }
+    })
+  }
+
+  const countDepartLevel = (arr, level = 0) => {
+    arr.forEach(_item => {
+      _item.level = level
+      if (_item.children) {
+        countDepartLevel(_item.children, level + 1)
+      }
+    })
+  }
+
+  const changeFetchDataProp = arr => {
+    arr.forEach(_item => {
+      _item.value = _item.departmentCode
+      _item.title = _item.departmentName
+
+      if (_item.children && _item.children.length > 0) {
+        changeFetchDataProp(_item.children)
+      }
+    })
+  }
+
+  const getCurDepartmentList = () => {
+    let _params = {
+      param: {
+        baseDepartmentCode: '',
+        buildChild: false,
+        excludeCode: [],
+        totalNodeLevel: 6
+      },
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+
+    getCurDepartment(_params)
+      .then(_result => {
+        deleteUselessChildren(_result.data)
+        countDepartLevel(_result.data)
+        changeFetchDataProp(_result.data)
+        setDepartment(_result.data)
+        console.log(_result.data, 'department')
+      })
+      .catch(err => console.log(err))
+  }
+
+  const selectCurdepartment = value => {}
+
+  const handleCharacterChange = value => {
+    setCurCharacter(value)
+  }
+
   return (
     <FilterMemberCon>
       <Form form={form} name="member">
@@ -64,17 +160,29 @@ const FilterMember = () => {
 
           <Col style={{ width: 130 }}>
             <Form.Item name="characterName">
-              <Input placeholder="请选择角色" />
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                placeholder="请选择角色"
+                onChange={handleCharacterChange}
+              >
+                {characterList.map(d => (
+                  <Option key={d.roleCode}>{d.roleName}</Option>
+                ))}
+              </Select>
             </Form.Item>
           </Col>
 
           <Col style={{ width: 170 }}>
             <Form.Item name="departmeName">
-              <Cascader
-                fieldNames={{ label: 'name', value: 'code', children: 'items' }}
-                changeOnSelect
-                options={options}
-                placeholder="请选择部门"
+              <TreeSelect
+                style={{ width: '100%' }}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={department}
+                onSelect={selectCurdepartment}
+                allowClear
+                placeholder="请选择所属部门"
+                treeDefaultExpandAll
               />
             </Form.Item>
           </Col>

@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:10:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 13:03:05
+ * @LastEditTime: 2020-07-12 13:19:46
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -21,10 +21,6 @@ class MemberPage extends React.Component {
     this.setState({
       curselect: key
     })
-  }
-
-  addMember() {
-    this.props.history.push('/team/member/addmember')
   }
 
   render() {

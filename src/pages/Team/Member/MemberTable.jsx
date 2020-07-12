@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 13:09:12
+ * @LastEditTime: 2020-07-12 13:21:35
  */
 import { observer } from 'mobx-react'
 import React, { useState, useEffect } from 'react'
@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import { Table, Dropdown, Menu, Space, Button, Row, Col } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import { DownOutlined } from '@ant-design/icons'
+import { useHistory } from 'react-router-dom'
 import { invitationRecord } from '@/api/member'
 
 //表头
@@ -55,10 +56,17 @@ const MemberTable = props => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
   const [isTableLoading, setIsTableLoading] = useState(false)
   const [selectedKeys, setSelectedKeys] = useState([])
+  const { MemberStore } = useStore()
+  const history = useHistory()
 
   const handleTableChange = () => {}
 
+  const addMember = () => {
+    history.push('/team/member/addmember')
+  }
+
   useEffect(() => {
+    // todo 根据条件查询
     setIsTableLoading(true)
     let _params = {
       timestamp: JSON.stringify(new Date().getTime()),
@@ -151,7 +159,9 @@ const MemberTable = props => {
         {curselect === 'joined' ? (
           <div className="add-remove">
             <Space>
-              <Button type="primary">添加成员</Button>
+              <Button type="primary" onClick={addMember}>
+                添加成员
+              </Button>
               <Button disabled={!selectedKeys.length}>删除</Button>
             </Space>
           </div>
