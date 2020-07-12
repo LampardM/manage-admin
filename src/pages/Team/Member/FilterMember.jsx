@@ -3,19 +3,21 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 18:42:40
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 14:52:40
+ * @LastEditTime: 2020-07-12 15:39:15
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useStore } from '@/hooks/useStore'
 import { Form, Row, Col, Input, Button, Select } from 'antd'
 
-const FilterMember = () => {
+const FilterMember = props => {
   const [form] = Form.useForm()
+  const { MemberStore } = useStore()
+  const { curselect } = props
+
   // const [curCharacter, setCurCharacter] = useState([])
   // const [characterList, setCharacterList] = useState([])
   // const [department, setDepartment] = useState([])
-  const { MemberStore, userInfoStore } = useStore()
 
   // const options = [
   //   {
@@ -52,10 +54,10 @@ const FilterMember = () => {
   //   }
   // ]
 
-  useEffect(() => {
-    // getCurRoleList()
-    // getCurDepartmentList()
-  }, [])
+  // useEffect(() => {
+  //   // getCurRoleList()
+  //   // getCurDepartmentList()
+  // }, [])
 
   // const getCurRoleList = () => {
   //   let _params = {
@@ -138,9 +140,19 @@ const FilterMember = () => {
   //   setCurCharacter(value)
   // }
 
+  useEffect(() => {
+    form.resetFields()
+    MemberStore.clearFilters()
+  }, [curselect])
+
+  const onFinish = values => {
+    console.log('Received values of form: ', values)
+    MemberStore.setFilters({ contact: values.name, phone: values.phone })
+  }
+
   return (
     <FilterMemberCon>
-      <Form form={form} name="member">
+      <Form form={form} name="member" onFinish={onFinish}>
         <Row gutter={5}>
           <Col style={{ width: 150 }}>
             <Form.Item name="name">
@@ -193,6 +205,7 @@ const FilterMember = () => {
               }}
               onClick={() => {
                 form.resetFields()
+                MemberStore.clearFilters()
               }}
             >
               重置

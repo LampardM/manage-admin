@@ -3,13 +3,14 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:10:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 13:19:46
+ * @LastEditTime: 2020-07-12 15:29:39
  */
 import React from 'react'
 import styled from 'styled-components'
 import MemberHeader from './MemberHeader'
 import FilterMember from './FilterMember'
 import MemberTable from './MemberTable'
+import { observer } from 'mobx-react'
 import { withRouter } from 'react-router-dom'
 import { Button, Space } from 'antd'
 @withRouter

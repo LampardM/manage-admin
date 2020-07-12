@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-06-27 14:02:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 14:49:40
+ * @LastEditTime: 2020-07-12 15:21:26
  */
 import { action, observable } from 'mobx'
 

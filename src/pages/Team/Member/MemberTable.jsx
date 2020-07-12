@@ -3,9 +3,10 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 14:50:17
+ * @LastEditTime: 2020-07-12 15:42:02
  */
 import { observer } from 'mobx-react'
+import { toJS } from 'mobx'
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Table, Dropdown, Menu, Space, Button, Row, Col } from 'antd'
@@ -66,11 +67,7 @@ const MemberTable = props => {
 
   useEffect(() => {
     fetch()
-  }, [curselect])
-
-  useEffect(() => {
-    fetch()
-  }, [pagination.current, pagination.pageSize, MemberStore.filters])
+  }, [curselect, pagination.current, pagination.pageSize, MemberStore.filters])
 
   const fetch = () => {
     setIsTableLoading(true)
@@ -95,35 +92,33 @@ const MemberTable = props => {
     } else {
       let _invitedParams = {
         param: {
-          pageIndex: 0,
-          pageSize: 10,
+          pageIndex: pagination.current - 1,
+          pageSize: pagination.pageSize,
           param: {
-            memberName: '',
-            phone: ''
+            memberName: toJS(MemberStore.filters).contact,
+            phone: toJS(MemberStore.filters).phone
           }
         },
-        timestamp: '',
-        token: '',
-        version: ''
+        timestamp: JSON.stringify(new Date().getTime()),
+        token: userInfoStore.token,
+        version: userInfoStore.version
       }
-      // invitedRecord(_invitedParams)
-      setIsTableLoading(false)
-      setData([
-        {
-          key: '1',
-          memberName: '胡彦斌',
-          contextPhone: 18356032765,
-          roleName: 32,
-          departmentName: '西湖区湖底公园1号'
-        },
-        {
-          key: '2',
-          memberName: '胡彦祖',
-          contextPhone: 18356032765,
-          roleName: 32,
-          departmentName: '西湖区湖底公园1号'
-        }
-      ])
+      invitedRecord(_invitedParams)
+        .then(_result => {
+          setIsTableLoading(false)
+          let { rows, pageIndex, pageSize, total } = _result.data
+          rows = rows.map(row => {
+            let temp = Object.assign({}, row, {
+              key: row.memberCode,
+              memberName: row.name,
+              contextPhone: row.phone
+            })
+            return temp
+          })
+          setData(rows)
+          setPagination({ current: pageIndex + 1, pageSize, total })
+        })
+        .catch(err => console.log(err))
     }
   }
 
@@ -240,4 +235,4 @@ const MemberTable = props => {
 
 const TableContainer = styled.div``
 
-export default MemberTable
+export default observer(MemberTable)
