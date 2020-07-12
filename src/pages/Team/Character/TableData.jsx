@@ -59,7 +59,7 @@ const TableData = observer(({ className, filters }) => {
 
   useEffect(() => {
     fetch()
-  }, [TeamCharacterStore.filters])
+  }, [TeamCharacterStore.filters, pagination.current])
 
   const fetch = async () => {
     setIsTableLoading(true)

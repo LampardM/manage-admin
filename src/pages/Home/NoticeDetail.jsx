@@ -8,13 +8,15 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Space, Divider, Message, Modal } from 'antd'
 import styled from 'styled-components'
+import { useHistory, useParams } from 'react-router-dom'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 const { confirm } = Modal
 
 const NoticeDetail = () => {
-  const [inviteUrl, setInviteUrl] = useState('www.baidu.com')
+  const { id } = useParams()
+  const [inviteUrl, setInviteUrl] = useState(`/home/notice/${id}`)
   const [copied, setCopied] = useState(false)
   const [disableJoin, setDisableJoin] = useState(false)
 
