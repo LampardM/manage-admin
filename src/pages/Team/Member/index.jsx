@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 23:10:57
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 09:00:24
+ * @LastEditTime: 2020-07-12 13:03:05
  */
 import React from 'react'
 import styled from 'styled-components'
@@ -38,26 +38,6 @@ class MemberPage extends React.Component {
           <MemberHeader switchCurSource={this.switchCurSource.bind(this)} />
           <div className="member-con">
             <FilterMember curselect={curselect}></FilterMember>
-            {curselect === 'joined' ? (
-              <div className="add-remove">
-                <Space>
-                  <Button type="primary" onClick={this.addMember.bind(this)}>
-                    添加成员
-                  </Button>
-                  <Button>删除</Button>
-                </Space>
-              </div>
-            ) : (
-              <div className="add-remove">
-                <Space>
-                  <Button type="primary" onClick={this.addMember.bind(this)}>
-                    再发送
-                  </Button>
-                  <Button>取消邀请</Button>
-                </Space>
-              </div>
-            )}
-
             <MemberTable curselect={curselect}></MemberTable>
           </div>
         </div>
