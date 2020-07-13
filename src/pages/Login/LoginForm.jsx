@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-08 23:02:07
+ * @LastEditTime: 2020-07-14 00:07:13
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -13,7 +13,7 @@ import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
-import { useSessionStorage } from 'react-use'
+import { useLocalStorageState } from '@umijs/hooks'
 import { setCurDepart } from '@/utils/session'
 import { switchDepartment } from '@/api/department'
 import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
@@ -25,7 +25,7 @@ const LoginForm = props => {
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [countDown, setCountDown] = useState(5)
   const [disLogin, setDisLogin] = useState(false)
-  const [userOrganizes, setUserOrganizes] = useSessionStorage('user-organizes', []) // 防止页面刷新左侧团队列表被重置
+  const [userOrganizes, setUserOrganizes] = useLocalStorageState('user-organizes', []) // 防止页面刷新左侧团队列表被重置
   const history = useHistory()
 
   let isLogining = false
@@ -60,7 +60,6 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result)
           setDisLogin(false)
-
           setUserOrganizes(_result.data.organizes)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected

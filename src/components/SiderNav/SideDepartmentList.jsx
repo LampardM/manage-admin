@@ -3,12 +3,12 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-13 22:14:55
+ * @LastEditTime: 2020-07-13 23:48:01
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
-import { useSessionStorage } from 'react-use'
 import { useStore } from '@/hooks/useStore'
+import { useLocalStorageState } from '@umijs/hooks'
 import { switchDepartment } from '@/api/department'
 import { useHistory } from 'react-router-dom'
 import { setCurDepart, getCurDepart } from '@/utils/session'
@@ -17,7 +17,7 @@ import styled from 'styled-components'
 const { Option } = Select
 
 const SideDepartmentList = () => {
-  const [userOrganizes] = useSessionStorage('user-organizes')
+  const [userOrganizes] = useLocalStorageState('user-organizes')
   const { userInfoStore } = useStore()
   const [curValue, setCurValue] = useState('')
   const history = useHistory()

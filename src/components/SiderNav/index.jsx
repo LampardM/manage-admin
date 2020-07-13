@@ -3,15 +3,15 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-07 22:14:06
+ * @LastEditTime: 2020-07-14 00:33:10
  */
 import React from 'react'
 import Menu from '../Menu/index'
 import { withRouter } from 'react-router-dom'
 import { inject, observer } from 'mobx-react'
+import { toJS } from 'mobx'
 import styled from 'styled-components'
 import SideDepartmentList from './SideDepartmentList'
-import { useSessionStorage } from 'react-use'
 
 /** Mock */
 import navMenus from '@/router.map'
@@ -21,17 +21,18 @@ import navMenus from '@/router.map'
 class SiderNav extends React.Component {
   render() {
     const { className, userInfoStore } = this.props
-
+    let curDepartmentList =
+      typeof toJS(userInfoStore.organizes) === 'string'
+        ? JSON.parse(toJS(userInfoStore.organizes))
+        : toJS(userInfoStore.organizes)
+    console.log(curDepartmentList, 'userInfoStore.organizes')
     return (
       <div className={className}>
         <div className="nav-container">
-          {/* <div style={styles.logo}></div> */}
           <SideDepartmentList />
           <Menu
             menus={
-              userInfoStore.organizes.length > 0
-                ? navMenus
-                : [navMenus[0], navMenus[navMenus.length - 2]]
+              curDepartmentList.length > 0 ? navMenus : [navMenus[0], navMenus[navMenus.length - 2]]
             }
           />
         </div>

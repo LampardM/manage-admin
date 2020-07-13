@@ -3,13 +3,13 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-13 23:06:01
+ * @LastEditTime: 2020-07-13 23:51:44
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
 import { getCurDepartment } from '@/api/department'
 import { useStore } from '@/hooks/useStore'
-import { useSessionStorage } from 'react-use'
+import { useLocalStorageState } from '@umijs/hooks'
 import { observer } from 'mobx-react'
 import { getCurDepart } from '@/utils/session'
 
@@ -20,7 +20,7 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
   const [depart, setDepart] = useState('')
   const [departInfo, setDepartInfo] = useState({})
   const [departList, setDepartList] = useState([])
-  const [userOrganizes] = useSessionStorage('user-organizes')
+  const [userOrganizes] = useLocalStorageState('user-organizes')
 
   useEffect(() => {
     if (subInfo) {
