@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 22:43:10
+ * @LastEditTime: 2020-07-13 22:22:39
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -23,11 +23,6 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
   const [userOrganizes] = useSessionStorage('user-organizes')
 
   useEffect(() => {
-    modalShow && getCurDepartmentList()
-    form.resetFields() // 修正getContainer的影响
-  }, [modalShow])
-
-  useEffect(() => {
     if (subInfo) {
       setDepart(subInfo)
       form.setFieldsValue({ updepartment: subInfo })
@@ -45,7 +40,12 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
       setDepartInfo({})
       form.setFieldsValue({ department: '' })
     }
-  }, [departList, subInfo])
+  }, [departList])
+
+  useEffect(() => {
+    modalShow && form.resetFields() && form.setFieldsValue({ updatedepartment: '' })
+    modalShow && getCurDepartmentList(subInfo)
+  }, [modalShow])
 
   const changeFetchDataProp = arr => {
     arr.forEach(_item => {
@@ -59,11 +59,11 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
   }
 
   // 获取当前组织架构列表
-  const getCurDepartmentList = () => {
+  const getCurDepartmentList = code => {
     let _params = {
       param: {
-        baseDepartmentCode: '',
-        buildChild: false,
+        baseDepartmentCode: code ? code : '',
+        buildChild: true,
         excludeCode: [],
         totalNodeLevel: 6
       },
@@ -75,11 +75,11 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
     getCurDepartment(_params)
       .then(_result => {
         changeFetchDataProp(_result.data)
-        setDepartList(unshiftCurDepart(_result.data))
+        code ? setDepartList(_result.data) : setDepartList(unshiftCurDepart(_result.data))
       })
       .catch(err => {
         console.log(err)
-        setDepartList(unshiftCurDepart([]))
+        code ? setDepartList([]) : setDepartList(unshiftCurDepart([]))
       })
   }
 

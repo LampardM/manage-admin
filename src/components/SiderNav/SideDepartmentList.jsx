@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 18:44:06
+ * @LastEditTime: 2020-07-13 22:14:55
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
@@ -24,19 +24,21 @@ const SideDepartmentList = () => {
 
   useEffect(() => {
     let _result
-    if (userOrganizes) {
+    if (userOrganizes && userOrganizes.length) {
       _result = userOrganizes.find(depart => depart.code === getCurDepart())
       setCurValue(_result.name)
+    } else {
+      setCurValue('暂无团队')
     }
   }, [])
 
   const getCurDepartName = () => {
     let _result
-    if (userOrganizes) {
+    if (userOrganizes && userOrganizes.length) {
       _result = userOrganizes.find(depart => depart.code === getCurDepart())
       return _result.name
     } else {
-      history.replace('/login')
+      return '暂无团队'
     }
   }
 
@@ -63,6 +65,7 @@ const SideDepartmentList = () => {
     <DepartmentCur>
       <Select
         defaultValue={getCurDepartName()}
+        disabled={userOrganizes && userOrganizes.length === 0}
         style={{ width: 180 }}
         onChange={handleChange}
         value={curValue}

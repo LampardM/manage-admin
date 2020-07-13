@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 16:52:52
+ * @LastEditTime: 2020-07-13 22:18:09
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -66,12 +66,12 @@ const ArchitectureContent = () => {
     })
   }
 
-  const getCurDepartmentList = baseDepartmentCode => {
+  const getCurDepartmentList = (baseDepartmentCode, down) => {
     setIsTableLoading(true)
     let _params = {
       param: {
         baseDepartmentCode: baseDepartmentCode ? baseDepartmentCode : '',
-        buildChild: false,
+        buildChild: down ? down : false,
         excludeCode: [],
         totalNodeLevel: 6
       },
@@ -262,7 +262,11 @@ const ArchitectureContent = () => {
   const rowExpandable = record => {}
 
   const getMoreChildren = record => {
-    getCurDepartmentList(record.departmentCode)
+    getCurDepartmentList(record.departmentCode, true)
+  }
+
+  const getMoreParent = record => {
+    getCurDepartmentList(record.departmentCode, false)
   }
 
   return (
@@ -300,6 +304,11 @@ const ArchitectureContent = () => {
                 {record.level === 5 && record.totalChildren !== 0 && (
                   <a style={{ marginRight: 16 }} onClick={() => getMoreChildren(record)}>
                     下钻
+                  </a>
+                )}
+                {record.level === 0 && record.departmentLevel !== 1 && (
+                  <a style={{ marginRight: 16 }} onClick={() => getMoreParent(record)}>
+                    上钻
                   </a>
                 )}
                 <a style={{ marginRight: 16 }} onClick={() => addChildDepartment(record)}>
