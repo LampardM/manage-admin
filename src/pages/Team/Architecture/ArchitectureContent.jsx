@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-13 22:18:09
+ * @LastEditTime: 2020-07-13 23:14:33
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -101,14 +101,19 @@ const ArchitectureContent = () => {
     for (let i = 0; i < targetArr.length; i++) {
       if (targetArr[i].departmentCode === target) {
         _targetCode = parent
+        return _targetCode
       } else {
         if (targetArr[i].children && targetArr[i].children.length > 0) {
-          return findParentDepartment(targetArr[i].children, target, targetArr[i].departmentCode)
+          _targetCode = findParentDepartment(
+            targetArr[i].children,
+            target,
+            targetArr[i].departmentCode
+          )
+          if (_targetCode) return _targetCode
         }
       }
-
-      return _targetCode
     }
+    return _targetCode
   }
 
   // 添加子部门
@@ -120,7 +125,10 @@ const ArchitectureContent = () => {
 
   // 编辑部门
   const editCurDepartment = curInfo => {
-    let _subInfo = findParentDepartment(recursionResult, curInfo.departmentCode)
+    let _subInfo =
+      curInfo.departmentLevel === 1
+        ? ''
+        : findParentDepartment(recursionResult, curInfo.departmentCode)
     setSubInfo(_subInfo)
     setCurDepart(curInfo)
     setModalType('edit')

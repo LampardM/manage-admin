@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-13 22:34:35
+ * @LastEditTime: 2020-07-13 23:06:01
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -32,7 +32,6 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
         form.setFieldsValue({ updepartment: departList[0].value }) &&
         setDepart(departList[0].value)
     }
-
     if (modalType === 'edit') {
       setDepartInfo(curInfo)
       form.setFieldsValue({ department: curInfo.departmentName })
@@ -75,11 +74,11 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
     getCurDepartment(_params)
       .then(_result => {
         changeFetchDataProp(_result.data)
-        code ? setDepartList(_result.data) : setDepartList(unshiftCurDepart(_result.data))
+        baseCode ? setDepartList(_result.data) : setDepartList(unshiftCurDepart(_result.data))
       })
       .catch(err => {
         console.log(err)
-        code ? setDepartList([]) : setDepartList(unshiftCurDepart([]))
+        baseCode ? setDepartList([]) : setDepartList(unshiftCurDepart([]))
       })
   }
 
