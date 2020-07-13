@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-13 22:22:39
+ * @LastEditTime: 2020-07-13 22:34:35
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -59,11 +59,11 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
   }
 
   // 获取当前组织架构列表
-  const getCurDepartmentList = code => {
+  const getCurDepartmentList = (baseCode, drillingDown = true) => {
     let _params = {
       param: {
-        baseDepartmentCode: code ? code : '',
-        buildChild: true,
+        baseDepartmentCode: baseCode ? baseCode : '',
+        buildChild: drillingDown, // true 下钻 false 上钻
         excludeCode: [],
         totalNodeLevel: 6
       },
