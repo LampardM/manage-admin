@@ -14,7 +14,7 @@ class App extends Component {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/forgotpassword" component={ForgotPassword} />
-        <Route path="/joindepart" component={JoinDepart} />
+        <Route path="/joindepart/:id" component={JoinDepart} />
         <PrivateRoute path="/" component={Index} />
       </Switch>
     )

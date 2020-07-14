@@ -33,7 +33,10 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     if (res.success !== 1) {
-      if (res.errorCode === '0x0000004' /* 登录失效，请重新登录 */) {
+      if (
+        res.errorCode === '0x0000004' /* 登录失效，请重新登录 */ ||
+        res.errorCode === '0x0000003' /*无效Token*/
+      ) {
         window.location.href = '/login'
       }
       if (!noerrMsgWhitelist.includes(response.config.url)) {

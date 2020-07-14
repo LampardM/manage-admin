@@ -138,3 +138,12 @@ export function roleDetail(data) {
     data
   })
 }
+
+//角色详情
+export function joinOrganize(data) {
+  return request({
+    url: '/User/JoinOrganize',
+    method: 'post',
+    data
+  })
+}

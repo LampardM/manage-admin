@@ -12,11 +12,15 @@ import { useHistory, useParams } from 'react-router-dom'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
+/** custom */
+import { urlPrefix } from '@/constants'
+
 const { confirm } = Modal
 
 const NoticeDetail = () => {
   const { id } = useParams()
-  const [inviteUrl, setInviteUrl] = useState(`/home/notice/${id}`)
+  const history = useHistory()
+  const [inviteUrl, setInviteUrl] = useState(`${urlPrefix}/joindepart/${id}`)
   const [copied, setCopied] = useState(false)
   const [disableJoin, setDisableJoin] = useState(false)
 
@@ -38,6 +42,7 @@ const NoticeDetail = () => {
       onOk() {
         console.log('OK')
         setDisableJoin(true)
+        //TODO 拒绝加入
       },
       onCancel() {
         console.log('Cancel')
@@ -46,8 +51,7 @@ const NoticeDetail = () => {
   }
 
   const acceptInvite = () => {
-    // TODO 服务端将此链接标示置为已加入
-    Message.success('成功加入团队！')
+    history.push(`/joindepart/${id}`)
   }
 
   return (
