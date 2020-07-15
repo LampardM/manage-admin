@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 17:40:46
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-18 20:32:50
+ * @LastEditTime: 2020-07-15 22:36:50
  */
 import request from '@/utils/request'
 
@@ -130,7 +130,7 @@ export function deleteRoles(data) {
   })
 }
 
-//角色详情
+// 角色详情
 export function roleDetail(data) {
   return request({
     url: '/User/RoleDetail',
@@ -139,11 +139,27 @@ export function roleDetail(data) {
   })
 }
 
-//角色详情
+// 加入团队
 export function joinOrganize(data) {
   return request({
     url: '/User/JoinOrganize',
     method: 'post',
     data
+  })
+}
+
+// 获取重置密码手机验证码
+export function getResetPasswordVerify(params) {
+  return request({
+    url: `/User/ResetPasswordVcode/${params.phone}/${params.ticket}/${params.rand}`,
+    method: 'get'
+  })
+}
+
+// 重置密码
+export function resetPassword(params) {
+  return request({
+    url: `/User/resetUserPassword/${params.phone}/${params.sms}/${params.newPassword}`,
+    method: 'get'
   })
 }
