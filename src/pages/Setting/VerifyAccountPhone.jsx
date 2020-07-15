@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:04:10
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-08 22:57:58
+ * @LastEditTime: 2020-07-15 21:56:07
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -23,7 +23,9 @@ const VerifyCurAccountPhone = props => {
   const [curPhone, setCurPhone] = useState('')
 
   const captchaCallback = res => {
-    console.log(res, 'res')
+    if (res.ret === 2) {
+      setIsSendVerify(false)
+    }
     if (!res.randstr || !res.ticket) return
     let _params = {
       param: {

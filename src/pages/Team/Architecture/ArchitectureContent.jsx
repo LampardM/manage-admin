@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-13 23:14:33
+ * @LastEditTime: 2020-07-15 21:56:41
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -83,10 +83,8 @@ const ArchitectureContent = () => {
     getCurDepartment(_params)
       .then(_result => {
         setIsTableLoading(false)
-        console.log(_result)
         deleteUselessChildren(_result.data)
-        var a = countDepartLevel(_result.data)
-        console.log(_result.data, 'data')
+        countDepartLevel(_result.data)
         setRecursionResult(_result.data)
       })
       .catch(err => console.log(err))

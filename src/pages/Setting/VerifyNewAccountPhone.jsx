@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 15:15:30
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 17:15:58
+ * @LastEditTime: 2020-07-15 21:56:29
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -24,6 +24,9 @@ const VerifyNewAccountPhone = () => {
   const history = useHistory()
 
   const captchaCallback = res => {
+    if (res.ret === 2) {
+      setIsSendVerify(false)
+    }
     if (!res.randstr || !res.ticket) return
     let _params = {
       param: {
