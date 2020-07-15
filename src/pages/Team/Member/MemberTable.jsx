@@ -9,11 +9,17 @@ import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Table, Dropdown, Menu, Space, Button, Row, Col } from 'antd'
+import { Table, Dropdown, Menu, Space, Button, Row, Col, Message } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import { DownOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import { invitationRecord, invitedRecord } from '@/api/member'
+
+/** vendor */
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+
+/** custom */
+import { urlPrefix } from '@/constants'
 
 //表头
 const columns = [
@@ -48,18 +54,19 @@ const columns = [
 
 const PAGE_SIZE = 10
 
-const joinMenuHandler = (record, item, key) => {}
-
 const MemberTable = props => {
   const { curselect } = props
+  const history = useHistory()
   const { userInfoStore, MemberStore } = useStore()
+
   const [data, setData] = useState([])
   const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
   const [isTableLoading, setIsTableLoading] = useState(false)
   const [selectedKeys, setSelectedKeys] = useState([])
-  const history = useHistory()
 
   const handleTableChange = () => {}
+
+  const joinMenuHandler = (record, item, key) => {}
 
   const addMember = () => {
     history.push('/team/member/addmember')
@@ -67,7 +74,7 @@ const MemberTable = props => {
 
   useEffect(() => {
     fetch()
-  }, [curselect, pagination.current, pagination.pageSize, MemberStore.filters])
+  }, [curselect, pagination.pageSize, MemberStore.filters])
 
   const fetch = () => {
     setIsTableLoading(true)
@@ -142,8 +149,15 @@ const MemberTable = props => {
 
   const invitedMenu = record => {
     return (
-      <Menu onClick={(item, key) => joinMenuHandler(record, item, key)}>
-        <Menu.Item key="1">复制链接</Menu.Item>
+      <Menu onClick={(item, key) => {}}>
+        <Menu.Item key="1">
+          <CopyToClipboard
+            text={`${urlPrefix}/joindepart/${record.key}`}
+            onCopy={() => Message.success('链接复制成功！')}
+          >
+            <span>复制链接</span>
+          </CopyToClipboard>
+        </Menu.Item>
         <Menu.Item key="2">取消邀请</Menu.Item>
       </Menu>
     )

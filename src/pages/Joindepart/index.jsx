@@ -10,10 +10,17 @@ import styled from 'styled-components'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { Button, Form, Input, Select } from 'antd'
 import { isAuthenticated } from '@/utils/session'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
+
+/** custom */
+import { joinOrganize } from '@/api'
+import { useStore } from '@/hooks/useStore'
 
 const AddDepartMentNotice = () => {
+  const { id } = useParams()
   const [form] = Form.useForm()
+  const { userInfoStore } = useStore()
+
   const [, forceUpdate] = useState()
   let history = useHistory()
 
@@ -29,7 +36,26 @@ const AddDepartMentNotice = () => {
     }
   })
 
-  const joinDepartMentHandle = () => {}
+  const joinDepartMentHandle = form => {
+    console.log(form.name, form.phone)
+
+    joinOrganize({
+      param: {
+        name: form.name,
+        phone: form.phone,
+        invitationCode: id
+      },
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime())
+    }).then(() => {
+      if (!isAuthenticated()) {
+        history.push('/login')
+      } else {
+        history.push('/home')
+      }
+    })
+  }
 
   return (
     <div style={{ padding: '0 16 16', marginTop: -16 }}>
@@ -39,6 +65,7 @@ const AddDepartMentNotice = () => {
             <AddDepartMentTitle>浙江xx公司邀请您加入团队</AddDepartMentTitle>
             <Form
               form={form}
+              onFinish={joinDepartMentHandle}
               labelCol={{
                 span: 5
               }}
@@ -116,7 +143,6 @@ const AddDepartMentNotice = () => {
                   <Button
                     type="primary"
                     htmlType="submit"
-                    onClick={joinDepartMentHandle}
                     disabled={
                       !form.isFieldTouched('phone') ||
                       !form.isFieldTouched('name') ||
