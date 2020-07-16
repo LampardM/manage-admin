@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-15 21:56:41
+ * @LastEditTime: 2020-07-16 22:12:49
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -32,6 +32,8 @@ const ArchitectureContent = () => {
   const [curDepart, setCurDepart] = useState({})
   const [expandedRowKeys, setExpandedRowKeys] = useState([])
   const [isTableLoading, setIsTableLoading] = useState(false)
+  const [drillingDown, setDrillingDown] = useState(false)
+  const [baseCode, setBaseCode] = useState('')
 
   const recursionExpandKeys = (arr, result) => {
     arr.forEach(element => {
@@ -66,12 +68,12 @@ const ArchitectureContent = () => {
     })
   }
 
-  const getCurDepartmentList = (baseDepartmentCode, down) => {
+  const getCurDepartmentList = () => {
     setIsTableLoading(true)
     let _params = {
       param: {
-        baseDepartmentCode: baseDepartmentCode ? baseDepartmentCode : '',
-        buildChild: down ? down : false,
+        baseDepartmentCode: baseCode,
+        buildChild: drillingDown,
         excludeCode: [],
         totalNodeLevel: 6
       },
@@ -92,7 +94,7 @@ const ArchitectureContent = () => {
 
   useEffect(() => {
     getCurDepartmentList()
-  }, [])
+  }, [baseCode])
 
   const findParentDepartment = (targetArr, target, parent = getCurDepart()) => {
     let _targetCode
@@ -268,11 +270,13 @@ const ArchitectureContent = () => {
   const rowExpandable = record => {}
 
   const getMoreChildren = record => {
-    getCurDepartmentList(record.departmentCode, true)
+    setDrillingDown(true)
+    setBaseCode(record.departmentCode)
   }
 
   const getMoreParent = record => {
-    getCurDepartmentList(record.departmentCode, false)
+    setDrillingDown(false)
+    setBaseCode(record.departmentCode)
   }
 
   return (

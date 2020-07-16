@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-15 21:49:49
+ * @LastEditTime: 2020-07-16 22:12:40
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -25,27 +25,8 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
   const { TreeNode } = TreeSelect
 
   useEffect(() => {
-    if (subInfo) {
-      setDepart(subInfo)
-      form.setFieldsValue({ updepartment: subInfo })
-    } else {
-      departList[0] &&
-        departList[0].value &&
-        form.setFieldsValue({ updepartment: departList[0].value }) &&
-        setDepart(departList[0].value)
-    }
-    if (modalType === 'edit') {
-      setDepartInfo(curInfo)
-      form.setFieldsValue({ department: curInfo.departmentName })
-    } else {
-      setDepartInfo({})
-      form.setFieldsValue({ department: '' })
-    }
-  }, [departList])
-
-  useEffect(() => {
     modalShow && form.resetFields() && form.setFieldsValue({ updatedepartment: '' })
-    modalShow && getCurDepartmentList(subInfo)
+    modalShow && getCurDepartmentList(true, subInfo)
   }, [modalShow])
 
   const changeFetchDataProp = arr => {
@@ -68,8 +49,27 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
     })
   }
 
+  const handleInitStatus = curdepartlist => {
+    if (subInfo) {
+      setDepart(subInfo)
+      form.setFieldsValue({ updepartment: subInfo })
+    } else {
+      curdepartlist[0] &&
+        curdepartlist[0].value &&
+        form.setFieldsValue({ updepartment: curdepartlist[0].value }) &&
+        setDepart(curdepartlist[0].value)
+    }
+    if (modalType === 'edit') {
+      setDepartInfo(curInfo)
+      form.setFieldsValue({ department: curInfo.departmentName })
+    } else {
+      setDepartInfo({})
+      form.setFieldsValue({ department: '' })
+    }
+  }
+
   // 获取当前组织架构列表
-  const getCurDepartmentList = (baseCode, drillingDown = true) => {
+  const getCurDepartmentList = (isfirst, baseCode, drillingDown = false) => {
     let _params = {
       param: {
         baseDepartmentCode: baseCode ? baseCode : '',
@@ -84,13 +84,40 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
 
     getCurDepartment(_params)
       .then(_result => {
+        let _lastData
         changeFetchDataProp(_result.data)
         countDepartLevel(_result.data)
-        baseCode ? setDepartList(_result.data) : setDepartList(unshiftCurDepart(_result.data))
+
+        if (isfirst) {
+          if (baseCode) {
+            if (_result.data && _result.data.length > 0 && _result.data[0].departmentLevel === 1) {
+              _lastData = unshiftCurDepart(_result.data)
+            } else {
+              _lastData = _result.data
+            }
+          } else {
+            _lastData = unshiftCurDepart(_result.data)
+          }
+        } else {
+          if (_result.data && _result.data.length > 0 && _result.data[0].departmentLevel === 1) {
+            _lastData = unshiftCurDepart(_result.data)
+          } else {
+            _lastData = _result.data
+          }
+        }
+
+        setDepartList(_lastData)
+        if (isfirst) {
+          handleInitStatus(_lastData)
+        }
       })
       .catch(err => {
         console.log(err)
-        baseCode ? setDepartList([]) : setDepartList(unshiftCurDepart([]))
+        let _lastData = isfirst ? unshiftCurDepart([]) : []
+        setDepartList(_lastData)
+        if (isfirst) {
+          handleInitStatus(_lastData)
+        }
       })
   }
 
@@ -130,9 +157,14 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
     setDepart(value)
   }
 
-  const test = (e, node) => {
-    console.log('下钻', node)
+  const drillingDown = (e, node) => {
     e.stopPropagation()
+    getCurDepartmentList(false, node.departmentCode, true)
+  }
+
+  const drillingUp = (e, node) => {
+    e.stopPropagation()
+    getCurDepartmentList(false, node.departmentCode, false)
   }
 
   const renderTreeNode = data => {
@@ -144,7 +176,12 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
               node.level === 5 && node.totalChildren !== 0 ? (
                 <SelectDepart>
                   <DepartName>{node.departmentName}</DepartName>
-                  <DownButton onClick={e => test(e, node)}>下钻</DownButton>
+                  <DownButton onClick={e => drillingDown(e, node)}>下钻</DownButton>
+                </SelectDepart>
+              ) : node.level === 0 && node.departmentLevel !== 1 ? (
+                <SelectDepart>
+                  <DepartName>{node.departmentName}</DepartName>
+                  <DownButton onClick={e => drillingUp(e, node)}>上钻</DownButton>
                 </SelectDepart>
               ) : (
                 node.departmentName
@@ -157,7 +194,21 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
       } else {
         return (
           <TreeNode
-            title={node.departmentName}
+            title={
+              node.level === 5 && node.totalChildren !== 0 ? (
+                <SelectDepart>
+                  <DepartName>{node.departmentName}</DepartName>
+                  <DownButton onClick={e => drillingDown(e, node)}>下钻</DownButton>
+                </SelectDepart>
+              ) : node.level === 0 && node.departmentLevel !== 1 ? (
+                <SelectDepart>
+                  <DepartName>{node.departmentName}</DepartName>
+                  <DownButton onClick={e => drillingUp(e, node)}>上钻</DownButton>
+                </SelectDepart>
+              ) : (
+                node.departmentName
+              )
+            }
             value={node.departmentCode}
             key={node.departmentCode}
           >
@@ -238,6 +289,8 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
             value={depart}
             treeDefaultExpandAll
             onChange={onChange}
+            listItemHeight={10}
+            listHeight={250}
           >
             {renderTreeNode(departList)}
           </TreeSelect>
