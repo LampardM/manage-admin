@@ -3,10 +3,11 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 12:03:05
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-15 22:45:01
+ * @LastEditTime: 2020-07-16 22:12:19
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Steps, message, Result } from 'antd'
+import useInterval from '@/hooks/useInterval'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
 import { useStore } from '@/hooks/useStore'
@@ -24,7 +25,6 @@ const ForgotPassword = () => {
   const [curPhone, setCurPhone] = useState('')
   const [countDown, setCountDown] = useState(5)
   const [, forceUpdate] = useState()
-
   const history = useHistory()
 
   const captchaCallback = res => {
@@ -41,7 +41,6 @@ const ForgotPassword = () => {
         ticket: res.ticket,
         rand: res.randstr
       }
-
       getResetPasswordVerify(_params)
         .then(_result => {
           message.success('验证码发送成功！')
@@ -80,6 +79,14 @@ const ForgotPassword = () => {
     }
     forceUpdate({})
   }, [countDown])
+
+  useInterval(
+    () => {
+      setCountDown(countDown => countDown - 1)
+    },
+    1000,
+    isSendVerify
+  )
 
   const goLogin = () => {
     history.push('/login')
