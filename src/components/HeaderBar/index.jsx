@@ -24,7 +24,7 @@ import { getUserMessages } from '@/api/user'
  * @default 60s
  * @type {number}
  */
-const POLLING_DELAY = 1000 * 60 * 10
+const POLLING_DELAY = 1000 * 60 * 2
 
 //withRouter一定要写在前面，不然路由变化不会反映到props中去
 @withRouter
