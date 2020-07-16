@@ -16,7 +16,7 @@ import { Row, Col, Badge, Dropdown, Menu } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined, NotificationOutlined } from '@ant-design/icons'
 
 /** custom */
-import { isAuthenticated } from '@/utils/session'
+import { getNickName, isAuthenticated } from '@/utils/session'
 import { getUserMessages } from '@/api/user'
 
 /**
@@ -93,7 +93,7 @@ class HeaderBar extends React.Component {
     return (
       <Menu className="menu" onClick={this.userInfoHandler}>
         <Menu.ItemGroup title="用户中心" className="menu-group">
-          <Menu.Item key={isAuthenticated()}>你好 - {isAuthenticated()}</Menu.Item>
+          <Menu.Item key={isAuthenticated()}>你好 - {getNickName()}</Menu.Item>
           <Menu.Item key="userInfo">个人信息</Menu.Item>
           <Menu.Item key="logout">退出登录</Menu.Item>
         </Menu.ItemGroup>
@@ -123,10 +123,9 @@ class HeaderBar extends React.Component {
   }
 
   login = () => {
-    const { name = 'Hi' } = this.props.userInfoStore
     return (
       <Dropdown overlay={this.menu()}>
-        <span style={{ cursor: 'pointer' }}>{name}</span>
+        <span style={{ cursor: 'pointer' }}>{getNickName()}</span>
       </Dropdown>
     )
   }
