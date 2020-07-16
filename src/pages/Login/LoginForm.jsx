@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-16 22:24:08
+ * @LastEditTime: 2020-07-17 00:19:10
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -64,11 +64,8 @@ const LoginForm = props => {
       LoginByPassword(_loginByPassParam)
         .then(_result => {
           console.log(_result)
-          setDisLogin(false)
           setNickName(_result.data.nick)
-          setNavMenus(_result.data.menus)
           setUserOrganizes(_result.data.organizes)
-          setUserMenus(_result.data.menus)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected
           })
@@ -84,15 +81,16 @@ const LoginForm = props => {
             switchDepartment(_params)
               .then(_result => {
                 console.log(_result)
+                setDisLogin(false)
+                setNavMenus(_result.data.menus)
+                setUserMenus(_result.data.menus)
+                message.success('登录成功！')
+                history.push('/home')
               })
               .catch(err => {
                 console.log(err)
               })
           }
-          message.success('登录成功！')
-          setTimeout(() => {
-            history.push('/home')
-          }, 500)
           userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
@@ -165,7 +163,6 @@ const LoginForm = props => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
           setUserMenus(_result.data.menus)
-          setDisLogin(false)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected
           })
@@ -180,16 +177,17 @@ const LoginForm = props => {
             }
             switchDepartment(_params)
               .then(_result => {
+                setDisLogin(false)
+                setNavMenus(_result.data.menus)
+                setUserMenus(_result.data.menus)
+                message.success('登录成功！')
+                history.push('/home')
                 console.log(_result)
               })
               .catch(err => {
                 console.log(err)
               })
           }
-          message.success('登录成功！')
-          setTimeout(() => {
-            history.push('/home')
-          }, 500)
           userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
