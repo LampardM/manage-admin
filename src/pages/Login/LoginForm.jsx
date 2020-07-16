@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 00:23:49
+ * @LastEditTime: 2020-07-17 00:27:56
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -84,6 +84,7 @@ const LoginForm = props => {
                 setDisLogin(false)
                 // setNavMenus(_result.data.menus)
                 setUserMenus(_result.data.menus)
+                setNickName(_result.data.nick)
                 message.success('登录成功！')
                 history.push('/home')
               })
@@ -167,6 +168,7 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
+          setNickName(_result.data.nick)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected
           })
@@ -184,6 +186,7 @@ const LoginForm = props => {
                 setDisLogin(false)
                 // setNavMenus(_result.data.menus)
                 setUserMenus(_result.data.menus)
+                setNickName(_result.data.nick)
                 message.success('登录成功！')
                 history.push('/home')
                 console.log(_result)
