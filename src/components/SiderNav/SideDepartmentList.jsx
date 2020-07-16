@@ -11,7 +11,7 @@ import { useStore } from '@/hooks/useStore'
 import { useLocalStorageState } from '@umijs/hooks'
 import { switchDepartment } from '@/api/department'
 import { useHistory } from 'react-router-dom'
-import { setCurDepart, getCurDepart } from '@/utils/session'
+import { setNickName, setNavMenus, setCurDepart, getCurDepart } from '@/utils/session'
 import styled from 'styled-components'
 
 const { Option } = Select
@@ -51,6 +51,8 @@ const SideDepartmentList = () => {
     }
     switchDepartment(_params)
       .then(_result => {
+        setNickName(_result.data.nick)
+        setNavMenus(_result.data.menus)
         setCurDepart([option.key])
         setCurValue(value)
         message.success('切换团队成功！')

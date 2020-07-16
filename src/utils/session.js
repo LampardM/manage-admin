@@ -5,8 +5,10 @@
  * @LastEditors: longzhang6
  * @LastEditTime: 2020-07-14 00:36:07
  */
-const LOGIN_COOKIE_NAME = 'sessionId'
+const NAV_MENUS = 'menus'
+const NICK_NAME = 'nick'
 const USER_DEPARTMENT = 'depart'
+const LOGIN_COOKIE_NAME = 'sessionId'
 
 export function isAuthenticated() {
   return _getCookie(LOGIN_COOKIE_NAME)
@@ -23,6 +25,22 @@ export function logout() {
 
 export function setCurDepart(depart) {
   return _setCookie(USER_DEPARTMENT, depart)
+}
+
+export function getNickName() {
+  return _getCookie(NICK_NAME)
+}
+
+export function setNickName(nick) {
+  return _setCookie(NICK_NAME, nick)
+}
+
+export function getNavMenus() {
+  return _getCookie(NAV_MENUS)
+}
+
+export function setNavMenus(menus) {
+  return _setCookie(NAV_MENUS, menus)
 }
 
 export function getCurDepart() {

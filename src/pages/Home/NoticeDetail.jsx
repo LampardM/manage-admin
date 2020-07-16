@@ -14,12 +14,16 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 /** custom */
 import { urlPrefix } from '@/constants'
+import { refuseInvitation } from '@/api'
+import { useStore } from '@/hooks/useStore'
 
 const { confirm } = Modal
 
 const NoticeDetail = () => {
   const { id } = useParams()
   const history = useHistory()
+  const { userInfoStore } = useStore()
+
   const [inviteUrl, setInviteUrl] = useState(`${urlPrefix}/joindepart/${id}`)
   const [copied, setCopied] = useState(false)
   const [disableJoin, setDisableJoin] = useState(false)
@@ -41,8 +45,14 @@ const NoticeDetail = () => {
       content: '拒绝后该邀请链接失效，不能再通过此链接加入',
       onOk() {
         console.log('OK')
-        setDisableJoin(true)
-        //TODO 拒绝加入
+        refuseInvitation({
+          param: id,
+          token: userInfoStore.token,
+          version: userInfoStore.version,
+          timestamp: JSON.stringify(new Date().getTime())
+        }).then(() => {
+          setDisableJoin(true)
+        })
       },
       onCancel() {
         console.log('Cancel')

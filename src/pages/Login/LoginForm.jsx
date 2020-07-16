@@ -14,7 +14,7 @@ import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
 import { useLocalStorageState } from '@umijs/hooks'
-import { setCurDepart } from '@/utils/session'
+import { setNickName, setNavMenus, setCurDepart } from '@/utils/session'
 import { switchDepartment } from '@/api/department'
 import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
 
@@ -65,6 +65,8 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result)
           setDisLogin(false)
+          setNickName(_result.data.nick)
+          setNavMenus(_result.data.menus)
           setUserOrganizes(_result.data.organizes)
           setUserMenus(_result.data.menus)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {

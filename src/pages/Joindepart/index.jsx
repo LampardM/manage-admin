@@ -13,16 +13,19 @@ import { isAuthenticated } from '@/utils/session'
 import { useHistory, useParams } from 'react-router-dom'
 
 /** custom */
-import { joinOrganize } from '@/api'
+import { joinOrganize, invitationInfo } from '@/api'
 import { useStore } from '@/hooks/useStore'
 
 const AddDepartMentNotice = () => {
+  let invitationCode = ''
   const { id } = useParams()
+  const history = useHistory()
   const [form] = Form.useForm()
   const { userInfoStore } = useStore()
 
   const [, forceUpdate] = useState()
-  let history = useHistory()
+  const [name, setName] = useState('')
+  const [organize, setOrganize] = useState('')
 
   const tailLayout = {
     wrapperCol: {
@@ -33,17 +36,31 @@ const AddDepartMentNotice = () => {
   useEffect(() => {
     if (!isAuthenticated()) {
       history.push('/login')
+    } else {
+      getInvitationInfo()
     }
   })
+
+  const getInvitationInfo = () => {
+    invitationInfo({
+      param: id,
+      token: userInfoStore.token,
+      version: userInfoStore.version,
+      timestamp: JSON.stringify(new Date().getTime())
+    }).then(({ data }) => {
+      invitationCode = data.invitationCode
+      setName(data.memberName)
+      setOrganize(data.organizeName)
+    })
+  }
 
   const joinDepartMentHandle = form => {
     console.log(form.name, form.phone)
 
     joinOrganize({
       param: {
-        name: form.name,
         phone: form.phone,
-        invitationCode: id
+        invitationCode: invitationCode
       },
       token: userInfoStore.token,
       version: userInfoStore.version,
@@ -62,7 +79,7 @@ const AddDepartMentNotice = () => {
       <AddDepartMentNoticeCon>
         <AddDepartContent>
           <RealContent>
-            <AddDepartMentTitle>浙江xx公司邀请您加入团队</AddDepartMentTitle>
+            <AddDepartMentTitle>{organize}邀请您加入团队</AddDepartMentTitle>
             <Form
               form={form}
               onFinish={joinDepartMentHandle}
@@ -87,7 +104,7 @@ const AddDepartMentNotice = () => {
                   }
                 ]}
               >
-                <Input placeholder="请输入姓名" />
+                <Input placeholder="请输入姓名" disabled value={name} />
               </Form.Item>
               <Form.Item
                 name="phone"
