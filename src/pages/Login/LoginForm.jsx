@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-15 21:51:41
+ * @LastEditTime: 2020-07-16 22:24:08
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -26,6 +26,8 @@ const LoginForm = props => {
   const [countDown, setCountDown] = useState(5)
   const [disLogin, setDisLogin] = useState(false)
   const [userOrganizes, setUserOrganizes] = useLocalStorageState('user-organizes', []) // 防止页面刷新左侧团队列表被重置
+  const [userMenus, setUserMenus] = useLocalStorageState('user-menus', []) // 防止页面刷新左侧团队列表被重置
+
   const history = useHistory()
 
   let isLogining = false
@@ -64,6 +66,7 @@ const LoginForm = props => {
           console.log(_result)
           setDisLogin(false)
           setUserOrganizes(_result.data.organizes)
+          setUserMenus(_result.data.menus)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected
           })
@@ -159,6 +162,7 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
+          setUserMenus(_result.data.menus)
           setDisLogin(false)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected

@@ -1,5 +1,5 @@
 /**
- * @Desc In User Settings Edit
+ * @Desc 左侧nav数据
  * @exports class
  * @Author jieq
  * @Date 2020-04-16 21:31:20
@@ -10,7 +10,8 @@ const menus = [
   {
     title: '首页',
     key: '/home',
-    unsub: true, // FIXME 不渲染下面的subs
+    show: true,
+    unsub: true, // 不渲染下面的subs
     subs: [
       {
         title: '通知详情',
@@ -21,74 +22,89 @@ const menus = [
   {
     title: '团队审核',
     key: '/organization',
+    show: false,
     subs: [
       {
         title: '待审核',
-        key: '/organization/check'
+        key: '/organization/check',
+        show: false
       },
       {
         title: '待授权',
         key: '/organization/auth',
-        unsub: true, // FIXME 不渲染下面的subs
+        show: false,
+        unsub: true, // 不渲染下面的subs
         subs: [
           {
             title: '权限授权',
-            key: '/organization/auth/info'
+            key: '/organization/auth/info',
+            show: false
           }
         ]
       },
       {
         title: '已通过',
         key: '/organization/approve',
-        unsub: true, // FIXME 不渲染下面的subs
+        show: false,
+        unsub: true, //  不渲染下面的subs
         subs: [
           {
             title: '编辑',
-            key: '/organization/approve/edit'
+            key: '/organization/approve/edit',
+            show: false
           }
         ]
       },
       {
         title: '已驳回',
-        key: '/organization/reject'
+        key: '/organization/reject',
+        show: false
       }
     ]
   },
   {
     title: '团队管理',
     key: '/team',
+    show: false,
     subs: [
       {
         title: '组织架构',
-        key: '/team/architecture'
+        key: '/team/architecture',
+        show: false
       },
       {
         title: '成员管理',
         key: '/team/member',
-        unsub: true, // FIXME 不渲染下面的subs
+        show: false,
+        unsub: true, // 不渲染下面的subs
         subs: [
           {
             title: '添加成员',
-            key: '/team/member/addmember'
+            key: '/team/member/addmember',
+            show: false
           },
           {
             title: '编辑成员',
-            key: '/team/member/editmember'
+            key: '/team/member/editmember',
+            show: false
           }
         ]
       },
       {
         title: '角色管理',
         key: '/team/character',
-        unsub: true, // FIXME 不渲染下面的subs
+        show: false,
+        unsub: true, // 不渲染下面的subs
         subs: [
           {
             title: '添加角色',
-            key: '/team/character/add'
+            key: '/team/character/add',
+            show: false
           },
           {
             title: '编辑角色',
-            key: '/team/character/edit'
+            key: '/team/character/edit',
+            show: false
           }
         ]
       }
@@ -114,15 +130,16 @@ const menus = [
   // },
   {
     title: '创建团队',
-    key: '/create'
+    key: '/create',
+    show: true
   },
   {
     title: '团队设置',
-    key: '/setting'
+    key: '/setting',
+    show: true
   }
 ]
 
-// FIXME 不推荐这么做
 const blackList = [
   '/home/notice',
   '/team/character/add',
