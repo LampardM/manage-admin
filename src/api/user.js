@@ -148,6 +148,24 @@ export function joinOrganize(data) {
   })
 }
 
+// 邀请加入团队信息
+export function invitationInfo(data) {
+  return request({
+    url: '/User/InvitationInfo',
+    method: 'post',
+    data
+  })
+}
+
+// 拒绝邀请加入
+export function refuseInvitation(data) {
+  return request({
+    url: '/User/RefuseInvitation',
+    method: 'post',
+    data
+  })
+}
+
 // 获取重置密码手机验证码
 export function getResetPasswordVerify(params) {
   return request({
