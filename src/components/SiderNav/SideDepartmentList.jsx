@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-16 23:46:55
+ * @LastEditTime: 2020-07-17 00:23:12
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
@@ -53,7 +53,7 @@ const SideDepartmentList = () => {
     switchDepartment(_params)
       .then(_result => {
         setNickName(_result.data.nick)
-        setNavMenus(_result.data.menus)
+        // setNavMenus(_result.data.menus)
         setUserMenus(_result.data.menus)
         setCurDepart([option.key])
         setCurValue(value)

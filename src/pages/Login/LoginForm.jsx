@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 00:19:10
+ * @LastEditTime: 2020-07-17 00:23:49
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -82,7 +82,7 @@ const LoginForm = props => {
               .then(_result => {
                 console.log(_result)
                 setDisLogin(false)
-                setNavMenus(_result.data.menus)
+                // setNavMenus(_result.data.menus)
                 setUserMenus(_result.data.menus)
                 message.success('登录成功！')
                 history.push('/home')
@@ -90,6 +90,11 @@ const LoginForm = props => {
               .catch(err => {
                 console.log(err)
               })
+          } else {
+            setDisLogin(false)
+            setUserMenus(_result.data.menus)
+            message.success('登录成功！')
+            history.push('/home')
           }
           userInfoStore.toggleLogin(true, _result.data)
         })
@@ -162,7 +167,6 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result)
           setUserOrganizes(_result.data.organizes)
-          setUserMenus(_result.data.menus)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected
           })
@@ -178,7 +182,7 @@ const LoginForm = props => {
             switchDepartment(_params)
               .then(_result => {
                 setDisLogin(false)
-                setNavMenus(_result.data.menus)
+                // setNavMenus(_result.data.menus)
                 setUserMenus(_result.data.menus)
                 message.success('登录成功！')
                 history.push('/home')
@@ -187,6 +191,11 @@ const LoginForm = props => {
               .catch(err => {
                 console.log(err)
               })
+          } else {
+            setDisLogin(false)
+            setUserMenus(_result.data.menus)
+            message.success('登录成功！')
+            history.push('/home')
           }
           userInfoStore.toggleLogin(true, _result.data)
         })
