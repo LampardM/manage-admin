@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 20:06:26
+ * @LastEditTime: 2020-07-17 21:34:38
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -236,7 +236,7 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
           .validateFields()
           .then(values => {
             form.resetFields()
-            onCreate(values, subInfo, curInfo)
+            onCreate(values, curInfo)
           })
           .catch(info => {
             console.log('Validate Failed:', info)
