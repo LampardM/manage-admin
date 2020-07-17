@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 20:12:28
+ * @LastEditTime: 2020-07-17 21:36:53
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -175,11 +175,11 @@ const ArchitectureContent = () => {
     setModalShow(true)
   }
 
-  const modalHandleOk = (values, subInfo, curInfo) => {
+  const modalHandleOk = (values, curInfo) => {
     let _params = {
       param: {
         departmentName: values.department,
-        parentCode: subInfo !== getCurDepart() ? subInfo : ''
+        parentCode: values.updepartment !== getCurDepart() ? values.updepartment : ''
       },
       timestamp: JSON.stringify(new Date().getTime()),
       token: userInfoStore.token,
@@ -200,7 +200,7 @@ const ArchitectureContent = () => {
         param: {
           departmentCode: curInfo.departmentCode,
           departmentName: values.department,
-          parentCode: subInfo !== getCurDepart() ? subInfo : ''
+          parentCode: values.updepartment !== getCurDepart() ? values.updepartment : ''
         }
       })
       updateDepartment(_params)
