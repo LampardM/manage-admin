@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 21:36:53
+ * @LastEditTime: 2020-07-17 21:45:54
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -172,6 +172,7 @@ const ArchitectureContent = () => {
   // 添加部门
   const addDepartment = () => {
     setSubInfo('')
+    setModalType('create')
     setModalShow(true)
   }
 
