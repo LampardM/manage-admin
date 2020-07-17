@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 15:46:55
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-16 22:12:49
+ * @LastEditTime: 2020-07-17 20:12:28
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Table, message } from 'antd'
@@ -94,7 +94,7 @@ const ArchitectureContent = () => {
 
   useEffect(() => {
     getCurDepartmentList()
-  }, [baseCode])
+  }, [drillingDown])
 
   const findParentDepartment = (targetArr, target, parent = getCurDepart()) => {
     let _targetCode

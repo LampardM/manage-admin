@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 17:03:34
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-16 22:12:40
+ * @LastEditTime: 2020-07-17 20:06:26
  */
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Input, TreeSelect } from 'antd'
@@ -73,7 +73,7 @@ const ArchitectureModal = ({ modalShow, modalType, subInfo, curInfo, onCreate, o
     let _params = {
       param: {
         baseDepartmentCode: baseCode ? baseCode : '',
-        buildChild: drillingDown, // true 下钻 false 上钻
+        buildChild: isfirst ? (baseCode ? true : false) : drillingDown, // true 下钻 false 上钻
         excludeCode: [],
         totalNodeLevel: 6
       },
