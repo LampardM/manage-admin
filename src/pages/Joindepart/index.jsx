@@ -24,7 +24,6 @@ const AddDepartMentNotice = () => {
   const { userInfoStore } = useStore()
 
   const [, forceUpdate] = useState()
-  const [name, setName] = useState('')
   const [organize, setOrganize] = useState('')
 
   const tailLayout = {
@@ -39,7 +38,7 @@ const AddDepartMentNotice = () => {
     } else {
       getInvitationInfo()
     }
-  })
+  }, [])
 
   const getInvitationInfo = () => {
     invitationInfo({
@@ -49,7 +48,7 @@ const AddDepartMentNotice = () => {
       timestamp: JSON.stringify(new Date().getTime())
     }).then(({ data }) => {
       invitationCode = data.invitationCode
-      setName(data.memberName)
+      form.setFieldsValue({ name: data.memberName })
       setOrganize(data.organizeName)
     })
   }
@@ -104,7 +103,7 @@ const AddDepartMentNotice = () => {
                   }
                 ]}
               >
-                <Input placeholder="请输入姓名" disabled value={name} />
+                <Input placeholder="请输入姓名" disabled />
               </Form.Item>
               <Form.Item
                 name="phone"
