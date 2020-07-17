@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 00:27:56
+ * @LastEditTime: 2020-07-17 20:36:13
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -63,7 +63,8 @@ const LoginForm = props => {
       }
       LoginByPassword(_loginByPassParam)
         .then(_result => {
-          console.log(_result)
+          console.log(_result, 'login success')
+          userInfoStore.toggleLogin(true, _result.data)
           setNickName(_result.data.nick)
           setUserOrganizes(_result.data.organizes)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
@@ -97,7 +98,6 @@ const LoginForm = props => {
             message.success('登录成功！')
             history.push('/home')
           }
-          userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
           console.log(err)
@@ -166,7 +166,8 @@ const LoginForm = props => {
         }
       LoginByPhone(_loginByVerParam)
         .then(_result => {
-          console.log(_result)
+          console.log(_result, 'login success')
+          userInfoStore.toggleLogin(true, _result.data)
           setUserOrganizes(_result.data.organizes)
           setNickName(_result.data.nick)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
@@ -200,7 +201,6 @@ const LoginForm = props => {
             message.success('登录成功！')
             history.push('/home')
           }
-          userInfoStore.toggleLogin(true, _result.data)
         })
         .catch(err => {
           console.log(err)
