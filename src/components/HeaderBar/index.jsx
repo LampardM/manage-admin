@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 01:31:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-06-27 14:11:44
+ * @LastEditTime: 2020-07-17 20:42:57
  */
 /** officail */
 import React from 'react'
@@ -94,7 +94,7 @@ class HeaderBar extends React.Component {
       <Menu className="menu" onClick={this.userInfoHandler}>
         <Menu.ItemGroup title="用户中心" className="menu-group">
           <Menu.Item key={isAuthenticated()}>你好 - {getNickName()}</Menu.Item>
-          <Menu.Item key="userInfo">个人信息</Menu.Item>
+          {/* <Menu.Item key="userInfo">个人信息</Menu.Item> */}
           <Menu.Item key="logout">退出登录</Menu.Item>
         </Menu.ItemGroup>
         {/* <Menu.ItemGroup title="设置中心" className="menu-group">

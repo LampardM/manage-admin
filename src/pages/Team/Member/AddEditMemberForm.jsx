@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-08 22:23:14
+ * @LastEditTime: 2020-07-17 20:57:43
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col, message } from 'antd'
@@ -11,9 +11,10 @@ import { useStore } from '@/hooks/useStore'
 import styled from 'styled-components'
 import { getRoleList } from '@/api/user'
 import { inviteMember } from '@/api/member'
-import { createDepartment, getCurDepartment } from '@/api/department'
+import { getCurDepartment } from '@/api/department'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 
+const { TreeNode } = TreeSelect
 const { Option } = Select
 const { TextArea } = Input
 
@@ -40,16 +41,6 @@ const AddEditMemberForm = () => {
     setCurCharacter(value)
   }
 
-  const deleteUselessChildren = arr => {
-    arr.forEach(_item => {
-      if (_item.children && _item.children.length === 0) {
-        delete _item.children
-      } else {
-        deleteUselessChildren(_item.children)
-      }
-    })
-  }
-
   const countDepartLevel = (arr, level = 0) => {
     arr.forEach(_item => {
       _item.level = level
@@ -70,11 +61,11 @@ const AddEditMemberForm = () => {
     })
   }
 
-  const getCurDepartmentList = () => {
+  const getCurDepartmentList = (baseCode = '', drillingDown = false) => {
     let _params = {
       param: {
-        baseDepartmentCode: '',
-        buildChild: false,
+        baseDepartmentCode: baseCode,
+        buildChild: drillingDown,
         excludeCode: [],
         totalNodeLevel: 6
       },
@@ -85,7 +76,6 @@ const AddEditMemberForm = () => {
 
     getCurDepartment(_params)
       .then(_result => {
-        deleteUselessChildren(_result.data)
         countDepartLevel(_result.data)
         changeFetchDataProp(_result.data)
         setDepartment(_result.data)
@@ -119,6 +109,68 @@ const AddEditMemberForm = () => {
 
   const onChange = value => {
     setNotice(value.target.checked)
+  }
+
+  const drillingDepartDown = (e, node) => {
+    e.stopPropagation()
+    getCurDepartmentList(node.departmentCode, true)
+  }
+
+  const drillingDepartUp = (e, node) => {
+    e.stopPropagation()
+    getCurDepartmentList(node.departmentCode, false)
+  }
+
+  const renderTreeNode = data => {
+    return data.map(node => {
+      if (node.children.length === 0) {
+        return (
+          <TreeNode
+            title={
+              node.level === 5 && node.totalChildren !== 0 ? (
+                <SelectDepart>
+                  <DepartName>{node.departmentName}</DepartName>
+                  <DownButton onClick={e => drillingDepartDown(e, node)}>下钻</DownButton>
+                </SelectDepart>
+              ) : node.level === 0 && node.departmentLevel !== 1 ? (
+                <SelectDepart>
+                  <DepartName>{node.departmentName}</DepartName>
+                  <DownButton onClick={e => drillingDepartUp(e, node)}>上钻</DownButton>
+                </SelectDepart>
+              ) : (
+                node.departmentName
+              )
+            }
+            value={node.departmentCode}
+            key={node.departmentCode}
+          ></TreeNode>
+        )
+      } else {
+        return (
+          <TreeNode
+            title={
+              node.level === 5 && node.totalChildren !== 0 ? (
+                <SelectDepart>
+                  <DepartName>{node.departmentName}</DepartName>
+                  <DownButton onClick={e => drillingDepartDown(e, node)}>下钻</DownButton>
+                </SelectDepart>
+              ) : node.level === 0 && node.departmentLevel !== 1 ? (
+                <SelectDepart>
+                  <DepartName>{node.departmentName}</DepartName>
+                  <DownButton onClick={e => drillingDepartUp(e, node)}>上钻</DownButton>
+                </SelectDepart>
+              ) : (
+                node.departmentName
+              )
+            }
+            value={node.departmentCode}
+            key={node.departmentCode}
+          >
+            {renderTreeNode(node.children)}
+          </TreeNode>
+        )
+      }
+    })
   }
 
   const onFinish = () => {
@@ -222,12 +274,15 @@ const AddEditMemberForm = () => {
           <TreeSelect
             style={{ width: '100%' }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            treeData={department}
             onSelect={selectCurdepartment}
             allowClear
             placeholder="请选择所属部门"
+            listItemHeight={10}
+            listHeight={250}
             treeDefaultExpandAll
-          />
+          >
+            {renderTreeNode(department)}
+          </TreeSelect>
         </Form.Item>
         <Form.Item name="checkbox-group" label="通知方式">
           <NoticeContent>
@@ -323,5 +378,17 @@ const FormContent = styled.div`
 const NoticeContent = styled.div``
 
 const HandleContainer = styled.div``
+
+const SelectDepart = styled.span`
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+`
+
+const DownButton = styled.a`
+  padding-right: 20px;
+`
+
+const DepartName = styled.div``
 
 export default AddEditMemberForm
