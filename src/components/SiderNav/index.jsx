@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-16 23:23:18
+ * @LastEditTime: 2020-07-17 20:16:08
  */
 import React from 'react'
 import Menu from '../Menu/index'
@@ -18,7 +18,7 @@ import navMenus from '@/router.map'
 @observer
 class SiderNav extends React.Component {
   componentDidMount() {
-    this.computedCurUserMenus()
+    // this.computedCurUserMenus()
   }
 
   computedCurUserMenus() {
