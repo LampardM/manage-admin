@@ -150,6 +150,19 @@ const blackList = [
   '/organization/approve/edit'
 ]
 
+const navMap = {
+  yj2g0LWOwR: '/organization',
+  yj2ga1inpl: '/organization/check',
+  yj2gZ2416f: '/organization/auth',
+  yj2gLKiY2z: '/organization/approve',
+  yj2gvTbsWj: '/organization/reject',
+  yj2gjg2yAa: '/team',
+  y63mb3GIQm: '/team/architecture',
+  yj2gmxpbDx: '/team/member',
+  yj2PdITv0L: '/team/character'
+}
+
 export { blackList }
+export { navMap }
 
 export default menus

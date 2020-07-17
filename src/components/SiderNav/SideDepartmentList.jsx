@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 21:11:32
+ * @LastEditTime: 2020-07-17 23:06:24
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
@@ -16,7 +16,7 @@ import styled from 'styled-components'
 
 const { Option } = Select
 
-const SideDepartmentList = () => {
+const SideDepartmentList = props => {
   const [userOrganizes] = useLocalStorageState('user-organizes')
   const [userMenus, setUserMenus] = useLocalStorageState('user-menus')
   const { userInfoStore } = useStore()
@@ -56,6 +56,7 @@ const SideDepartmentList = () => {
         setUserMenus(_result.data.menus)
         setCurDepart([option.key])
         setCurValue(value)
+        props.changeDepartment()
         message.success('切换团队成功！')
         history.push('/home')
       })

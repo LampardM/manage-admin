@@ -3,13 +3,14 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 20:16:08
+ * @LastEditTime: 2020-07-17 23:24:39
  */
 import React from 'react'
 import Menu from '../Menu/index'
 import { withRouter } from 'react-router-dom'
-import { inject, observer } from 'mobx-react'
+import { observer } from 'mobx-react'
 import styled from 'styled-components'
+import { navMap } from '@/router.map'
 import SideDepartmentList from './SideDepartmentList'
 
 /** Mock */
@@ -17,50 +18,48 @@ import navMenus from '@/router.map'
 @withRouter
 @observer
 class SiderNav extends React.Component {
+  state = {
+    menuslist: [],
+    whitelist: ['/create', '/home', '/setting']
+  }
   componentDidMount() {
-    // this.computedCurUserMenus()
+    this.computedCurUserMenus()
   }
 
   computedCurUserMenus() {
-    let initUserMenus = JSON.parse(localStorage.getItem('user-menus'))
-    console.log(initUserMenus, 'menus')
-    if (initUserMenus.length === 0) {
-      return navMenus
-    } else {
-      this.handleInitMenus(initUserMenus, navMenus)
+    let userComeMenus = JSON.parse(localStorage.getItem('user-menus'))
+    console.log(userComeMenus, 'menus')
+    if (userComeMenus && userComeMenus.length !== 0) {
+      this.handleInitMenus(userComeMenus, navMenus)
     }
+    this.setState({ menuslist: navMenus })
   }
 
-  handleInitMenus(menus, origin) {
-    menus.forEach(menu => {
-      let _target = origin.find(_nav => {
-        return _nav.key === menu.key
+  handleInitMenus(userMenus, configMenus) {
+    configMenus.forEach(_target => {
+      let menu = userMenus.find(_nav => {
+        return _target.key === navMap[_nav.key]
       })
-
-      if (_target) {
+      if (menu) {
         _target.show = true
         if (menu.subs && menu.subs.length > 0) {
           this.handleInitMenus(menu.subs, _target.subs)
         }
+      } else {
+        _target.show = this.state.whitelist.includes(_target.key) ? true : false
       }
     })
   }
 
   render() {
     const { className } = this.props
-    let initDepartmentList = JSON.parse(localStorage.getItem('user-organizes'))
+    const { menuslist } = this.state
 
     return (
       <div className={className}>
         <div className="nav-container">
-          <SideDepartmentList />
-          <Menu
-            menus={
-              initDepartmentList.length > 0
-                ? navMenus
-                : [navMenus[0], navMenus[navMenus.length - 2]]
-            }
-          />
+          <SideDepartmentList changeDepartment={this.computedCurUserMenus.bind(this)} />
+          <Menu menus={menuslist} />
         </div>
       </div>
     )
