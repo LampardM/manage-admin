@@ -174,8 +174,25 @@ class HeaderBar extends React.Component {
                     textOverflow: 'ellipsis'
                   }}
                 >
-                  <div style={{ fontWeight: 'bold' }}>{it.title}</div>
-                  <div>{it.content}</div>
+                  <div
+                    style={{
+                      fontWeight: 'bold',
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {it.title}
+                  </div>
+                  <div
+                    style={{
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {it.content}
+                  </div>
                 </Col>
                 <Col
                   span={8}
