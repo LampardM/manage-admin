@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 20:36:13
+ * @LastEditTime: 2020-07-17 21:11:52
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -14,7 +14,7 @@ import { useStore } from '@/hooks/useStore'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
 import { useLocalStorageState } from '@umijs/hooks'
-import { setNickName, setNavMenus, setCurDepart } from '@/utils/session'
+import { setNickName, setCurDepart } from '@/utils/session'
 import { switchDepartment } from '@/api/department'
 import { LoginByPassword, loginPhoneVerify, LoginByPhone } from '@/api/user'
 
@@ -83,7 +83,6 @@ const LoginForm = props => {
               .then(_result => {
                 console.log(_result)
                 setDisLogin(false)
-                // setNavMenus(_result.data.menus)
                 setUserMenus(_result.data.menus)
                 setNickName(_result.data.nick)
                 message.success('登录成功！')
@@ -185,7 +184,6 @@ const LoginForm = props => {
             switchDepartment(_params)
               .then(_result => {
                 setDisLogin(false)
-                // setNavMenus(_result.data.menus)
                 setUserMenus(_result.data.menus)
                 setNickName(_result.data.nick)
                 message.success('登录成功！')

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 00:23:12
+ * @LastEditTime: 2020-07-17 21:11:32
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
@@ -11,7 +11,7 @@ import { useStore } from '@/hooks/useStore'
 import { useLocalStorageState } from '@umijs/hooks'
 import { switchDepartment } from '@/api/department'
 import { useHistory } from 'react-router-dom'
-import { setNickName, setNavMenus, setCurDepart, getCurDepart } from '@/utils/session'
+import { setNickName, setCurDepart, getCurDepart } from '@/utils/session'
 import styled from 'styled-components'
 
 const { Option } = Select
@@ -53,7 +53,6 @@ const SideDepartmentList = () => {
     switchDepartment(_params)
       .then(_result => {
         setNickName(_result.data.nick)
-        // setNavMenus(_result.data.menus)
         setUserMenus(_result.data.menus)
         setCurDepart([option.key])
         setCurValue(value)
