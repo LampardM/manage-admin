@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 20:16:05
+ * @LastEditTime: 2020-07-19 20:21:45
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col, message } from 'antd'
@@ -234,7 +234,7 @@ const AddEditMemberForm = props => {
           depts: formValue.department,
           memo: formValue.desc,
           orgMemberCode: memberDetail.orgMemberCode,
-          orgMemberName: memberDetail.orgMemberName,
+          orgMemberName: formValue.name,
           phone: formValue.phone,
           roles: formValue.character
         },
