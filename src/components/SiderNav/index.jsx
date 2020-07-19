@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 23:24:39
+ * @LastEditTime: 2020-07-19 17:46:42
  */
 import React from 'react'
 import Menu from '../Menu/index'
@@ -11,6 +11,7 @@ import { withRouter } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
 import { navMap } from '@/router.map'
+import { Ext } from '@/utils'
 import SideDepartmentList from './SideDepartmentList'
 
 /** Mock */
@@ -20,19 +21,27 @@ import navMenus from '@/router.map'
 class SiderNav extends React.Component {
   state = {
     menuslist: [],
-    whitelist: ['/create', '/home', '/setting']
+    whitelist: ['/create', '/home', '/setting'],
+    curUserNavMenus: []
   }
   componentDidMount() {
-    this.computedCurUserMenus()
+    console.log(Ext.deepClone(navMenus), 'Ext.deepClone(navMenus)')
+    this.setState(
+      {
+        curUserNavMenus: Ext.deepClone(navMenus)
+      },
+      () => {
+        this.computedCurUserMenus()
+      }
+    )
   }
 
   computedCurUserMenus() {
     let userComeMenus = JSON.parse(localStorage.getItem('user-menus'))
-    console.log(userComeMenus, 'menus')
     if (userComeMenus && userComeMenus.length !== 0) {
-      this.handleInitMenus(userComeMenus, navMenus)
+      this.handleInitMenus(userComeMenus, this.state.curUserNavMenus)
     }
-    this.setState({ menuslist: navMenus })
+    this.setState({ menuslist: this.state.curUserNavMenus })
   }
 
   handleInitMenus(userMenus, configMenus) {

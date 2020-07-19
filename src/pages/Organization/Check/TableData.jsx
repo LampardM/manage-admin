@@ -15,7 +15,7 @@ import React, { useState, useEffect } from 'react'
 import { Row, Col, Button, Table, Modal, message, Input } from 'antd'
 
 /** custom */
-import { Ext } from '../../../utils'
+import { Ext } from '@/utils'
 import { useStore } from '@/hooks/useStore'
 import { getApproval, queryApprovingList } from '@/api'
 import { ExclamationCircleOutlined } from '@ant-design/icons'

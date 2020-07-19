@@ -3,57 +3,57 @@
  * @Author: jieq
  * @Date: 2020-04-15 22:39:59
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-16 22:39:31
+ * @LastEditTime: 2020-07-19 17:46:09
  */
 
 /*is判断类*/
 let UtilExtIs = {
   //判断对象是否是数组
-  isArray: function (object) {
+  isArray: function(object) {
     return Array.isArray(object)
   },
   //判断对象是否是对象
-  isObject: function (object) {
+  isObject: function(object) {
     return Object.prototype.toString.call(object) === '[object Object]'
   },
   //判断对象是否是方法
-  isFunc: function (object) {
+  isFunc: function(object) {
     return typeof object == 'function'
   },
   //判断对象是否是Boolean
-  isBoolean: function (object) {
+  isBoolean: function(object) {
     return typeof object == 'boolean'
   },
   //判断对象是否是Date对象
-  isDate: function (object) {
+  isDate: function(object) {
     return object instanceof Date
   },
   //判断对象是否是数字
-  isNumber: function (object) {
+  isNumber: function(object) {
     return typeof object == 'number'
   },
   //判断对象是否是字符串
-  isString: function (object) {
+  isString: function(object) {
     return typeof object == 'string'
   },
   //判断对象是否是数字
-  isNumberArray: function (object) {
+  isNumberArray: function(object) {
     return UtilExtIs.isArray(object) && UtilExtIs.isNumber(object[0])
   },
   //判断对象是否是字符串
-  isStringArray: function (object) {
+  isStringArray: function(object) {
     return UtilExtIs.isArray(object) && UtilExtIs.isString(object[0])
   },
   //判断对象是否是字符串
-  isDateArray: function (object) {
+  isDateArray: function(object) {
     return UtilExtIs.isArray(object) && UtilExtIs.isDate(object[0])
   },
   //判断对象/数组/字符串是否无值
-  isEmpty: function (object) {
+  isEmpty: function(object) {
     return !_.isHasValue(object)
   },
   //判断对象/数组/字符串是否有值
-  isHasValue: function (object) {
+  isHasValue: function(object) {
     if (object) {
       if (_.isArray(object)) {
         return object.length > 0
@@ -70,7 +70,7 @@ let UtilExtIs = {
     }
   },
   //判断是否为JSON字符串
-  isJSONString: function (str) {
+  isJSONString: function(str) {
     if (typeof str == 'string') {
       try {
         let obj = JSON.parse(str)
@@ -90,12 +90,12 @@ let UtilExtIs = {
  */
 let UtilExtObject = {
   //对象克隆
-  clone: function (object) {
+  clone: function(object) {
     return { ...object }
   },
 
   //方法用于调用数组的每个元素，并将元素传递给回调函数
-  each: function (object, iteratee) {
+  each: function(object, iteratee) {
     if (_.isHasValue(object) && iteratee) {
       if (_.isArray(object)) {
         for (let i = 0; i < object.length; i++) {
@@ -115,7 +115,7 @@ let UtilExtObject = {
   },
 
   //查找符合条件的第一条数据
-  find: function (object, iteratee) {
+  find: function(object, iteratee) {
     let result = null
     _.each(object, (current, keyindex, original) => {
       if (iteratee(current, keyindex, original)) {
@@ -129,7 +129,7 @@ let UtilExtObject = {
   },
 
   //查找符合条件的所有数据
-  filter: function (object, iteratee) {
+  filter: function(object, iteratee) {
     let isArray = _.isArray(object)
     let result = isArray ? [] : {}
     _.each(object, (current, keyindex, original) => {
@@ -145,7 +145,7 @@ let UtilExtObject = {
   },
 
   //方法返回一个新数组，数组中的元素为原始数组元素调用函数处理后的值
-  map: function (object, iteratee) {
+  map: function(object, iteratee) {
     let isArray = _.isArray(object)
     let result = isArray ? [] : {}
     _.each(object, (current, keyindex, original) => {
@@ -168,7 +168,7 @@ let UtilExtArray = {
    * @example
    * [{id:1,name:'name1'},{id:2,name:'name2'}].arrayToJson('id') => {1:{id:1,name:'name1'},2:{id:2,name:'name2'}}
    */
-  arrayToJson: function (array = [], key) {
+  arrayToJson: function(array = [], key) {
     var result = {},
       obj = null
     if (array.length > 0) {
@@ -181,7 +181,7 @@ let UtilExtArray = {
   },
 
   //数组去重
-  uniq: function (array = []) {
+  uniq: function(array = []) {
     let result = []
     // eslint-disable-next-line no-unused-vars
     for (let i of array) {
@@ -193,7 +193,7 @@ let UtilExtArray = {
   },
 
   //数组取合集(顺序以第一个数组为准)
-  union: function (...array) {
+  union: function(...array) {
     let result = []
     // eslint-disable-next-line no-unused-vars
     for (let i of array) {
@@ -203,7 +203,7 @@ let UtilExtArray = {
   },
 
   //数组取交集(顺序以第一个数组为准)
-  intersection: function (...array) {
+  intersection: function(...array) {
     let result = []
     let min = array.sort((a, b) => {
       return a.length - b.length
@@ -247,23 +247,17 @@ let UtilExtString = {
    * 1. UtilExtString.format("{0} hello {1}", "hulk","world") => "hulk hello world"
    * 2. UtilExtString.format("{name} hello {value}", {name: "hulk",value: "world"}) => "hulk hello world"
    */
-  format: function (object, ...args) {
+  format: function(object, ...args) {
     //分别处理string和Date两种场景
     const handleStringJoin = (object, args) => {
       if (args.length === 1 && typeof args[0] == 'object') {
         // eslint-disable-next-line no-unused-vars
         for (let key in args[0]) {
-          object = object.replace(
-            new RegExp('({' + key + '})', 'g'),
-            args[0][key] || ''
-          )
+          object = object.replace(new RegExp('({' + key + '})', 'g'), args[0][key] || '')
         }
       } else {
         for (let i = 0; i < args.length; i++) {
-          object = object.replace(
-            new RegExp('({[' + i + ']})', 'g'),
-            args[i] || ''
-          )
+          object = object.replace(new RegExp('({[' + i + ']})', 'g'), args[i] || '')
         }
       }
       return object
@@ -291,19 +285,13 @@ let UtilExtString = {
         S: object.getMilliseconds() //毫秒
       }
       if (/(y+)/.test(fmtstr)) {
-        fmtstr = fmtstr.replace(
-          RegExp.$1,
-          (object.getFullYear() + '').substr(4 - RegExp.$1.length)
-        )
+        fmtstr = fmtstr.replace(RegExp.$1, (object.getFullYear() + '').substr(4 - RegExp.$1.length))
       }
       if (/(E+)/.test(fmtstr)) {
         fmtstr = fmtstr.replace(
           RegExp.$1,
-          (RegExp.$1.length > 1
-            ? RegExp.$1.length > 2
-              ? '\u661f\u671f'
-              : '\u5468'
-            : '') + week[object.getDay() + '']
+          (RegExp.$1.length > 1 ? (RegExp.$1.length > 2 ? '\u661f\u671f' : '\u5468') : '') +
+            week[object.getDay() + '']
         )
       }
       // eslint-disable-next-line no-unused-vars
@@ -311,9 +299,7 @@ let UtilExtString = {
         if (new RegExp('(' + k + ')').test(fmtstr)) {
           fmtstr = fmtstr.replace(
             RegExp.$1,
-            RegExp.$1.length === 1
-              ? o[k]
-              : ('00' + o[k]).substr(('' + o[k]).length)
+            RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
           )
         }
       }
@@ -324,11 +310,7 @@ let UtilExtString = {
     } else if (args.length > 0) {
       try {
         const dateLike = new Date(
-          _.isString(object)
-            ? Number.isNaN(+object)
-              ? this.parseDate(object)
-              : +object
-            : object
+          _.isString(object) ? (Number.isNaN(+object) ? this.parseDate(object) : +object) : object
         )
         return handleDateFormat(dateLike, args)
       } catch (e) {
@@ -341,23 +323,23 @@ let UtilExtString = {
   },
 
   //字符串转日期对象
-  parseDate: function (str) {
+  parseDate: function(str) {
     return new Date(str.replace(/-/g, '/'))
   },
 
   //字符串转化为JSON
-  parseJson: function (str) {
+  parseJson: function(str) {
     // eslint-disable-next-line no-eval
     return str ? eval('(' + str + ')') : {}
   },
 
   //经纬度String类型格式化为Number类型
-  parseLatLng: function (str) {
+  parseLatLng: function(str) {
     return !isNaN(str) ? parseFloat(str) : 0
   },
 
   // 手机号码加*
-  parseMobile: function (tel) {
+  parseMobile: function(tel) {
     if (tel) {
       tel += ''
       return tel.substr(0, 3) + '****' + tel.substr(-4)
@@ -394,7 +376,7 @@ let UtilExtDate = {
    * @param {int} json.second 秒
    * @returns {Date} 操作后的时间
    */
-  timeAdd: function (dateTime, { month, day, hour, minute, second }) {
+  timeAdd: function(dateTime, { month, day, hour, minute, second }) {
     let newDT = new Date(dateTime)
     month && newDT.setMonth(dateTime.getMonth() + month)
     day && newDT.setDate(dateTime.getDate() + day)
@@ -409,7 +391,7 @@ let UtilExtDate = {
    * @param {int} [minute=10] 取整的分钟数
    * @returns {Date} 操作后的时间
    */
-  timeFloor: function (dateTime, minute = 10) {
+  timeFloor: function(dateTime, minute = 10) {
     let newDT = new Date(dateTime)
     newDT.setMinutes(Math.floor(dateTime.getMinutes() / minute) * minute)
     return newDT
@@ -420,7 +402,7 @@ let UtilExtDate = {
    * @param {int} [minute=10] 取整的分钟数
    * @returns {Date} 操作后的时间
    */
-  timeCeil: function (dateTime, minute = 10) {
+  timeCeil: function(dateTime, minute = 10) {
     dateTime.setMinutes(Math.ceil(dateTime.getMinutes() / minute) * minute)
     return dateTime
   }
@@ -433,9 +415,9 @@ let UtilExtFunction = {
    * @param {function} [action] 执行方法
    * @returns {function} 节流后的方法
    */
-  throttle: function (delay, action) {
+  throttle: function(delay, action) {
     let last = 0
-    return function () {
+    return function() {
       let curr = +new Date()
       if (curr - last > delay) {
         action.apply(this, arguments)
@@ -450,16 +432,31 @@ let UtilExtFunction = {
    * @param {function} [action] 执行方法
    * @returns {function} 防抖函数
    */
-  debounce: function (delay, action) {
+  debounce: function(delay, action) {
     let last
-    return function () {
+    return function() {
       let ctx = this,
         args = arguments
       clearTimeout(last)
-      last = setTimeout(function () {
+      last = setTimeout(function() {
         action.apply(ctx, args)
       }, delay)
     }
+  },
+  // 深拷贝
+  deepClone: function(target) {
+    let _lastResult = Object.prototype.toString.call(target) === '[object Array]' ? [] : {}
+    for (let i in target) {
+      if (target[i] === _lastResult) {
+        continue
+      }
+      if (typeof target[i] === 'object') {
+        _lastResult[i] = this.deepClone(target[i])
+      } else {
+        _lastResult[i] = target[i]
+      }
+    }
+    return _lastResult
   }
 }
 
