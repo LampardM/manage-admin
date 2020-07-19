@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 21:11:52
+ * @LastEditTime: 2020-07-19 14:21:24
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -67,6 +67,7 @@ const LoginForm = props => {
           userInfoStore.toggleLogin(true, _result.data)
           setNickName(_result.data.nick)
           setUserOrganizes(_result.data.organizes)
+          userInfoStore.updateUserOrganizes(_result.data.organizes)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected
           })
@@ -168,6 +169,7 @@ const LoginForm = props => {
           console.log(_result, 'login success')
           userInfoStore.toggleLogin(true, _result.data)
           setUserOrganizes(_result.data.organizes)
+          userInfoStore.updateUserOrganizes(_result.data.organizes)
           setNickName(_result.data.nick)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
             return org.selected

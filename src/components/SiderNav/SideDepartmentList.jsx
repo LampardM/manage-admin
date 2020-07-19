@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 23:06:24
+ * @LastEditTime: 2020-07-19 14:39:18
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
@@ -11,17 +11,29 @@ import { useStore } from '@/hooks/useStore'
 import { useLocalStorageState } from '@umijs/hooks'
 import { switchDepartment } from '@/api/department'
 import { useHistory } from 'react-router-dom'
+import { observer } from 'mobx-react'
+import { toJS } from 'mobx'
 import { setNickName, setCurDepart, getCurDepart } from '@/utils/session'
 import styled from 'styled-components'
 
 const { Option } = Select
 
 const SideDepartmentList = props => {
-  const [userOrganizes] = useLocalStorageState('user-organizes')
   const [userMenus, setUserMenus] = useLocalStorageState('user-menus')
+  const [userStorageOrganizes, setStorageUserOrganizes] = useLocalStorageState('user-organizes')
   const { userInfoStore } = useStore()
   const [curValue, setCurValue] = useState('')
+  const [userOrganizes, setUserOrganizes] = useState([])
   const history = useHistory()
+
+  useEffect(() => {
+    console.log(toJS(userInfoStore.userOrganizes), 'toJS(userInfoStore.userOrganizes)')
+    setUserOrganizes(toJS(userInfoStore.userOrganizes))
+  }, [userInfoStore.userOrganizes])
+
+  useEffect(() => {
+    setUserOrganizes(userStorageOrganizes)
+  }, [])
 
   useEffect(() => {
     let _result
@@ -31,7 +43,7 @@ const SideDepartmentList = props => {
     } else {
       setCurValue('暂无团队')
     }
-  }, [])
+  }, [userOrganizes])
 
   const getCurDepartName = () => {
     let _result
@@ -98,4 +110,4 @@ const DepartmentCur = styled.div`
   cursor: pointer;
 `
 
-export default SideDepartmentList
+export default observer(SideDepartmentList)

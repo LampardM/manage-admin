@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 09:40:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-05-18 20:45:58
+ * @LastEditTime: 2020-07-19 14:12:00
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -11,6 +11,8 @@ import { observer } from 'mobx-react'
 import { Button, Form, Input, Select, Space, message } from 'antd'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { useStore } from '@/hooks/useStore'
+import { useHistory } from 'react-router-dom'
+import { useLocalStorageState } from '@umijs/hooks'
 import { createOrganization, getOrganizationType } from '@/api/organize'
 
 const { Option } = Select
@@ -22,6 +24,8 @@ const CreateDepartForm = () => {
   const { userInfoStore } = useStore()
   const [organizeTypes, setOrganizeTypes] = useState([])
   const [curOriganize, setCurOriganize] = useState('')
+  const [userOrganizes, setUserOrganizes] = useLocalStorageState('user-organizes')
+  const history = useHistory()
 
   const tailLayout = {
     wrapperCol: {
@@ -71,6 +75,12 @@ const CreateDepartForm = () => {
     createOrganization(_params)
       .then(_result => {
         console.log(_result)
+        console.log(userOrganizes, 'userOrganizes')
+        let _updateOrganizes = [...userOrganizes]
+        _updateOrganizes.push(_result.data)
+        setUserOrganizes(_updateOrganizes)
+        userInfoStore.updateUserOrganizes(_updateOrganizes)
+        history.push('/home')
         message.success('创建团队成功！')
       })
       .catch(err => {
