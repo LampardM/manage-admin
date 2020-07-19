@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-06-28 21:18:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 17:03:54
+ * @LastEditTime: 2020-07-19 17:13:14
  */
 import request from '@/utils/request'
 
@@ -29,6 +29,15 @@ export function invitedRecord(data) {
 export function inviteMember(data) {
   return request({
     url: '/User/InviteOrgMember',
+    method: 'post',
+    data
+  })
+}
+
+// 重新邀请
+export function resetInviteOrgMember(data) {
+  return request({
+    url: '/User/ResetInviteOrgMember',
     method: 'post',
     data
   })

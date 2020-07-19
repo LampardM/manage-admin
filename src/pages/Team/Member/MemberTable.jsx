@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 17:05:55
+ * @LastEditTime: 2020-07-19 17:18:52
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -13,7 +13,7 @@ import { Table, Dropdown, Menu, Space, Button, Row, Col, Message } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import { DownOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { invitationRecord, invitedRecord, getMemberDetail } from '@/api/member'
+import { invitationRecord, invitedRecord, resetInviteOrgMember } from '@/api/member'
 
 /** vendor */
 import { CopyToClipboard } from 'react-copy-to-clipboard'
@@ -139,6 +139,20 @@ const MemberTable = props => {
     }
   }
 
+  const inviteMemberAgain = invitationCode => {
+    let _params = {
+      param: invitationCode,
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+    resetInviteOrgMember(_params)
+      .then(_result => {
+        Message.success('再此邀请成功！')
+      })
+      .catch(err => console.log(err))
+  }
+
   const joinedMenu = record => {
     return (
       <Menu onClick={(item, key) => joinMenuHandler(record, item, key)}>
@@ -186,7 +200,12 @@ const MemberTable = props => {
   const invitedAction = record => {
     return (
       <Space>
-        <span style={{ color: '#1890ff', cursor: 'pointer' }}>再发送</span>
+        <span
+          style={{ color: '#1890ff', cursor: 'pointer' }}
+          onClick={() => inviteMemberAgain(record.invitationCode)}
+        >
+          再发送
+        </span>
         <Dropdown overlay={() => invitedMenu(record)}>
           <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
             更多
