@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 17:05:21
+ * @LastEditTime: 2020-07-19 20:16:05
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col, message } from 'antd'
@@ -45,14 +45,16 @@ const AddEditMemberForm = props => {
   useEffect(() => {
     if (memberDetail && memberDetail.phone) {
       console.log(memberDetail, 'memberDetail')
+      let _character = memberDetail.roles.map(character => character.roleCode),
+        _department = memberDetail.depts.map(dep => dep.deptCode)
       form.setFieldsValue({
         name: memberDetail.orgMemberName,
         phone: memberDetail.phone,
         desc: memberDetail.memo,
-        character: memberDetail.roles,
-        department: ['y6h4iikJVd', 'y6h4ak1eVg']
+        character: _character,
+        department: _department
       })
-      setCurCharacter(memberDetail.roles)
+      setCurCharacter(_character)
     }
   }, [memberDetail])
 
@@ -415,6 +417,8 @@ const AddEditMemberForm = props => {
                         !form.isFieldTouched('department') ||
                         (form.getFieldValue('character') &&
                           form.getFieldValue('character').length === 0) ||
+                        (form.getFieldValue('department') &&
+                          form.getFieldValue('department').length === 0) ||
                         form.getFieldsError().filter(({ errors }) => errors.length).length
                       : !form.isFieldTouched('name') ||
                         !form.isFieldTouched('phone') ||
