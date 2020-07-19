@@ -123,7 +123,11 @@ const MainContent = ({ location }) => {
 
         <PrivateRoute path="/team/member" component={TeamMember} exact />
         <PrivateRoute path="/team/member/addmember" component={AddTeamMember} exact />
-        <PrivateRoute path="/team/member/editmember" component={EditTeamMember} exact />
+        <PrivateRoute
+          path="/team/member/editmember/:memberCode/"
+          component={EditTeamMember}
+          exact
+        />
         <PrivateRoute path="/team/character" component={TeamCharacter} exact />
         <PrivateRoute path="/team/character/add" component={AddCharacter} exact />
         <PrivateRoute path="/team/character/edit/:id/" component={EditCharacter} />

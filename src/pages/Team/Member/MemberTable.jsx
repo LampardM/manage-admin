@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 17:05:04
+ * @LastEditTime: 2020-07-19 17:05:55
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -13,7 +13,7 @@ import { Table, Dropdown, Menu, Space, Button, Row, Col, Message } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import { DownOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { invitationRecord, invitedRecord } from '@/api/member'
+import { invitationRecord, invitedRecord, getMemberDetail } from '@/api/member'
 
 /** vendor */
 import { CopyToClipboard } from 'react-copy-to-clipboard'
@@ -27,42 +27,39 @@ const columns = [
     title: '姓名',
     dataIndex: 'memberName',
     ellipsis: true,
-    width: 150,
     textWrap: 'word-break'
   },
   {
     title: '手机号码',
     dataIndex: 'contextPhone',
     ellipsis: true,
-    width: 150,
-    textWrap: 'word-break'
-  },
-  {
-    title: '角色',
-    dataIndex: 'roleName',
-    ellipsis: true,
-    width: 200,
-    textWrap: 'word-break'
-  },
-  {
-    title: '所属部门',
-    dataIndex: 'departmentName',
-    ellipsis: true,
     textWrap: 'word-break'
   }
+  // {
+  //   title: '角色',
+  //   dataIndex: 'roleName',
+  //   ellipsis: true,
+  //   width: 200,
+  //   textWrap: 'word-break'
+  // },
+  // {
+  //   title: '所属部门',
+  //   dataIndex: 'departmentName',
+  //   ellipsis: true,
+  //   textWrap: 'word-break'
+  // }
 ]
 
 const PAGE_SIZE = 10
 
 const MemberTable = props => {
   const { curselect } = props
-  const history = useHistory()
   const { userInfoStore, MemberStore } = useStore()
-
   const [data, setData] = useState([])
   const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
   const [isTableLoading, setIsTableLoading] = useState(false)
   const [selectedKeys, setSelectedKeys] = useState([])
+  const history = useHistory()
 
   const handleTableChange = () => {}
 
@@ -70,6 +67,10 @@ const MemberTable = props => {
 
   const addMember = () => {
     history.push('/team/member/addmember')
+  }
+
+  const editCurMember = member => {
+    history.push(`/team/member/editmember/${member.memberCode}`)
   }
 
   useEffect(() => {
@@ -169,13 +170,15 @@ const MemberTable = props => {
         {/* <span style={{ color: '#1890ff', pointerEvents: 'none'}} disabled>
           详情
         </span> */}
-        <span style={{ color: '#1890ff', cursor: 'pointer' }}>删除</span>
-        {/* <Dropdown overlay={() => joinedMenu(record)}>
+        <span style={{ color: '#1890ff', cursor: 'pointer' }} onClick={() => editCurMember(record)}>
+          编辑
+        </span>
+        <Dropdown overlay={() => joinedMenu(record)}>
           <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
             更多
             <DownOutlined />
           </a>
-        </Dropdown> */}
+        </Dropdown>
       </Space>
     )
   }

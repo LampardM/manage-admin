@@ -3,19 +3,22 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:13:49
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-20 23:58:15
+ * @LastEditTime: 2020-07-19 15:16:25
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import AddEditMemberForm from './AddEditMemberForm'
+import { useParams } from 'react-router-dom'
 
 const EditMember = () => {
+  const { memberCode } = useParams()
+
   return (
     <div style={{ padding: '0 16 16', marginTop: -16 }}>
       <EditMemberCon>
         <EditMemberTitle>编辑成员</EditMemberTitle>
         <EditMemberContent>
-          <AddEditMemberForm />
+          <AddEditMemberForm memberCode={memberCode} />
         </EditMemberContent>
       </EditMemberCon>
     </div>

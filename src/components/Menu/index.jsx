@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 22:46:19
+ * @LastEditTime: 2020-07-19 15:23:35
  */
 /** official */
 import React from 'react'
@@ -13,7 +13,7 @@ import { Link, withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
 
 /** custom */
-import { blackList } from '../../router.map'
+import { blackList } from '@/router.map'
 
 // 此组件的意义就是将数据抽离出来，通过传递数据去渲染
 @withRouter
@@ -28,6 +28,12 @@ class _Menu extends React.Component {
     let pathname = this.props.location.pathname
 
     if (pathname.includes('/team/character/edit') && pathname !== '/team/character/edit') {
+      pathname = pathname.split('/')
+      pathname.pop()
+      pathname = pathname.join('/')
+    }
+
+    if (pathname.includes('/team/member/editmember') && pathname !== '/team/member/editmember') {
       pathname = pathname.split('/')
       pathname.pop()
       pathname = pathname.join('/')
@@ -65,6 +71,12 @@ class _Menu extends React.Component {
     let pathname = nextProps.location.pathname
 
     if (pathname.includes('/team/character/edit') && pathname !== '/team/character/edit') {
+      pathname = pathname.split('/')
+      pathname.pop()
+      pathname = pathname.join('/')
+    }
+
+    if (pathname.includes('/team/member/editmember') && pathname !== '/team/member/editmember') {
       pathname = pathname.split('/')
       pathname.pop()
       pathname = pathname.join('/')

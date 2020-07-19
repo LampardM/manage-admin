@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-06-28 21:18:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-12 14:36:36
+ * @LastEditTime: 2020-07-19 17:03:54
  */
 import request from '@/utils/request'
 
@@ -29,6 +29,24 @@ export function invitedRecord(data) {
 export function inviteMember(data) {
   return request({
     url: '/User/InviteOrgMember',
+    method: 'post',
+    data
+  })
+}
+
+// 获取成员信息
+export function getMemberDetail(data) {
+  return request({
+    url: '/User/MemberDetail',
+    method: 'post',
+    data
+  })
+}
+
+// 编辑成员
+export function updateMemberDetail(data) {
+  return request({
+    url: '/User/UpdateMemberDetail',
     method: 'post',
     data
   })

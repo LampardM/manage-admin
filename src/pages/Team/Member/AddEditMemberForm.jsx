@@ -3,28 +3,32 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 20:57:43
+ * @LastEditTime: 2020-07-19 17:05:21
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col, message } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import styled from 'styled-components'
 import { getRoleList } from '@/api/user'
-import { inviteMember } from '@/api/member'
+import { inviteMember, getMemberDetail, updateMemberDetail } from '@/api/member'
 import { getCurDepartment } from '@/api/department'
+import { useHistory } from 'react-router-dom'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 
 const { TreeNode } = TreeSelect
 const { Option } = Select
 const { TextArea } = Input
 
-const AddEditMemberForm = () => {
+const AddEditMemberForm = props => {
   const [form] = Form.useForm()
   const { userInfoStore } = useStore()
   const [characterList, setCharacterList] = useState([])
   const [curCharacter, setCurCharacter] = useState([])
   const [department, setDepartment] = useState([])
   const [notice, setNotice] = useState(false)
+  const [depart, setDepart] = useState('')
+  const [memberDetail, setMemberDetail] = useState({})
+  const history = useHistory()
 
   const tailLayout = {
     wrapperCol: {
@@ -33,9 +37,41 @@ const AddEditMemberForm = () => {
   }
 
   useEffect(() => {
+    props.memberCode && getCurMemberDetail()
     getCurRoleList()
     getCurDepartmentList()
   }, [])
+
+  useEffect(() => {
+    if (memberDetail && memberDetail.phone) {
+      console.log(memberDetail, 'memberDetail')
+      form.setFieldsValue({
+        name: memberDetail.orgMemberName,
+        phone: memberDetail.phone,
+        desc: memberDetail.memo,
+        character: memberDetail.roles,
+        department: ['y6h4iikJVd', 'y6h4ak1eVg']
+      })
+      setCurCharacter(memberDetail.roles)
+    }
+  }, [memberDetail])
+
+  const getCurMemberDetail = () => {
+    form.resetFields()
+    let _params = {
+      param: props.memberCode,
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }
+
+    getMemberDetail(_params)
+      .then(_result => {
+        console.log(_result, '成员信息')
+        setMemberDetail(_result.data)
+      })
+      .catch(err => console.log(err))
+  }
 
   const handleCharacterChange = value => {
     setCurCharacter(value)
@@ -105,7 +141,9 @@ const AddEditMemberForm = () => {
       .catch(err => console.log(err))
   }
 
-  const selectCurdepartment = value => {}
+  const selectCurdepartment = value => {
+    setDepart(value)
+  }
 
   const onChange = value => {
     setNotice(value.target.checked)
@@ -175,7 +213,7 @@ const AddEditMemberForm = () => {
 
   const onFinish = () => {
     let formValue = form.getFieldsValue(),
-      _params = {
+      _createparams = {
         param: {
           departmentCode: formValue.department,
           inviteType: notice ? 'BOTH' : 'SMS',
@@ -188,12 +226,35 @@ const AddEditMemberForm = () => {
         timestamp: JSON.stringify(new Date().getTime()),
         token: userInfoStore.token,
         version: userInfoStore.version
+      },
+      _editparams = {
+        param: {
+          depts: formValue.department,
+          memo: formValue.desc,
+          orgMemberCode: memberDetail.orgMemberCode,
+          orgMemberName: memberDetail.orgMemberName,
+          phone: formValue.phone,
+          roles: formValue.character
+        },
+        timestamp: JSON.stringify(new Date().getTime()),
+        token: userInfoStore.token,
+        version: userInfoStore.version
       }
-    inviteMember(_params)
-      .then(_result => {
-        message.success('添加成功！')
-      })
-      .catch(err => {})
+    if (props.memberCode) {
+      updateMemberDetail(_editparams)
+        .then(_result => {
+          message.success('编辑成功！')
+          history.push('/team/member')
+        })
+        .catch(err => console.log(err))
+    } else {
+      inviteMember(_createparams)
+        .then(_result => {
+          message.success('添加成功！')
+          history.push('/team/member')
+        })
+        .catch(err => {})
+    }
   }
 
   return (
@@ -238,7 +299,7 @@ const AddEditMemberForm = () => {
             }
           ]}
         >
-          <Input placeholder="手机号码" addonBefore={PrefixSelector} />
+          <Input placeholder="手机号码" addonBefore={PrefixSelector} disabled={props.memberCode} />
         </Form.Item>
         <Form.Item
           name="character"
@@ -253,6 +314,7 @@ const AddEditMemberForm = () => {
           <Select
             mode="multiple"
             style={{ width: '100%' }}
+            value={curCharacter}
             placeholder="请选择角色"
             onChange={handleCharacterChange}
           >
@@ -272,10 +334,12 @@ const AddEditMemberForm = () => {
           ]}
         >
           <TreeSelect
+            multiple={props.memberCode ? true : false}
             style={{ width: '100%' }}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
             onSelect={selectCurdepartment}
             allowClear
+            value={depart}
             placeholder="请选择所属部门"
             listItemHeight={10}
             listHeight={250}
@@ -284,51 +348,55 @@ const AddEditMemberForm = () => {
             {renderTreeNode(department)}
           </TreeSelect>
         </Form.Item>
-        <Form.Item name="checkbox-group" label="通知方式">
-          <NoticeContent>
-            <Row>
-              <Col>
-                <Checkbox
-                  style={{
-                    lineHeight: '32px'
-                  }}
-                  defaultChecked
-                  disabled
-                >
-                  通过联系手机号发送短信通知
-                </Checkbox>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Checkbox
-                  onChange={onChange}
-                  style={{
-                    lineHeight: '32px'
-                  }}
-                >
-                  通过注册手机号发送站内通知
-                </Checkbox>
-              </Col>
-            </Row>
-          </NoticeContent>
-        </Form.Item>
-        <Form.Item
-          name="registerphone"
-          label="注册手机号"
-          rules={[
-            {
-              required: true,
-              message: '请输入注册手机号'
-            },
-            {
-              pattern: '^1[345789][0-9]{9}$',
-              message: '请输入正确的手机号'
-            }
-          ]}
-        >
-          <Input placeholder="请输入注册手机号" addonBefore={PrefixSelector} />
-        </Form.Item>
+        {!props.memberCode ? (
+          <Form.Item name="checkbox-group" label="通知方式">
+            <NoticeContent>
+              <Row>
+                <Col>
+                  <Checkbox
+                    style={{
+                      lineHeight: '32px'
+                    }}
+                    defaultChecked
+                    disabled
+                  >
+                    通过联系手机号发送短信通知
+                  </Checkbox>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Checkbox
+                    onChange={onChange}
+                    style={{
+                      lineHeight: '32px'
+                    }}
+                  >
+                    通过注册手机号发送站内通知
+                  </Checkbox>
+                </Col>
+              </Row>
+            </NoticeContent>
+          </Form.Item>
+        ) : null}
+        {!props.memberCode ? (
+          <Form.Item
+            name="registerphone"
+            label="注册手机号"
+            rules={[
+              {
+                required: true,
+                message: '请输入注册手机号'
+              },
+              {
+                pattern: '^1[345789][0-9]{9}$',
+                message: '请输入正确的手机号'
+              }
+            ]}
+          >
+            <Input placeholder="请输入注册手机号" addonBefore={PrefixSelector} />
+          </Form.Item>
+        ) : null}
         <Form.Item name="desc" label="备注">
           <TextArea placeholder="备注" autoSize={{ minRows: 3, maxRows: 5 }} />
         </Form.Item>
@@ -341,27 +409,38 @@ const AddEditMemberForm = () => {
                   type="primary"
                   htmlType="submit"
                   disabled={
-                    !form.isFieldTouched('name') ||
-                    !form.isFieldTouched('phone') ||
-                    !form.isFieldTouched('character') ||
-                    !form.isFieldTouched('registerphone') ||
-                    form.getFieldsError().filter(({ errors }) => errors.length).length
+                    props.memberCode
+                      ? !form.isFieldTouched('phone') ||
+                        !form.isFieldTouched('character') ||
+                        !form.isFieldTouched('department') ||
+                        (form.getFieldValue('character') &&
+                          form.getFieldValue('character').length === 0) ||
+                        form.getFieldsError().filter(({ errors }) => errors.length).length
+                      : !form.isFieldTouched('name') ||
+                        !form.isFieldTouched('phone') ||
+                        !form.isFieldTouched('character') ||
+                        !form.isFieldTouched('department') ||
+                        !form.isFieldTouched('registerphone') ||
+                        form.getFieldsError().filter(({ errors }) => errors.length).length
                   }
                 >
                   确定
                 </Button>
-                <Button
-                  type="primary"
-                  disabled={
-                    !form.isFieldTouched('name') ||
-                    !form.isFieldTouched('phone') ||
-                    !form.isFieldTouched('character') ||
-                    !form.isFieldTouched('registerphone') ||
-                    form.getFieldsError().filter(({ errors }) => errors.length).length
-                  }
-                >
-                  确定并继续添加
-                </Button>
+                {!props.memberCode ? (
+                  <Button
+                    type="primary"
+                    disabled={
+                      !form.isFieldTouched('name') ||
+                      !form.isFieldTouched('phone') ||
+                      !form.isFieldTouched('character') ||
+                      !form.isFieldTouched('department') ||
+                      !form.isFieldTouched('registerphone') ||
+                      form.getFieldsError().filter(({ errors }) => errors.length).length
+                    }
+                  >
+                    确定并继续添加
+                  </Button>
+                ) : null}
               </Space>
             </HandleContainer>
           )}
