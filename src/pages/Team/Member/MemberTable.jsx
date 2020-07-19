@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 17:18:52
+ * @LastEditTime: 2020-07-19 17:24:54
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -61,8 +61,6 @@ const MemberTable = props => {
   const [selectedKeys, setSelectedKeys] = useState([])
   const history = useHistory()
 
-  const handleTableChange = () => {}
-
   const joinMenuHandler = (record, item, key) => {}
 
   const addMember = () => {
@@ -75,7 +73,7 @@ const MemberTable = props => {
 
   useEffect(() => {
     fetch()
-  }, [curselect, pagination.pageSize, MemberStore.filters])
+  }, [curselect, pagination.current, MemberStore.filters])
 
   const fetch = () => {
     setIsTableLoading(true)
@@ -137,6 +135,10 @@ const MemberTable = props => {
         })
         .catch(err => console.log(err))
     }
+  }
+
+  const handleTableChange = pagination => {
+    setPagination(pagination)
   }
 
   const inviteMemberAgain = invitationCode => {
