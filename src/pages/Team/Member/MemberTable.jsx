@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 17:24:54
+ * @LastEditTime: 2020-07-21 23:44:23
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -73,7 +73,11 @@ const MemberTable = props => {
 
   useEffect(() => {
     fetch()
-  }, [curselect, pagination.current, MemberStore.filters])
+  }, [curselect, pagination.current, pagination.pageSize])
+
+  useEffect(() => {
+    setPagination({ current: 1, pageSize: PAGE_SIZE })
+  }, [MemberStore.filters])
 
   const fetch = () => {
     setIsTableLoading(true)

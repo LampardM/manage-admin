@@ -75,7 +75,11 @@ const TableData = () => {
 
   useEffect(() => {
     fetch()
-  }, [pagination.current, pagination.pageSize, OrganizationCheckStore.filters])
+  }, [pagination.current, pagination.pageSize])
+
+  useEffect(() => {
+    setPagination({ current: 1, pageSize: PAGE_SIZE })
+  }, [OrganizationCheckStore.filters])
 
   const fetch = () => {
     setIsTableLoading(true)

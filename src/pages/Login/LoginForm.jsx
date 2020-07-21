@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 14:21:24
+ * @LastEditTime: 2020-07-21 22:54:44
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -27,6 +27,7 @@ const LoginForm = props => {
   const [disLogin, setDisLogin] = useState(false)
   const [userOrganizes, setUserOrganizes] = useLocalStorageState('user-organizes', []) // 防止页面刷新左侧团队列表被重置
   const [userMenus, setUserMenus] = useLocalStorageState('user-menus', []) // 防止页面刷新左侧团队列表被重置
+  const [isLogined, setIsLogined] = useState(false)
 
   const history = useHistory()
 
@@ -86,8 +87,8 @@ const LoginForm = props => {
                 setDisLogin(false)
                 setUserMenus(_result.data.menus)
                 setNickName(_result.data.nick)
+                setIsLogined(true)
                 message.success('登录成功！')
-                history.push('/home')
               })
               .catch(err => {
                 console.log(err)
@@ -95,8 +96,8 @@ const LoginForm = props => {
           } else {
             setDisLogin(false)
             setUserMenus(_result.data.menus)
+            setIsLogined(true)
             message.success('登录成功！')
-            history.push('/home')
           }
         })
         .catch(err => {
@@ -152,6 +153,12 @@ const LoginForm = props => {
     form.resetFields()
   }, [loginType])
 
+  useEffect(() => {
+    if (isLogined) {
+      history.push('/home')
+    }
+  }, [isLogined])
+
   const onFinish = () => {
     setDisLogin(true)
     isLogining = true
@@ -188,8 +195,8 @@ const LoginForm = props => {
                 setDisLogin(false)
                 setUserMenus(_result.data.menus)
                 setNickName(_result.data.nick)
+                setIsLogined(true)
                 message.success('登录成功！')
-                history.push('/home')
                 console.log(_result)
               })
               .catch(err => {
@@ -197,9 +204,9 @@ const LoginForm = props => {
               })
           } else {
             setDisLogin(false)
+            setIsLogined(true)
             setUserMenus(_result.data.menus)
             message.success('登录成功！')
-            history.push('/home')
           }
         })
         .catch(err => {

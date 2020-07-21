@@ -74,7 +74,6 @@ const TableData = observer(({ className, filters }) => {
   const history = useHistory()
   const { OrganizationApproveStore } = useStore()
   const { userInfoStore } = useStore('userInfoStore')
-
   const [data, setData] = useState([])
   const [selectedKeys, setSelectedKeys] = useState([])
   const [isTableLoading, setIsTableLoading] = useState(true)
@@ -82,7 +81,11 @@ const TableData = observer(({ className, filters }) => {
 
   useEffect(() => {
     fetch()
-  }, [OrganizationApproveStore.filters, pagination.current])
+  }, [pagination.current, pagination.pageSize])
+
+  useEffect(() => {
+    setPagination({ current: 1, pageSize: PAGE_SIZE })
+  }, [OrganizationApproveStore.filters])
 
   const fetch = async () => {
     setIsTableLoading(true)

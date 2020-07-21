@@ -81,7 +81,11 @@ const TableData = observer(({ className, filters }) => {
 
   useEffect(() => {
     fetch()
-  }, [pagination.current, pagination.pageSize, OrganizationRejectStore.filters])
+  }, [pagination.current, pagination.pageSize])
+
+  useEffect(() => {
+    setPagination({ current: 1, pageSize: PAGE_SIZE })
+  }, [OrganizationRejectStore.filters])
 
   const fetch = async () => {
     setIsTableLoading(true)
