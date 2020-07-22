@@ -3,10 +3,11 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-22 19:27:06
+ * @LastEditTime: 2020-07-22 19:55:44
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
+import { PlusCircleOutlined } from '@ant-design/icons'
 import { useStore } from '@/hooks/useStore'
 import { useLocalStorageState } from '@umijs/hooks'
 import { switchDepartment } from '@/api/department'
@@ -102,12 +103,10 @@ const SideDepartmentList = props => {
           userOrganizes.length &&
           userOrganizes.map((organization, idx) =>
             organization.code === 'create' ? (
-              <Option
-                value={organization.name}
-                key={organization.code}
-                style={{ fontSize: '13px' }}
-              >
-                {organization.name}
+              <Option value={organization.name} key={organization.code}>
+                <CreateDepart>
+                  <CreateText>{organization.name}</CreateText> <PlusCircleOutlined />
+                </CreateDepart>
               </Option>
             ) : (
               <Option value={organization.name} key={organization.code}>
@@ -130,6 +129,16 @@ const DepartmentCur = styled.div`
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+`
+
+const CreateDepart = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const CreateText = styled.span`
+  font-size: 13px;
 `
 
 export default observer(SideDepartmentList)
