@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-21 22:54:44
+ * @LastEditTime: 2020-07-22 14:15:18
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -67,6 +67,11 @@ const LoginForm = props => {
           console.log(_result, 'login success')
           userInfoStore.toggleLogin(true, _result.data)
           setNickName(_result.data.nick)
+          _result.data.organizes.push({
+            code: 'create',
+            name: '创建团队',
+            selected: false
+          })
           setUserOrganizes(_result.data.organizes)
           userInfoStore.updateUserOrganizes(_result.data.organizes)
           let _initSelectedKeyIdx = _result.data.organizes.findIndex(org => {
@@ -175,6 +180,11 @@ const LoginForm = props => {
         .then(_result => {
           console.log(_result, 'login success')
           userInfoStore.toggleLogin(true, _result.data)
+          _result.data.organizes.push({
+            code: 'create',
+            name: '创建团队',
+            selected: false
+          })
           setUserOrganizes(_result.data.organizes)
           userInfoStore.updateUserOrganizes(_result.data.organizes)
           setNickName(_result.data.nick)

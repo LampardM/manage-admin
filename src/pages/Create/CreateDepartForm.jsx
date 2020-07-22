@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 09:40:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 14:12:00
+ * @LastEditTime: 2020-07-22 14:13:38
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -77,7 +77,7 @@ const CreateDepartForm = () => {
         console.log(_result)
         console.log(userOrganizes, 'userOrganizes')
         let _updateOrganizes = [...userOrganizes]
-        _updateOrganizes.push(_result.data)
+        _updateOrganizes.splice(-1, 0, _result.data)
         setUserOrganizes(_updateOrganizes)
         userInfoStore.updateUserOrganizes(_updateOrganizes)
         history.push('/home')

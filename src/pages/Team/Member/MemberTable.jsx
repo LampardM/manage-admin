@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-21 23:44:23
+ * @LastEditTime: 2020-07-22 19:08:00
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -73,18 +73,14 @@ const MemberTable = props => {
 
   useEffect(() => {
     fetch()
-  }, [curselect, pagination.current, pagination.pageSize])
-
-  useEffect(() => {
-    setPagination({ current: 1, pageSize: PAGE_SIZE })
   }, [MemberStore.filters])
 
-  const fetch = () => {
+  const fetch = (pageIndex = 0, pageSize = PAGE_SIZE) => {
     setIsTableLoading(true)
     let _params = {
       param: {
-        pageIndex: pagination.current - 1,
-        pageSize: pagination.pageSize,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
         param: {
           memberName: toJS(MemberStore.filters).contact,
           memberPhone: toJS(MemberStore.filters).phone
@@ -111,8 +107,8 @@ const MemberTable = props => {
     } else {
       let _invitedParams = {
         param: {
-          pageIndex: pagination.current - 1,
-          pageSize: pagination.pageSize,
+          pageIndex: pageIndex,
+          pageSize: pageSize,
           param: {
             memberName: toJS(MemberStore.filters).contact,
             phone: toJS(MemberStore.filters).phone
@@ -142,6 +138,7 @@ const MemberTable = props => {
   }
 
   const handleTableChange = pagination => {
+    fetch(pagination.current - 1, pagination.pageSize)
     setPagination(pagination)
   }
 

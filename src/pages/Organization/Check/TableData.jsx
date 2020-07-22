@@ -65,7 +65,6 @@ let orgCodes = []
 
 const TableData = () => {
   const { userInfoStore, OrganizationCheckStore } = useStore()
-
   const [data, setData] = useState([])
   const [selectedKeys, setSelectedKeys] = useState([])
   const [rejectReason, setRejectReason] = useState('')
@@ -75,13 +74,9 @@ const TableData = () => {
 
   useEffect(() => {
     fetch()
-  }, [pagination.current, pagination.pageSize])
-
-  useEffect(() => {
-    setPagination({ current: 1, pageSize: PAGE_SIZE })
   }, [OrganizationCheckStore.filters])
 
-  const fetch = () => {
+  const fetch = (pageIndex = 0, pageSize = PAGE_SIZE) => {
     setIsTableLoading(true)
 
     const param = toJS(OrganizationCheckStore.filters)
@@ -96,8 +91,8 @@ const TableData = () => {
       timestamp: JSON.stringify(new Date().getTime()),
       param: {
         param,
-        pageSize: pagination.pageSize,
-        pageIndex: pagination.current - 1
+        pageIndex: pageIndex,
+        pageSize: pageSize
       }
     })
       .then(({ data }) => {
@@ -172,7 +167,8 @@ const TableData = () => {
     submit(true)
   }
 
-  const onChange = (pagination /*{current, pageSize}*/) => {
+  const onChange = pagination => {
+    fetch(pagination.current - 1, pagination.pageSize)
     setPagination(pagination)
   }
 

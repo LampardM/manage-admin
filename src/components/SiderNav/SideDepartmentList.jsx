@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 14:39:18
+ * @LastEditTime: 2020-07-22 14:10:51
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
@@ -37,7 +37,7 @@ const SideDepartmentList = props => {
 
   useEffect(() => {
     let _result
-    if (userOrganizes && userOrganizes.length) {
+    if (userOrganizes && userOrganizes.length > 1) {
       _result = userOrganizes.find(depart => depart.code === getCurDepart())
       setCurValue(_result.name)
     } else {
@@ -47,7 +47,7 @@ const SideDepartmentList = props => {
 
   const getCurDepartName = () => {
     let _result
-    if (userOrganizes && userOrganizes.length) {
+    if (userOrganizes && userOrganizes.length > 1) {
       _result = userOrganizes.find(depart => depart.code === getCurDepart())
       return _result.name
     } else {
@@ -56,25 +56,29 @@ const SideDepartmentList = props => {
   }
 
   const handleChange = (value, option) => {
-    let _params = {
-      param: option.key,
-      timestamp: JSON.stringify(new Date().getTime()),
-      token: userInfoStore.token,
-      version: userInfoStore.version
+    if (option.key === 'create') {
+      history.push('/create')
+    } else {
+      let _params = {
+        param: option.key,
+        timestamp: JSON.stringify(new Date().getTime()),
+        token: userInfoStore.token,
+        version: userInfoStore.version
+      }
+      switchDepartment(_params)
+        .then(_result => {
+          setNickName(_result.data.nick)
+          setUserMenus(_result.data.menus)
+          setCurDepart([option.key])
+          setCurValue(value)
+          props.changeDepartment()
+          message.success('切换团队成功！')
+          history.push('/home')
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
-    switchDepartment(_params)
-      .then(_result => {
-        setNickName(_result.data.nick)
-        setUserMenus(_result.data.menus)
-        setCurDepart([option.key])
-        setCurValue(value)
-        props.changeDepartment()
-        message.success('切换团队成功！')
-        history.push('/home')
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }
 
   return (
@@ -88,11 +92,21 @@ const SideDepartmentList = props => {
       >
         {userOrganizes &&
           userOrganizes.length &&
-          userOrganizes.map((organization, idx) => (
-            <Option value={organization.name} key={organization.code}>
-              {organization.name}
-            </Option>
-          ))}
+          userOrganizes.map((organization, idx) =>
+            organization.code === 'create' ? (
+              <Option
+                value={organization.name}
+                key={organization.code}
+                style={{ fontSize: '13px' }}
+              >
+                {organization.name}
+              </Option>
+            ) : (
+              <Option value={organization.name} key={organization.code}>
+                {organization.name}
+              </Option>
+            )
+          )}
       </Select>
     </DepartmentCur>
   )

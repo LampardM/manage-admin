@@ -77,13 +77,9 @@ const TableData = observer(({ className }) => {
 
   useEffect(() => {
     fetch()
-  }, [pagination.current, pagination.pageSize])
-
-  useEffect(() => {
-    setPagination({ current: 1, pageSize: PAGE_SIZE })
   }, [OrganizationAuthStore.filters])
 
-  const fetch = async () => {
+  const fetch = async (pageIndex = 0, pageSize = PAGE_SIZE) => {
     setIsTableLoading(true)
 
     const param = toJS(OrganizationAuthStore.filters)
@@ -98,8 +94,8 @@ const TableData = observer(({ className }) => {
       timestamp: JSON.stringify(new Date().getTime()),
       param: {
         param,
-        pageSize: pagination.pageSize,
-        pageIndex: pagination.current - 1
+        pageIndex: pageIndex,
+        pageSize: pageSize
       }
     })
       .then(({ data }) => {
@@ -131,6 +127,7 @@ const TableData = observer(({ className }) => {
   }
 
   const handleTableChange = pagination => {
+    fetch(pagination.current - 1, pagination.pageSize)
     setPagination(pagination)
   }
 

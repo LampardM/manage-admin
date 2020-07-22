@@ -59,21 +59,17 @@ const TableData = observer(({ className, filters }) => {
 
   useEffect(() => {
     fetch()
-  }, [pagination.current, pagination.pageSize])
-
-  useEffect(() => {
-    setPagination({ current: 1, pageSize: PAGE_SIZE })
   }, [TeamCharacterStore.filters])
 
-  const fetch = async () => {
+  const fetch = async (pageIndex = 0, pageSize = PAGE_SIZE) => {
     setIsTableLoading(true)
 
     const param = toJS(TeamCharacterStore.filters)
 
     getRoleList({
       param: {
-        pageSize: PAGE_SIZE, //pagination.pageSize,
-        pageIndex: pagination.current - 1,
+        pageIndex: pageIndex,
+        pageSize: pageSize,
         param: {
           roleName: param.name,
           state: param.status || 'ALL'
@@ -100,7 +96,10 @@ const TableData = observer(({ className, filters }) => {
     }))
   }
 
-  const handleTableChange = () => {}
+  const handleTableChange = pagination => {
+    fetch(pagination.current - 1, pagination.pageSize)
+    setPagination(pagination)
+  }
 
   const addCharacter = () => {
     history.push(`/team/character/add`)
