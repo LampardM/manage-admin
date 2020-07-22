@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-22 14:10:51
+ * @LastEditTime: 2020-07-22 19:27:06
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
@@ -39,7 +39,11 @@ const SideDepartmentList = props => {
     let _result
     if (userOrganizes && userOrganizes.length > 1) {
       _result = userOrganizes.find(depart => depart.code === getCurDepart())
-      setCurValue(_result.name)
+      if (_result) {
+        setCurValue(_result.name)
+      } else {
+        setCurValue('请切换团队')
+      }
     } else {
       setCurValue('暂无团队')
     }
@@ -49,7 +53,11 @@ const SideDepartmentList = props => {
     let _result
     if (userOrganizes && userOrganizes.length > 1) {
       _result = userOrganizes.find(depart => depart.code === getCurDepart())
-      return _result.name
+      if (_result) {
+        return _result.name
+      } else {
+        return '请切换团队'
+      }
     } else {
       return '暂无团队'
     }
