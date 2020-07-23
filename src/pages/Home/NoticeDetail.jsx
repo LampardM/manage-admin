@@ -24,7 +24,6 @@ const NoticeDetail = () => {
   const history = useHistory()
   const { userInfoStore } = useStore()
 
-  const [inviteUrl, setInviteUrl] = useState(`${urlPrefix}/joindepart/${id}`)
   const [copied, setCopied] = useState(false)
   const [disableJoin, setDisableJoin] = useState(false)
 
@@ -95,8 +94,8 @@ const NoticeDetail = () => {
             <div>
               <Space>
                 <span>邀请链接:</span>
-                <InviteUrlCon>{inviteUrl}</InviteUrlCon>
-                <CopyToClipboard text={inviteUrl} onCopy={copyInviteUrl}>
+                <InviteUrlCon>{`${urlPrefix}/joindepart/${id}`}</InviteUrlCon>
+                <CopyToClipboard text={`${urlPrefix}/joindepart/${id}`} onCopy={copyInviteUrl}>
                   <Button size="small">复制</Button>
                 </CopyToClipboard>
               </Space>
