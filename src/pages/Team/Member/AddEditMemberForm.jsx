@@ -6,7 +6,19 @@
  * @LastEditTime: 2020-07-19 20:21:45
  */
 import React, { useState, useEffect } from 'react'
-import { Button, Form, Input, Select, TreeSelect, Checkbox, Space, Row, Col, message } from 'antd'
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  TreeSelect,
+  Checkbox,
+  Space,
+  Row,
+  Col,
+  message,
+  Modal
+} from 'antd'
 import { useStore } from '@/hooks/useStore'
 import styled from 'styled-components'
 import { getRoleList } from '@/api/user'
@@ -14,6 +26,8 @@ import { inviteMember, getMemberDetail, updateMemberDetail } from '@/api/member'
 import { getCurDepartment } from '@/api/department'
 import { useHistory } from 'react-router-dom'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { deleteReject } from '@/api'
 
 const { TreeNode } = TreeSelect
 const { Option } = Select
@@ -406,7 +420,23 @@ const AddEditMemberForm = props => {
           {() => (
             <HandleContainer>
               <Space>
-                <Button>取消</Button>
+                <Button
+                  onClick={() =>
+                    Modal.confirm({
+                      title: '确认离开?',
+                      icon: <ExclamationCircleOutlined />,
+                      content: '是否确认放弃所编辑内容',
+                      onOk() {
+                        history.goBack()
+                      },
+                      onCancel() {
+                        console.log('Cancel')
+                      }
+                    })
+                  }
+                >
+                  取消
+                </Button>
                 <Button
                   type="primary"
                   htmlType="submit"
