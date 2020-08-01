@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-22 19:08:00
+ * @LastEditTime: 2020-07-23 22:04:01
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -73,7 +73,7 @@ const MemberTable = props => {
 
   useEffect(() => {
     fetch()
-  }, [MemberStore.filters])
+  }, [MemberStore.filters, curselect])
 
   const fetch = (pageIndex = 0, pageSize = PAGE_SIZE) => {
     setIsTableLoading(true)
