@@ -100,6 +100,11 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
       _cloneNodeData = cloneNodeData
     }
 
+    if (showAllChecked) {
+      const allCheckedStatus = checkAllChecked(_cloneNodeData)
+      setIsAllChecked(allCheckedStatus)
+    }
+
     const formatData = nodePackageRow(_cloneNodeData, cutOffRow, [])
 
     setDataSource(formatData)
