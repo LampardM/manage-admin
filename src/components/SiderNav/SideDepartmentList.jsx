@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-05-13 22:13:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-22 19:55:44
+ * @LastEditTime: 2020-08-02 20:34:28
  */
 import React, { useState, useEffect } from 'react'
 import { Select, message } from 'antd'
@@ -22,6 +22,7 @@ const { Option } = Select
 const SideDepartmentList = props => {
   const [userMenus, setUserMenus] = useLocalStorageState('user-menus')
   const [userStorageOrganizes, setStorageUserOrganizes] = useLocalStorageState('user-organizes')
+  const [currentDepart, setCurrentDepart] = useLocalStorageState('current-depart')
   const { userInfoStore } = useStore()
   const [curValue, setCurValue] = useState('')
   const [userOrganizes, setUserOrganizes] = useState([])
@@ -42,10 +43,13 @@ const SideDepartmentList = props => {
       _result = userOrganizes.find(depart => depart.code === getCurDepart())
       if (_result) {
         setCurValue(_result.name)
+        setCurrentDepart(_result.name)
       } else {
         setCurValue('请切换团队')
+        setCurrentDepart('none')
       }
     } else {
+      setCurrentDepart('none')
       setCurValue('暂无团队')
     }
   }, [userOrganizes])

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-16 22:33:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-22 14:15:18
+ * @LastEditTime: 2020-08-02 20:41:14
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, message } from 'antd'
@@ -23,7 +23,7 @@ const LoginForm = props => {
   const { userInfoStore } = useStore()
   const [loginType, setLoginType] = useState('password')
   const [isSendVerify, setIsSendVerify] = useState(false)
-  const [countDown, setCountDown] = useState(5)
+  const [countDown, setCountDown] = useState(60)
   const [disLogin, setDisLogin] = useState(false)
   const [userOrganizes, setUserOrganizes] = useLocalStorageState('user-organizes', []) // 防止页面刷新左侧团队列表被重置
   const [userMenus, setUserMenus] = useLocalStorageState('user-menus', []) // 防止页面刷新左侧团队列表被重置
@@ -149,7 +149,7 @@ const LoginForm = props => {
   useEffect(() => {
     if (countDown === 0) {
       setIsSendVerify(false)
-      setCountDown(5)
+      setCountDown(60)
     }
     forceUpdate({})
   }, [countDown])

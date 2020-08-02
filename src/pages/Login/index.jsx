@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-11 16:05:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-22 22:51:05
+ * @LastEditTime: 2020-08-02 20:47:01
  */
 import React from 'react'
 import { withRouter } from 'react-router-dom'
@@ -13,17 +13,12 @@ import LoginForm from './LoginForm'
 import RegisterForm from './RegisterForm'
 import 'animate.css'
 
-// import { login } from "@/api/user";
-
 @withRouter
 @observer
 @inject('userInfoStore')
 class Login extends React.Component {
   state = {
     showBox: 'login'
-  }
-  componentDidMount() {
-    // login().then(() => {});
   }
 
   switchShowBox = curbox => {
