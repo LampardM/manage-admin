@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-08-02 20:34:50
+ * @LastEditTime: 2020-08-02 21:11:10
  */
 /** official */
 import React from 'react'
@@ -26,24 +26,7 @@ class _Menu extends React.Component {
   componentDidMount() {
     // 防止页面刷新侧边栏又初始化了
     let pathname = this.props.location.pathname
-
-    if (pathname.includes('/team/character/edit') && pathname !== '/team/character/edit') {
-      pathname = pathname.split('/')
-      pathname.pop()
-      pathname = pathname.join('/')
-    }
-
-    if (pathname.includes('/team/member/editmember') && pathname !== '/team/member/editmember') {
-      pathname = pathname.split('/')
-      pathname.pop()
-      pathname = pathname.join('/')
-    }
-
-    if (pathname.includes('/home/notice') && pathname !== '/home/notice') {
-      pathname = pathname.split('/')
-      pathname.pop()
-      pathname = pathname.join('/')
-    }
+    this.defaultSelectedKeys(pathname)
 
     if (blackList.includes(pathname)) {
       const tmp = pathname.split('/')
@@ -75,24 +58,7 @@ class _Menu extends React.Component {
   componentWillReceiveProps(nextProps) {
     // 当点击面包屑导航时，侧边栏要同步响应
     let pathname = nextProps.location.pathname
-
-    if (pathname.includes('/team/character/edit') && pathname !== '/team/character/edit') {
-      pathname = pathname.split('/')
-      pathname.pop()
-      pathname = pathname.join('/')
-    }
-
-    if (pathname.includes('/team/member/editmember') && pathname !== '/team/member/editmember') {
-      pathname = pathname.split('/')
-      pathname.pop()
-      pathname = pathname.join('/')
-    }
-
-    if (pathname.includes('/home/notice') && pathname !== '/home/notice') {
-      pathname = pathname.split('/')
-      pathname.pop()
-      pathname = pathname.join('/')
-    }
+    pathname = this.defaultSelectedKeys(pathname)
 
     if (blackList.includes(pathname)) {
       const tmp = pathname.split('/')
@@ -104,6 +70,22 @@ class _Menu extends React.Component {
         selectedKeys: [pathname]
       })
     }
+  }
+
+  defaultSelectedKeys(pathname) {
+    if (
+      (pathname.includes('/team/character/edit') && pathname !== '/team/character/edit') ||
+      (pathname.includes('/team/member/editmember') && pathname !== '/team/member/editmember') ||
+      (pathname.includes('/home/notice') && pathname !== '/home/notice') ||
+      (pathname.includes('/organization/auth/info') && pathname !== '/organization/auth/info') ||
+      (pathname.includes('/organization/approve/edit') && pathname !== '/organization/approve/edit')
+    ) {
+      pathname = pathname.split('/')
+      pathname.pop()
+      pathname = pathname.join('/')
+    }
+
+    return pathname
   }
 
   onOpenChange = openKeys => {
