@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-08-02 21:11:10
+ * @LastEditTime: 2020-08-02 21:14:17
  */
 /** official */
 import React from 'react'
@@ -26,7 +26,7 @@ class _Menu extends React.Component {
   componentDidMount() {
     // 防止页面刷新侧边栏又初始化了
     let pathname = this.props.location.pathname
-    this.defaultSelectedKeys(pathname)
+    pathname = this.defaultSelectedKeys(pathname)
 
     if (blackList.includes(pathname)) {
       const tmp = pathname.split('/')
