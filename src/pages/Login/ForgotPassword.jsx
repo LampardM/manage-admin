@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-18 12:03:05
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-16 22:12:19
+ * @LastEditTime: 2020-08-02 20:41:43
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Steps, message, Result } from 'antd'
@@ -23,7 +23,7 @@ const ForgotPassword = () => {
   const [step, setStep] = useState(0)
   const [isSendVerify, setIsSendVerify] = useState(false)
   const [curPhone, setCurPhone] = useState('')
-  const [countDown, setCountDown] = useState(5)
+  const [countDown, setCountDown] = useState(60)
   const [, forceUpdate] = useState()
   const history = useHistory()
 
@@ -75,7 +75,7 @@ const ForgotPassword = () => {
   useEffect(() => {
     if (countDown === 0) {
       setIsSendVerify(false)
-      setCountDown(5)
+      setCountDown(60)
     }
     forceUpdate({})
   }, [countDown])

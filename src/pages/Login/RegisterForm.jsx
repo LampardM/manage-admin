@@ -18,7 +18,7 @@ import { register, registerPhoneVerify } from '@/api/user'
 const RegisterForm = props => {
   const { userInfoStore } = useStore()
   const [isSendVerify, setIsSendVerify] = useState(false)
-  const [countDown, setCountDown] = useState(5)
+  const [countDown, setCountDown] = useState(60)
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
   const history = useHistory()
@@ -90,7 +90,7 @@ const RegisterForm = props => {
   useEffect(() => {
     if (countDown === 0) {
       setIsSendVerify(false)
-      setCountDown(5)
+      setCountDown(60)
     }
     forceUpdate({})
   }, [countDown])

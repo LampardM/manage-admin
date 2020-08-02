@@ -20,7 +20,7 @@ const VerifyNewAccountPhone = () => {
   const [, forceUpdate] = useState()
   const { userInfoStore, SettingStore } = useStore()
   const [isSendVerify, setIsSendVerify] = useState(false)
-  const [countDown, setCountDown] = useState(5)
+  const [countDown, setCountDown] = useState(60)
   const history = useHistory()
 
   const captchaCallback = res => {
@@ -67,7 +67,7 @@ const VerifyNewAccountPhone = () => {
   useEffect(() => {
     if (countDown === 0) {
       setIsSendVerify(false)
-      setCountDown(5)
+      setCountDown(60)
     }
     forceUpdate({})
   }, [countDown])
