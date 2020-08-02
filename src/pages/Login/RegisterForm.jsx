@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-13 22:23:37
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 20:13:53
+ * @LastEditTime: 2020-08-02 20:49:26
  */
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Select, Button, message } from 'antd'
@@ -12,7 +12,6 @@ import useInterval from '@/hooks/useInterval'
 import styled from 'styled-components'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { observer } from 'mobx-react'
-import { useHistory } from 'react-router-dom'
 import { register, registerPhoneVerify } from '@/api/user'
 
 const RegisterForm = props => {
@@ -21,7 +20,6 @@ const RegisterForm = props => {
   const [countDown, setCountDown] = useState(60)
   const [form] = Form.useForm()
   const [, forceUpdate] = useState()
-  const history = useHistory()
 
   const captchaCallback = res => {
     // * 滑动验证成功回调
@@ -58,9 +56,7 @@ const RegisterForm = props => {
       .then(result => {
         console.log(result)
         message.success('注册成功！')
-        setTimeout(() => {
-          history.push('/login')
-        }, 2000)
+        props.switchShowBox('login')
       })
       .catch(err => {
         console.log(err, 'err')
