@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 15:23:35
+ * @LastEditTime: 2020-08-02 20:34:50
  */
 /** official */
 import React from 'react'
@@ -34,6 +34,12 @@ class _Menu extends React.Component {
     }
 
     if (pathname.includes('/team/member/editmember') && pathname !== '/team/member/editmember') {
+      pathname = pathname.split('/')
+      pathname.pop()
+      pathname = pathname.join('/')
+    }
+
+    if (pathname.includes('/home/notice') && pathname !== '/home/notice') {
       pathname = pathname.split('/')
       pathname.pop()
       pathname = pathname.join('/')
@@ -82,6 +88,12 @@ class _Menu extends React.Component {
       pathname = pathname.join('/')
     }
 
+    if (pathname.includes('/home/notice') && pathname !== '/home/notice') {
+      pathname = pathname.split('/')
+      pathname.pop()
+      pathname = pathname.join('/')
+    }
+
     if (blackList.includes(pathname)) {
       const tmp = pathname.split('/')
       pathname = tmp.slice(0, tmp.length - 1).join('/')
@@ -120,6 +132,8 @@ class _Menu extends React.Component {
   }
 
   renderMenuItem = ({ key, icon, title }) => {
+    let _current_depart = JSON.parse(window.localStorage.getItem('current-depart'))
+    if (key === '/setting' && _current_depart === 'none') return
     return (
       <Menu.Item key={key}>
         <Link to={key}>
