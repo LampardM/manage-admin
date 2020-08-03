@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-21 10:55:41
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 14:38:52
+ * @LastEditTime: 2020-08-03 22:27:40
  */
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -22,7 +22,6 @@ const AddDepartMentNotice = () => {
   const history = useHistory()
   const [form] = Form.useForm()
   const { userInfoStore } = useStore()
-
   const [, forceUpdate] = useState()
   const [organize, setOrganize] = useState('')
 

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-20 22:14:14
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 20:21:45
+ * @LastEditTime: 2020-08-03 22:26:02
  */
 import React, { useState, useEffect } from 'react'
 import {
@@ -27,7 +27,6 @@ import { getCurDepartment } from '@/api/department'
 import { useHistory } from 'react-router-dom'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { deleteReject } from '@/api'
 
 const { TreeNode } = TreeSelect
 const { Option } = Select
@@ -42,6 +41,7 @@ const AddEditMemberForm = props => {
   const [notice, setNotice] = useState(false)
   const [depart, setDepart] = useState('')
   const [memberDetail, setMemberDetail] = useState({})
+  const [, forceUpdate] = useState()
   const history = useHistory()
 
   const tailLayout = {
@@ -61,14 +61,17 @@ const AddEditMemberForm = props => {
       console.log(memberDetail, 'memberDetail')
       let _character = memberDetail.roles.map(character => character.roleCode),
         _department = memberDetail.depts.map(dep => dep.deptCode)
-      form.setFieldsValue({
-        name: memberDetail.orgMemberName,
-        phone: memberDetail.phone,
-        desc: memberDetail.memo,
-        character: _character,
-        department: _department
-      })
-      setCurCharacter(_character)
+
+      setTimeout(() => {
+        form.setFieldsValue({
+          name: memberDetail.orgMemberName,
+          phone: memberDetail.phone,
+          desc: memberDetail.memo,
+          character: _character,
+          department: _department
+        })
+        setCurCharacter(_character)
+      }, 500)
     }
   }, [memberDetail])
 
@@ -227,7 +230,7 @@ const AddEditMemberForm = props => {
     })
   }
 
-  const onFinish = () => {
+  const addMemberSubmit = () => {
     let formValue = form.getFieldsValue(),
       _createparams = {
         param: {
@@ -273,11 +276,40 @@ const AddEditMemberForm = props => {
     }
   }
 
+  const addAnotherMemberSubmit = () => {
+    let formValue = form.getFieldsValue(),
+      _createparams = {
+        param: {
+          departmentCode: formValue.department,
+          inviteType: notice ? 'BOTH' : 'SMS',
+          memberName: formValue.name,
+          memo: formValue.desc,
+          phone: formValue.phone,
+          registPhone: formValue.registerphone,
+          roleCode: formValue.character
+        },
+        timestamp: JSON.stringify(new Date().getTime()),
+        token: userInfoStore.token,
+        version: userInfoStore.version
+      }
+    inviteMember(_createparams)
+      .then(_result => {
+        message.success('添加成功！')
+        form.setFieldsValue({
+          name: '',
+          phone: '',
+          registerphone: '',
+          desc: ''
+        })
+        setNotice(false)
+      })
+      .catch(err => {})
+  }
+
   return (
     <FormContent>
       <Form
         form={form}
-        onFinish={onFinish}
         labelCol={{
           span: 5
         }}
@@ -384,6 +416,7 @@ const AddEditMemberForm = props => {
                 <Col>
                   <Checkbox
                     onChange={onChange}
+                    checked={notice}
                     style={{
                       lineHeight: '32px'
                     }}
@@ -440,6 +473,7 @@ const AddEditMemberForm = props => {
                 <Button
                   type="primary"
                   htmlType="submit"
+                  onClick={addMemberSubmit}
                   disabled={
                     props.memberCode
                       ? !form.isFieldTouched('phone') ||
@@ -455,6 +489,9 @@ const AddEditMemberForm = props => {
                         !form.isFieldTouched('character') ||
                         !form.isFieldTouched('department') ||
                         !form.isFieldTouched('registerphone') ||
+                        !form.getFieldValue('name') ||
+                        !form.getFieldValue('phone') ||
+                        !form.getFieldValue('registerphone') ||
                         form.getFieldsError().filter(({ errors }) => errors.length).length
                   }
                 >
@@ -463,12 +500,16 @@ const AddEditMemberForm = props => {
                 {!props.memberCode ? (
                   <Button
                     type="primary"
+                    onClick={addAnotherMemberSubmit}
                     disabled={
                       !form.isFieldTouched('name') ||
                       !form.isFieldTouched('phone') ||
                       !form.isFieldTouched('character') ||
                       !form.isFieldTouched('department') ||
                       !form.isFieldTouched('registerphone') ||
+                      !form.getFieldValue('name') ||
+                      !form.getFieldValue('phone') ||
+                      !form.getFieldValue('registerphone') ||
                       form.getFieldsError().filter(({ errors }) => errors.length).length
                     }
                   >
