@@ -17,7 +17,7 @@ import { joinOrganize, invitationInfo } from '@/api'
 import { useStore } from '@/hooks/useStore'
 
 const AddDepartMentNotice = () => {
-  let invitationCode = ''
+  const [invitationCode, setInvitationCode] = useState('')
   const { id } = useParams()
   const history = useHistory()
   const [form] = Form.useForm()
@@ -46,14 +46,14 @@ const AddDepartMentNotice = () => {
       version: userInfoStore.version,
       timestamp: JSON.stringify(new Date().getTime())
     }).then(({ data }) => {
-      invitationCode = data.invitationCode
+      setInvitationCode(data.invitationCode)
       form.setFieldsValue({ name: data.memberName })
       setOrganize(data.organizeName)
     })
   }
 
   const joinDepartMentHandle = form => {
-    console.log(form.name, form.phone)
+    console.log(form.name, form.phone, invitationCode)
 
     joinOrganize({
       param: {
@@ -73,7 +73,12 @@ const AddDepartMentNotice = () => {
   }
 
   return (
-    <div style={{ padding: '0 16 16', marginTop: -16 }}>
+    <div
+      style={{
+        padding: '0 16 16',
+        marginTop: -16
+      }}
+    >
       <AddDepartMentNoticeCon>
         <AddDepartContent>
           <RealContent>

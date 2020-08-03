@@ -52,6 +52,7 @@ import { Ext } from '../../utils'
 const TableCheckBox /**: TableCheckBoxProps */ = ({
   columns = [],
   nodeData = [],
+  disabled = false,
   initStructure = () => {},
   onChange = () => {},
   showAllChecked = false,
@@ -97,6 +98,11 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
       })
     } else {
       _cloneNodeData = cloneNodeData
+    }
+
+    if (showAllChecked) {
+      const allCheckedStatus = checkAllChecked(_cloneNodeData)
+      setIsAllChecked(allCheckedStatus)
     }
 
     const formatData = nodePackageRow(_cloneNodeData, cutOffRow, [])
@@ -180,8 +186,6 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
           column.dataIndex
         ][0] = `${recursiveQueryRes.key}###${recursiveQueryRes.value}###${recursiveQueryRes.checked}`
       }
-      console.log('1- - - - - - - - - - - - - - - - - - - -')
-      console.log('\n')
     })
     return formatData
   }
@@ -451,7 +455,7 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
    * @description 渲染每个td
    * @param {Array<string>} text
    * @param {object} record
-   * @param {mumber} index
+   * @param {number} index
    * @returns {React.ReactElement}
    */
   const renderCheckboxItem = (text, record, index) => {
@@ -461,6 +465,7 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
           const [value, label, checked] = it.split('###')
           return (
             <Checkbox
+              disabled={disabled}
               key={value}
               value={value}
               checked={checked === 'true'}
@@ -611,12 +616,11 @@ const TableCheckBox /**: TableCheckBoxProps */ = ({
 
   useEffect(() => {
     formatColumnsStructure()
-  }, [mergeCol])
-
+  }, [mergeCol, disabled])
   return (
     <>
       {showAllChecked ? (
-        <Checkbox checked={isAllChecked} onChange={onAllChange}>
+        <Checkbox disabled={disabled} checked={isAllChecked} onChange={onAllChange}>
           全选
         </Checkbox>
       ) : null}

@@ -35,6 +35,8 @@ const columns = [
   }
 ]
 
+const SPECIAL_CODE = ['y6be5yQXIt', 'y6beBAB65w']
+
 const AddEditCharacterForm = () => {
   const { id } = useParams()
   const [form] = Form.useForm()
@@ -44,6 +46,7 @@ const AddEditCharacterForm = () => {
   const [desc, setDesc] = useState('')
   const [touched, setTouched] = useState(false)
   const [permissionsTableData, setPermissionsTableData] = useState([])
+  const [disableAuthorisedPermissions, setDisableAuthorisedPermissions] = useState(true)
   const [authorisedPermissionsTableData, setAuthorisedPermissionsTableData] = useState([])
   const [permission, setPermission] = useState([])
   const [authorisedPermission, setAuthorisedPermission] = useState([])
@@ -145,7 +148,7 @@ const AddEditCharacterForm = () => {
   const doUpdateRole = values => {
     updateRole({
       param: {
-        empowerCodes: authorisedPermission,
+        empowerCodes: !!disableAuthorisedPermissions ? [] : authorisedPermission,
         memo: values.desc || '',
         powerCodes: permission,
         roleCode: id,
@@ -166,7 +169,7 @@ const AddEditCharacterForm = () => {
   const doCreateRole = values => {
     createRole({
       param: {
-        empowerCodes: authorisedPermission,
+        empowerCodes: !!disableAuthorisedPermissions ? [] : authorisedPermission,
         memo: values.desc || '',
         powerCodes: permission,
         roleCode: '',
@@ -238,6 +241,7 @@ const AddEditCharacterForm = () => {
         >
           <TableCheckBox
             className="table"
+            name={'权限'}
             bordered
             columns={columns}
             pagination={false}
@@ -245,9 +249,21 @@ const AddEditCharacterForm = () => {
             nodeData={permissionsTableData}
             loading={isPermissionsTableLoading}
             initStructure={tailCollection => {
+              if (SPECIAL_CODE.every(it => tailCollection.includes(it))) {
+                setDisableAuthorisedPermissions(false)
+              } else {
+                setDisableAuthorisedPermissions(true)
+              }
               setPermission(tailCollection)
             }}
             onChange={(value, isChecked, tailCollection) => {
+              if (SPECIAL_CODE.every(it => tailCollection.includes(it))) {
+                setDisableAuthorisedPermissions(false)
+              } else {
+                // setAuthorisedPermission([])
+                setDisableAuthorisedPermissions(true)
+              }
+
               setTouched(true)
               setPermission(tailCollection)
             }}
@@ -284,6 +300,7 @@ const AddEditCharacterForm = () => {
             columns={columns}
             pagination={false}
             showAllChecked={true}
+            disabled={disableAuthorisedPermissions}
             nodeData={authorisedPermissionsTableData}
             loading={isAuthorisedPermissionsTableLoading}
             initStructure={tailCollection => {
@@ -322,7 +339,7 @@ const AddEditCharacterForm = () => {
                     (!id &&
                       (!form.isFieldTouched('name') ||
                         !permission.length ||
-                        !authorisedPermission.length ||
+                        (!disableAuthorisedPermissions && !authorisedPermission.length) ||
                         form.getFieldsError().filter(({ errors }) => errors.length).length)) ||
                     (id && !touched && !form.isFieldTouched('name') && !form.isFieldTouched('desc'))
                   }
