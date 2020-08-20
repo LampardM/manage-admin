@@ -8,13 +8,14 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PrefixSelector from '@/components/PrefixSelector/PrefixSelector'
-import { Button, Form, Input, Select } from 'antd'
+import { Button, Form, Input } from 'antd'
 import { isAuthenticated } from '@/utils/session'
 import { useHistory, useParams } from 'react-router-dom'
 
 /** custom */
 import { joinOrganize, invitationInfo } from '@/api'
 import { useStore } from '@/hooks/useStore'
+import { useLocalStorageState } from '@umijs/hooks'
 
 const AddDepartMentNotice = () => {
   const [invitationCode, setInvitationCode] = useState('')
@@ -22,8 +23,8 @@ const AddDepartMentNotice = () => {
   const history = useHistory()
   const [form] = Form.useForm()
   const { userInfoStore } = useStore()
-  const [, forceUpdate] = useState()
   const [organize, setOrganize] = useState('')
+  const [userOrganizes, setUserOrganizes] = useLocalStorageState('user-organizes')
 
   const tailLayout = {
     wrapperCol: {
@@ -54,7 +55,6 @@ const AddDepartMentNotice = () => {
 
   const joinDepartMentHandle = form => {
     console.log(form.name, form.phone, invitationCode)
-
     joinOrganize({
       param: {
         phone: form.phone,
@@ -63,10 +63,17 @@ const AddDepartMentNotice = () => {
       token: userInfoStore.token,
       version: userInfoStore.version,
       timestamp: JSON.stringify(new Date().getTime())
-    }).then(() => {
+    }).then(({ data }) => {
       if (!isAuthenticated()) {
         history.push('/login')
       } else {
+        console.log(userOrganizes, 'userOrganizes')
+        if (data) {
+          let _updateOrganizes = [...userOrganizes]
+          _updateOrganizes.splice(-1, 0, data)
+          setUserOrganizes(_updateOrganizes)
+          userInfoStore.updateUserOrganizes(_updateOrganizes)
+        }
         history.push('/home')
       }
     })
