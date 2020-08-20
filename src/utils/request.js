@@ -48,6 +48,7 @@ service.interceptors.response.use(
     }
   },
   error => {
+    message.error('请求超时，请重试')
     return Promise.reject(error)
   }
 )
