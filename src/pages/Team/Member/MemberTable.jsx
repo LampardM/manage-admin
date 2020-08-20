@@ -13,7 +13,7 @@ import { Table, Dropdown, Menu, Space, Button, Row, Col, Message } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import { DownOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
-import { invitationRecord, invitedRecord, resetInviteOrgMember } from '@/api/member'
+import { deleteOrgMembers, invitationRecord, invitedRecord, resetInviteOrgMember } from '@/api'
 
 /** vendor */
 import { CopyToClipboard } from 'react-copy-to-clipboard'
@@ -61,7 +61,22 @@ const MemberTable = props => {
   const [selectedKeys, setSelectedKeys] = useState([])
   const history = useHistory()
 
-  const joinMenuHandler = (record, item, key) => {}
+  const joinMenuHandler = (record, { key }) => {
+    if (+key === 2) {
+      deleteMembers([record.memberCode])
+    }
+  }
+
+  const deleteMembers = selected => {
+    deleteOrgMembers({
+      param: selected || selectedKeys,
+      timestamp: JSON.stringify(new Date().getTime()),
+      token: userInfoStore.token,
+      version: userInfoStore.version
+    }).then(() => {
+      fetch(pagination.current - 1, pagination.pageSize)
+    })
+  }
 
   const addMember = () => {
     history.push('/team/member/addmember')
@@ -159,7 +174,9 @@ const MemberTable = props => {
   const joinedMenu = record => {
     return (
       <Menu onClick={(item, key) => joinMenuHandler(record, item, key)}>
-        <Menu.Item key="1">详情</Menu.Item>
+        <Menu.Item key="1" disabled>
+          详情
+        </Menu.Item>
         <Menu.Item key="2">删除</Menu.Item>
       </Menu>
     )
@@ -228,7 +245,9 @@ const MemberTable = props => {
               <Button type="primary" onClick={addMember}>
                 添加成员
               </Button>
-              <Button disabled={!selectedKeys.length}>删除</Button>
+              <Button disabled={!selectedKeys.length} onClick={deleteMembers}>
+                删除
+              </Button>
             </Space>
           </div>
         ) : (

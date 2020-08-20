@@ -181,3 +181,12 @@ export function resetPassword(params) {
     method: 'get'
   })
 }
+
+// 删除成员
+export function deleteOrgMembers(payload) {
+  return request({
+    url: `/User/DeleteOrgMembers`,
+    method: 'post',
+    data: payload
+  })
+}
