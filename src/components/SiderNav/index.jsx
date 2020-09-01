@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:49:09
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-19 17:46:42
+ * @LastEditTime: 2020-09-01 21:11:03
  */
 import React from 'react'
 import Menu from '../Menu/index'
@@ -38,10 +38,11 @@ class SiderNav extends React.Component {
 
   computedCurUserMenus() {
     let userComeMenus = JSON.parse(localStorage.getItem('user-menus'))
-    if (userComeMenus && userComeMenus.length !== 0) {
+    if (userComeMenus) {
       this.handleInitMenus(userComeMenus, this.state.curUserNavMenus)
+    } else {
+      this.handleInitMenus([], this.state.curUserNavMenus)
     }
-    this.setState({ menuslist: this.state.curUserNavMenus })
   }
 
   handleInitMenus(userMenus, configMenus) {
@@ -57,6 +58,11 @@ class SiderNav extends React.Component {
       } else {
         _target.show = this.state.whitelist.includes(_target.key) ? true : false
       }
+    })
+
+    this.setState({
+      curUserNavMenus: Ext.deepClone(configMenus),
+      menuslist: Ext.deepClone(configMenus)
     })
   }
 

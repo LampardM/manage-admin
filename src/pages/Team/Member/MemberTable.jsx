@@ -3,16 +3,17 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-23 22:04:01
+ * @LastEditTime: 2020-09-01 21:17:03
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Table, Dropdown, Menu, Space, Button, Row, Col, Message } from 'antd'
+import { Table, Dropdown, Menu, Space, Button, Row, Col, Message, Modal } from 'antd'
 import { useStore } from '@/hooks/useStore'
 import { DownOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { deleteOrgMembers, invitationRecord, invitedRecord, resetInviteOrgMember } from '@/api'
 
 /** vendor */
@@ -61,9 +62,23 @@ const MemberTable = props => {
   const [selectedKeys, setSelectedKeys] = useState([])
   const history = useHistory()
 
+  const batchCancelInvite = () => {
+    console.log('批量取消邀请')
+  }
+
+  const cancelInvite = (record, { key }) => {}
+
   const joinMenuHandler = (record, { key }) => {
     if (+key === 2) {
-      deleteMembers([record.memberCode])
+      Modal.confirm({
+        title: '确认删除？',
+        icon: <ExclamationCircleOutlined />,
+        content: '是否确认删除所选成员？',
+        onOk() {
+          deleteMembers([record.memberCode])
+        },
+        onCancel() {}
+      })
     }
   }
 
@@ -155,6 +170,10 @@ const MemberTable = props => {
   const handleTableChange = pagination => {
     fetch(pagination.current - 1, pagination.pageSize)
     setPagination(pagination)
+  }
+
+  const batchInviteAgain = invitationCode => {
+    console.log('批量再邀请')
   }
 
   const inviteMemberAgain = invitationCode => {
@@ -253,10 +272,12 @@ const MemberTable = props => {
         ) : (
           <div className="add-remove">
             <Space>
-              <Button type="primary" disabled={!selectedKeys.length}>
+              <Button type="primary" disabled={!selectedKeys.length} onClick={batchInviteAgain}>
                 再发送
               </Button>
-              <Button disabled={!selectedKeys.length}>取消邀请</Button>
+              <Button disabled={!selectedKeys.length} onClick={batchCancelInvite}>
+                取消邀请
+              </Button>
             </Space>
           </div>
         )}
