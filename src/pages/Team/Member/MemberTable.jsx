@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-09-01 21:33:00
+ * @LastEditTime: 2020-09-01 21:36:18
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -224,7 +224,7 @@ const MemberTable = props => {
 
   const invitedMenu = record => {
     return (
-      <Menu onClick={(item, key) => {}}>
+      <Menu onClick={(item, key) => cancelInvite(record, item, key)}>
         <Menu.Item key="1">
           <CopyToClipboard
             text={`${urlPrefix}/joindepart/${record.key}`}
