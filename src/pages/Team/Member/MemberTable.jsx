@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-19 19:11:00
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-09-01 21:17:03
+ * @LastEditTime: 2020-09-01 21:33:00
  */
 import { observer } from 'mobx-react'
 import { toJS } from 'mobx'
@@ -89,7 +89,28 @@ const MemberTable = props => {
       token: userInfoStore.token,
       version: userInfoStore.version
     }).then(() => {
+      Message.success('删除成功')
       fetch(pagination.current - 1, pagination.pageSize)
+    })
+  }
+
+  const batchDeleteMembers = () => {
+    Modal.confirm({
+      title: '确认进行批量删除？',
+      icon: <ExclamationCircleOutlined />,
+      content: '是否确认批量删除所选成员？',
+      onOk() {
+        deleteOrgMembers({
+          param: selectedKeys,
+          timestamp: JSON.stringify(new Date().getTime()),
+          token: userInfoStore.token,
+          version: userInfoStore.version
+        }).then(() => {
+          Message.success('删除成功')
+          fetch(pagination.current - 1, pagination.pageSize)
+        })
+      },
+      onCancel() {}
     })
   }
 
@@ -264,7 +285,7 @@ const MemberTable = props => {
               <Button type="primary" onClick={addMember}>
                 添加成员
               </Button>
-              <Button disabled={!selectedKeys.length} onClick={deleteMembers}>
+              <Button disabled={!selectedKeys.length} onClick={batchDeleteMembers}>
                 删除
               </Button>
             </Space>
