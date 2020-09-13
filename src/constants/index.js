@@ -3,4 +3,4 @@
  * @type {string}
  *    不以'/'结尾
  */
-export const urlPrefix = 'https://www.liehuo360.com'
+export const urlPrefix = 'https://www.liehuo360.com:361'
