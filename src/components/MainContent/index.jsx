@@ -111,7 +111,7 @@ const MainContent = ({ location }) => {
 
       <Switch>
         <PrivateRoute path="/home" component={Home} exact />
-        <PrivateRoute path="/home/notice/:id" component={NoticeDetail} />
+        <PrivateRoute path="/home/notice/:id/:content" component={NoticeDetail} />
         <PrivateRoute path="/create" component={Create} exact />
 
         <PrivateRoute path="/organization/auth" component={OrganizationAuth} exact />

@@ -3,7 +3,7 @@
  * @Author: longzhang6
  * @Date: 2020-04-26 10:28:03
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-04-26 11:29:55
+ * @LastEditTime: 2020-09-13 22:35:53
  */
 import React, { useState, useEffect } from 'react'
 import { Button, Space, Divider, Message, Modal } from 'antd'
@@ -20,7 +20,7 @@ import { useStore } from '@/hooks/useStore'
 const { confirm } = Modal
 
 const NoticeDetail = () => {
-  const { id } = useParams()
+  const { id, content } = useParams()
   const history = useHistory()
   const { userInfoStore } = useStore()
 
@@ -84,7 +84,7 @@ const NoticeDetail = () => {
         </NoticeHeader>
         <Divider></Divider>
         <NoticeInfoDetail>
-          <DetailTitle>来自浙江xx公司的邀请</DetailTitle>
+          <DetailTitle>{content}</DetailTitle>
           <div>
             <p>同意，请点击加入按钮，执行加入操作；</p>
             <p>不同意，请点击拒绝；点击拒绝按钮后，无法再通过该通知加入团队；</p>

@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 01:31:45
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-07-17 20:42:57
+ * @LastEditTime: 2020-09-13 22:36:45
  */
 /** officail */
 import React from 'react'
@@ -86,7 +86,7 @@ class HeaderBar extends React.Component {
   }
 
   messageHandler = item => {
-    this.props.history.push(`/home/notice/${item.key}`)
+    this.props.history.push(`/home/notice/${item.key}/${item.item.props.content}`)
   }
 
   menu = () => {
@@ -156,7 +156,7 @@ class HeaderBar extends React.Component {
       <Menu className="menu" onClick={this.messageHandler}>
         <Menu.ItemGroup style={{ maxHeight: 200, overflow: 'auto' }}>
           {this.state.messageLists.map(it => (
-            <Menu.Item key={it.code}>
+            <Menu.Item key={it.code} content={it.content}>
               <Row
                 flex="auto"
                 align="center"
