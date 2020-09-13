@@ -3,7 +3,7 @@
  * @Author: jieq
  * @Date: 2020-04-16 02:50:28
  * @LastEditors: longzhang6
- * @LastEditTime: 2020-08-02 21:14:17
+ * @LastEditTime: 2020-09-13 22:44:30
  */
 /** official */
 import React from 'react'
@@ -80,6 +80,12 @@ class _Menu extends React.Component {
       (pathname.includes('/organization/auth/info') && pathname !== '/organization/auth/info') ||
       (pathname.includes('/organization/approve/edit') && pathname !== '/organization/approve/edit')
     ) {
+      pathname = pathname.split('/')
+      pathname.pop()
+      pathname = pathname.join('/')
+    }
+
+    if (pathname.includes('/home/notice') && pathname !== '/home/notice') {
       pathname = pathname.split('/')
       pathname.pop()
       pathname = pathname.join('/')
