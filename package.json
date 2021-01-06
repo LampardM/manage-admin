@@ -14,7 +14,7 @@
     "@umijs/hooks": "^1.9.2",
     "animate.css": "^3.7.2",
     "antd": "^4.1.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-eslint": "10.1.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.1.0",
